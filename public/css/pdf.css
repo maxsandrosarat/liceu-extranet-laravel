@@ -1,0 +1,23 @@
+@page {
+  margin: 10px 40px 10px 50px !important;
+  padding: 10px 40px 10px 50px !important;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  font-size: small;
+}
+
+.container {
+    margin: 0;
+    padding: 0;
+}
+
+table{
+  width: 100%;
+}
+
+table thead tr th{
+  text-align: center;
+  white-space: nowrap;
+}
