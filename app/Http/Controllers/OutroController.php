@@ -400,99 +400,61 @@ class OutroController extends Controller
         $provas = Simulado::where('ano',"$ano")->orderBy('prazo', 'desc')->get();
         return view('outros.home_provas',compact('ano','turmas','anos','provas'));
     }
-    //DB::table('questao_simulados')->select(DB::raw('id, descricao, bimestre, ano'))->groupByRaw('id, descricao, bimestre, ano')->get();
-    
-    public function gerarSimulados(Request $request){
-        $prova = new Simulado();
-        $prova->prazo = $request->input('prazo');
-        $prova->descricao = $request->input('descricao');
-        $prova->ano = $request->input('ano');
-        $prova->bimestre = $request->input('bimestre');
-        $prova->save();
-        $turmas = $request->input('turmas');
-        $discs = Disciplina::where('ativo',true)->get();
-        foreach($turmas as $turmaId){
-            $turma = Turma::find($turmaId);
-            foreach($discs as $disc){
-                if($disc->ensino=="fund" && $turma->ensino=="fund"){
-                    $validador = Questao::where('simulado_id', "$prova->id")->where('turma_id', "$turmaId")->where('disciplina_id', "$disc->id")->count();
-                    if($validador == 0){
-                        $quest = new Questao();
-                        $quest->simulado_id = $prova->id;
-                        $quest->turma_id = $turmaId;
-                        $quest->disciplina_id = $disc->id;
-                        $quest->save();
-
-                        $quest = new ConteudoProva();
-                        $quest->simulado_id = $prova->id;
-                        $quest->turma_id = $turmaId;
-                        $quest->disciplina_id = $disc->id;
-                        $quest->save();
-                    }
-                } else if($disc->ensino=="medio" && $turma->ensino=="medio"){
-                    $validador = Questao::where('simulado_id', "$prova->id")->where('turma_id', "$turmaId")->where('disciplina_id', "$disc->id")->count();
-                    if($validador == 0){
-                        $quest = new Questao();
-                        $quest->simulado_id = $prova->id;
-                        $quest->turma_id = $turmaId;
-                        $quest->disciplina_id = $disc->id;
-                        $quest->save();
-
-                        $quest = new ConteudoProva();
-                        $quest->simulado_id = $prova->id;
-                        $quest->turma_id = $turmaId;
-                        $quest->disciplina_id = $disc->id;
-                        $quest->save();
-                    }
-                }
-            }
-        }
-        return back()->with('mensagem', 'Campos para anexar os conteúdos e questões gerados com sucesso!')->with('type', 'success');
-    }
 
     public function painelSimulados($provaId){
         $prova = Simulado::find($provaId);
         $ano = $prova->ano;
+        $fundSeries = "";
         $fundTurmas = "";
         $fundDiscs = "";
         $contFunds = "";
         $medioTurmas = "";
         $medioDiscs = "";
         $contMedios = "";
+        $medioSeries = "";
         $ensino = "";
-        $fundTurmas = Turma::where('ensino','fund')->where('ativo',true)->orderBy('serie')->orderBy('turma')->get();
-        $turmaIdsFund = array();
-        foreach($fundTurmas as $fundTurma){
-            $turmaIdsFund[] = $fundTurma->id;
+        $provaTurmas = array();
+        $turmasSimulado = ConteudoProva::where('simulado_id', "$provaId")->select(DB::raw("turma_id"))->groupBy('turma_id')->get();
+        foreach($turmasSimulado as $turma){
+            $provaTurmas[] = $turma->turma_id;
         }
-        $validadorFund = Questao::where('simulado_id', "$provaId")->whereIn('turma_id', $turmaIdsFund)->count();
-        if($validadorFund!=0){
-            $ensino = "fund";
-            $anexosFund = Questao::where('simulado_id',"$provaId")->whereIn('turma_id', $turmaIdsFund)->distinct('disciplina_id')->get();
-            $discIdsFund = array();
-            foreach($anexosFund as $anexo){
-                $discIdsFund[] = $anexo->disciplina_id;
+        $fundTurmas = Turma::whereIn('id',$provaTurmas)->where('ensino','fund')->where('ativo',true)->orderBy('serie')->orderBy('turma')->get();
+        if(isset($fundTurmas)){
+            $turmaIdsFund = array();
+            foreach($fundTurmas as $fundTurma){
+                $turmaIdsFund[] = $fundTurma->id;
             }
-            $fundSeries = Turma::whereIn('id', $turmaIdsFund)->select(DB::raw("serie"))->groupBy('serie')->get();
-            $fundDiscs = Disciplina::orWhereIn('id', $discIdsFund)->where('ativo',true)->with('turmas')->orderBy('nome')->get();
-            $contFunds = Questao::where('simulado_id', "$provaId")->whereIn('turma_id', $turmaIdsFund)->orderBy('disciplina_id')->get();
-        }
-        $medioTurmas = Turma::where('ensino','medio')->where('ativo',true)->orderBy('serie')->orderBy('turma')->get();
-        $turmaIdsMedio = array();
-        foreach($medioTurmas as $medioTurma){
-            $turmaIdsMedio[] = $medioTurma->id;
-        }
-        $validadorMedio = Questao::where('simulado_id', "$provaId")->whereIn('turma_id', $turmaIdsMedio)->count();
-        if($validadorMedio!=0){
-            $ensino = "medio";
-            $anexosMed = Questao::where('simulado_id',"$provaId")->whereIn('turma_id', $turmaIdsMedio)->distinct('disciplina_id')->get();
-            $discIdsMed = array();
-            foreach($anexosMed as $anexo){
-                $discIdsMed[] = $anexo->disciplina_id;
+            $validadorFund = Questao::where('simulado_id', "$provaId")->whereIn('turma_id', $turmaIdsFund)->count();
+            if($validadorFund!=0){
+                $ensino = "fund";
+                $anexosFund = Questao::where('simulado_id',"$provaId")->whereIn('turma_id', $turmaIdsFund)->distinct('disciplina_id')->get();
+                $discIdsFund = array();
+                foreach($anexosFund as $anexo){
+                    $discIdsFund[] = $anexo->disciplina_id;
+                }
+                $fundSeries = Turma::whereIn('id', $turmaIdsFund)->select(DB::raw("serie"))->groupBy('serie')->get();
+                $fundDiscs = Disciplina::orWhereIn('id', $discIdsFund)->where('ativo',true)->with('turmas')->orderBy('nome')->get();
+                $contFunds = Questao::where('simulado_id', "$provaId")->whereIn('turma_id', $turmaIdsFund)->orderBy('disciplina_id')->get();
             }
-            $medioSeries = Turma::whereIn('id', $turmaIdsMedio)->select(DB::raw("serie"))->groupBy('serie')->get();
-            $medioDiscs = Disciplina::orWhereIn('id', $discIdsMed)->where('ativo',true)->with('turmas')->orderBy('nome')->get();
-            $contMedios = Questao::where('simulado_id', "$provaId")->whereIn('turma_id', $turmaIdsMedio)->orderBy('disciplina_id')->get();
+        }
+        $medioTurmas = Turma::whereIn('id',$provaTurmas)->where('ensino','medio')->where('ativo',true)->orderBy('serie')->orderBy('turma')->get();
+        if(isset($medioTurmas)){
+            $turmaIdsMedio = array();
+            foreach($medioTurmas as $medioTurma){
+                $turmaIdsMedio[] = $medioTurma->id;
+            }
+            $validadorMedio = Questao::where('simulado_id', "$provaId")->whereIn('turma_id', $turmaIdsMedio)->count();
+            if($validadorMedio!=0){
+                $ensino = "medio";
+                $anexosMed = Questao::where('simulado_id',"$provaId")->whereIn('turma_id', $turmaIdsMedio)->distinct('disciplina_id')->get();
+                $discIdsMed = array();
+                foreach($anexosMed as $anexo){
+                    $discIdsMed[] = $anexo->disciplina_id;
+                }
+                $medioSeries = Turma::whereIn('id', $turmaIdsMedio)->select(DB::raw("serie"))->groupBy('serie')->get();
+                $medioDiscs = Disciplina::orWhereIn('id', $discIdsMed)->where('ativo',true)->with('turmas')->orderBy('nome')->get();
+                $contMedios = Questao::where('simulado_id', "$provaId")->whereIn('turma_id', $turmaIdsMedio)->orderBy('disciplina_id')->get();
+            }
         }
         if($validadorFund!=0 && $validadorMedio!=0){
             $ensino = "todos";
@@ -558,39 +520,48 @@ class OutroController extends Controller
         $medioDiscs = "";
         $contMedios = "";
         $ensino = "";
-        $fundTurmas = Turma::where('ensino','fund')->where('ativo',true)->orderBy('serie')->orderBy('turma')->get();
-        $turmaIdsFund = array();
-        foreach($fundTurmas as $fundTurma){
-            $turmaIdsFund[] = $fundTurma->id;
+        $provaTurmas = array();
+        $turmasSimulado = ConteudoProva::where('simulado_id', "$provaId")->select(DB::raw("turma_id"))->groupBy('turma_id')->get();
+        foreach($turmasSimulado as $turma){
+            $provaTurmas[] = $turma->turma_id;
         }
-        $validadorFund = ConteudoProva::where('simulado_id', "$provaId")->whereIn('turma_id', $turmaIdsFund)->count();
-        if($validadorFund!=0){
-            $ensino = "fund";
-            $anexosFund = ConteudoProva::where('simulado_id',"$provaId")->whereIn('turma_id', $turmaIdsFund)->distinct('disciplina_id')->get();
-            $discIdsFund = array();
-            foreach($anexosFund as $anexo){
-                $discIdsFund[] = $anexo->disciplina_id;
+        $fundTurmas = Turma::whereIn('id',$provaTurmas)->where('ensino','fund')->where('ativo',true)->orderBy('serie')->orderBy('turma')->get();
+        if(isset($fundTurmas)){
+            $turmaIdsFund = array();
+            foreach($fundTurmas as $fundTurma){
+                $turmaIdsFund[] = $fundTurma->id;
             }
-            $fundSeries = Turma::whereIn('id', $turmaIdsFund)->select(DB::raw("serie"))->groupBy('serie')->get();
-            $fundDiscs = Disciplina::orWhereIn('id', $discIdsFund)->where('ativo',true)->with('turmas')->orderBy('nome')->get();
-            $contFunds = ConteudoProva::where('simulado_id', "$provaId")->whereIn('turma_id', $turmaIdsFund)->orderBy('disciplina_id')->get();
-        }
-        $medioTurmas = Turma::where('ensino','medio')->where('ativo',true)->orderBy('serie')->orderBy('turma')->get();
-        $turmaIdsMedio = array();
-        foreach($medioTurmas as $medioTurma){
-            $turmaIdsMedio[] = $medioTurma->id;
-        }
-        $validadorMedio = ConteudoProva::where('simulado_id', "$provaId")->whereIn('turma_id', $turmaIdsMedio)->count();
-        if($validadorMedio!=0){
-            $ensino = "medio";
-            $anexosMed = ConteudoProva::where('simulado_id',"$provaId")->whereIn('turma_id', $turmaIdsMedio)->distinct('disciplina_id')->get();
-            $discIdsMed = array();
-            foreach($anexosMed as $anexo){
-                $discIdsMed[] = $anexo->disciplina_id;
+            $validadorFund = ConteudoProva::where('simulado_id', "$provaId")->whereIn('turma_id', $turmaIdsFund)->count();
+            if($validadorFund!=0){
+                $ensino = "fund";
+                $anexosFund = ConteudoProva::where('simulado_id',"$provaId")->whereIn('turma_id', $turmaIdsFund)->distinct('disciplina_id')->get();
+                $discIdsFund = array();
+                foreach($anexosFund as $anexo){
+                    $discIdsFund[] = $anexo->disciplina_id;
+                }
+                $fundSeries = Turma::whereIn('id', $turmaIdsFund)->select(DB::raw("serie"))->groupBy('serie')->get();
+                $fundDiscs = Disciplina::orWhereIn('id', $discIdsFund)->where('ativo',true)->with('turmas')->orderBy('nome')->get();
+                $contFunds = ConteudoProva::where('simulado_id', "$provaId")->whereIn('turma_id', $turmaIdsFund)->orderBy('disciplina_id')->get();
             }
-            $medioSeries = Turma::whereIn('id', $turmaIdsMedio)->select(DB::raw("serie"))->groupBy('serie')->get();
-            $medioDiscs = Disciplina::orWhereIn('id', $discIdsMed)->where('ativo',true)->with('turmas')->orderBy('nome')->get();
-            $contMedios = ConteudoProva::where('simulado_id', "$provaId")->whereIn('turma_id', $turmaIdsMedio)->orderBy('disciplina_id')->get();
+        }
+        $medioTurmas = Turma::whereIn('id',$provaTurmas)->where('ensino','medio')->where('ativo',true)->orderBy('serie')->orderBy('turma')->get();
+        if(isset($medioTurmas)){
+            $turmaIdsMedio = array();
+            foreach($medioTurmas as $medioTurma){
+                $turmaIdsMedio[] = $medioTurma->id;
+            }
+            $validadorMedio = ConteudoProva::where('simulado_id', "$provaId")->whereIn('turma_id', $turmaIdsMedio)->count();
+            if($validadorMedio!=0){
+                $ensino = "medio";
+                $anexosMed = ConteudoProva::where('simulado_id',"$provaId")->whereIn('turma_id', $turmaIdsMedio)->distinct('disciplina_id')->get();
+                $discIdsMed = array();
+                foreach($anexosMed as $anexo){
+                    $discIdsMed[] = $anexo->disciplina_id;
+                }
+                $medioSeries = Turma::whereIn('id', $turmaIdsMedio)->select(DB::raw("serie"))->groupBy('serie')->get();
+                $medioDiscs = Disciplina::orWhereIn('id', $discIdsMed)->where('ativo',true)->with('turmas')->orderBy('nome')->get();
+                $contMedios = ConteudoProva::where('simulado_id', "$provaId")->whereIn('turma_id', $turmaIdsMedio)->orderBy('disciplina_id')->get();
+            }
         }
         if($validadorFund!=0 && $validadorMedio!=0){
             $ensino = "todos";
