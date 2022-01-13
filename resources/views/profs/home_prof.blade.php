@@ -62,6 +62,17 @@
                 </div>
             </div>
         </div>
+        <div class="col-auto">
+            <div class="card border-primary text-center centralizado">
+                <div class="card-body">
+                    <h5>Planejamentos</h5>
+                    <p class="card-text">
+                        Cadastrar e Consultar Planejamentos
+                    </p>
+                    <a href="/prof/planejamentos/{{date("Y")}}" class="btn btn-primary">Planejamentos</a>
+                </div>
+            </div>
+        </div>
         {{--  <div class="col-auto">
             <div class="card border-primary text-center centralizado">
                 <div class="card-body">
@@ -125,17 +136,6 @@
                         Anexar e baixar os conteúdos
                     </p>
                     <a href="/prof/conteudosProvas/{{date("Y")}}" class="btn btn-primary">Conteúdos</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-auto">
-            <div class="card border-primary text-center centralizado">
-                <div class="card-body">
-                    <h5>Planejamentos</h5>
-                    <p class="card-text">
-                        Cadastrar e Consultar Planejamentos
-                    </p>
-                    <a href="/prof/planejamentos/{{date("Y")}}" class="btn btn-primary">Planejamentos</a>
                 </div>
             </div>
         </div> --}}

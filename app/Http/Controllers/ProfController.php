@@ -1158,51 +1158,98 @@ class ProfController extends Controller
         return view('profs.home_planejamentos',compact('ano','anos','planejamentos'));
     }
 
-    public function painelPlanejamentos($simId){
-        $planejamento = Planejamento::find($simId);
-        $ano = $planejamento->ano;
+    public function painelPlanejamentos($provaId){
+        $prova = Planejamento::find($provaId);
+        $ano = $prova->ano;
+        $fundSeries = "";
         $fundTurmas = "";
         $fundDiscs = "";
         $contFunds = "";
+        $medioSeries = "";
         $medioTurmas = "";
         $medioDiscs = "";
         $contMedios = "";
         $ensino = "";
-        $validadorFund = 0;
-        $validadorMedio = 0;
+        $profDisc = "";
+        $discIdsProfFund = array();
+        $discIdsProfMedio = array();
+        $discsProf = array();
+        $discsProfFund = array();
+        $discsProfMedio = array();
+        $profTurmas = array();
         $profId = Auth::user()->id;
+        $provaTurmas = array();
+        $turmasSimulado = AnexoPlanejamento::where('planejamento_id', "$provaId")->select(DB::raw("turma_id"))->groupBy('turma_id')->get();
+        foreach($turmasSimulado as $turma){
+            $provaTurmas[] = $turma->turma_id;
+        }
         $profDiscs = ProfDisciplina::where('prof_id',"$profId")->get();
-        $discIds = array();
-        foreach($profDiscs as $disc){
-            $validador = 0;
-            $validador = AnexoPlanejamento::where('planejamento_id',"$simId")->where('disciplina_id',"$disc->disciplina_id")->count();
-            if($validador!=0){
-                $discIds[] = $disc->disciplina_id;
-                $disc = Disciplina::find($disc->disciplina_id);
-                if($disc->ensino=="fund"){
-                    $validadorFund = 1;
-                } else {
-                    $validadorMedio = 1;
+        foreach ($profDiscs as $disc) {
+            $disciplina = Disciplina::find($disc->disciplina_id);
+            if($disciplina->ensino=="fund"){
+                $discIdsProfFund[] = $disciplina->id;
+                $ensinoProfFund = 1;
+                $profDisc = ProfDisciplina::where('prof_id',"$profId")->where('disciplina_id',"$disc->disciplina_id")->first();
+                $discsProfFund[] = $profDisc->id;
+                $profDisc = "";
+            } else if($disciplina->ensino=="medio"){
+                $discIdsProfMedio[] = $disciplina->id;
+                $ensinoProfMedio = 1;
+                $profDisc = ProfDisciplina::where('prof_id',"$profId")->where('disciplina_id',"$disc->disciplina_id")->first();
+                $discsProfMedio[] = $profDisc->id;
+                $profDisc = "";
+            }
+            $profTurma = ProfTurma::where('prof_disciplina_id',"$disc->id")->get();
+            foreach ($profTurma as $turma) {
+                $profTurmas[] = $turma->turma_id;
+            }
+            $profTurma = "";
+        }
+        $fundTurmas = Turma::whereIn('id',$provaTurmas)->whereIn('id', $profTurmas)->where('ensino','fund')->where('ativo',true)->orderBy('serie')->orderBy('turma')->get();
+        if(isset($fundTurmas)){
+            $turmaIdsFund = array();
+            foreach($fundTurmas as $fundTurma){
+                $turmaIdsFund[] = $fundTurma->id;
+            }
+            $validadorFund = AnexoPlanejamento::where('planejamento_id', "$provaId")->whereIn('turma_id', $turmaIdsFund)->count();
+            if($validadorFund!=0){
+                $ensino = "fund";
+                $anexosFund = AnexoPlanejamento::where('planejamento_id',"$provaId")->whereIn('turma_id', $turmaIdsFund)->distinct('disciplina_id')->get();
+                $discIdsFund = array();
+                foreach($anexosFund as $anexo){
+                    $discIdsFund[] = $anexo->disciplina_id;
                 }
+                $fundSeries = Turma::whereIn('id', $turmaIdsFund)->select(DB::raw("serie"))->groupBy('serie')->get();
+                $fundDiscs = Disciplina::orWhereIn('id', $discIdsProfFund)->where('ativo',true)->with('turmas')->orderBy('nome')->get();
+                $contFunds = AnexoPlanejamento::where('planejamento_id', "$provaId")->whereIn('turma_id', $turmaIdsFund)->orderBy('disciplina_id')->get();
             }
         }
-        if($validadorFund!=0){
-            $ensino = "fund";
-        }
-        if($validadorMedio!=0){
-            $ensino = "medio";
+        $medioTurmas = Turma::whereIn('id',$provaTurmas)->whereIn('id', $profTurmas)->where('ensino','medio')->where('ativo',true)->orderBy('serie')->orderBy('turma')->get();
+        if(isset($medioTurmas)){
+            $turmaIdsMedio = array();
+            foreach($medioTurmas as $medioTurma){
+                $turmaIdsMedio[] = $medioTurma->id;
+            }
+            $validadorMedio = AnexoPlanejamento::where('planejamento_id', "$provaId")->whereIn('turma_id', $turmaIdsMedio)->count();
+            if($validadorMedio!=0){
+                $ensino = "medio";
+                $anexosMed = AnexoPlanejamento::where('planejamento_id',"$provaId")->whereIn('turma_id', $turmaIdsMedio)->distinct('disciplina_id')->get();
+                $discIdsMed = array();
+                foreach($anexosMed as $anexo){
+                    $discIdsMed[] = $anexo->disciplina_id;
+                }
+                $medioSeries = Turma::whereIn('id', $turmaIdsMedio)->select(DB::raw("serie"))->groupBy('serie')->get();
+                $medioDiscs = Disciplina::orWhereIn('id', $discIdsProfMedio)->where('ativo',true)->with('turmas')->orderBy('nome')->get();
+                $contMedios = AnexoPlanejamento::where('planejamento_id', "$provaId")->whereIn('turma_id', $turmaIdsMedio)->orderBy('disciplina_id')->get();
+            }
         }
         if($validadorFund!=0 && $validadorMedio!=0){
             $ensino = "todos";
         }
-        $fundTurmas = DB::table('anexo_planejamentos')->where('planejamento_id', "$simId")->where('ensino','fund')->select(DB::raw("serie"))->groupBy('serie')->get();
-        $fundDiscs = Disciplina::orWhereIn('id', $discIds)->where('ativo',true)->where('ensino','fund')->with('turmas')->orderBy('nome')->get();
-        $contFunds = AnexoPlanejamento::where('planejamento_id', "$simId")->where('ensino','fund')->orWhereIn('disciplina_id', $discIds)->orderBy('disciplina_id')->get();
-
-        $medioTurmas = DB::table('anexo_planejamentos')->where('planejamento_id', "$simId")->where('ensino','medio')->select(DB::raw("serie"))->groupBy('serie')->get();
-        $medioDiscs = Disciplina::orWhereIn('id', $discIds)->where('ativo',true)->where('ensino','medio')->with('turmas')->orderBy('nome')->get();
-        $contMedios = AnexoPlanejamento::where('planejamento_id', "$simId")->where('ensino','medio')->orWhereIn('disciplina_id', $discIds)->orderBy('disciplina_id')->get();
-        return view('profs.planejamentos',compact('ensino','planejamento','ano','fundTurmas','medioTurmas','fundDiscs','medioDiscs','contFunds','contMedios'));
+        if($validadorFund==0 && $validadorMedio==0){
+            return back()->with('mensagem', 'Não foram criados campos de conteúdos para essa prova!')->with('type', 'warning');
+        }
+        return view('profs.planejamentos',compact('ensino','prova','ano','fundSeries','fundTurmas','medioSeries','medioTurmas','fundDiscs','medioDiscs','contFunds','contMedios'));
     }
 
     public function anexarPlanejamento(Request $request, $id)

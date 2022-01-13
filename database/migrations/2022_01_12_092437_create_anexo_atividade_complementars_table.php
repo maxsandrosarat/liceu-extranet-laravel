@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAnexoPlanejamentosTable extends Migration
+class CreateAnexoAtividadeComplementarsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,19 +13,17 @@ class CreateAnexoPlanejamentosTable extends Migration
      */
     public function up()
     {
-        Schema::create('anexo_planejamentos', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->unsignedBigInteger('planejamento_id');
-            $table->foreign('planejamento_id')->references('id')->on('planejamentos');
-            $table->integer('serie');
-            $table->string('ensino');
+        Schema::create('anexo_atividade_complementars', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('atividade_complementar_id');
+            $table->foreign('atividade_complementar_id')->references('id')->on('atividades_complementares');
             $table->unsignedBigInteger('turma_id');
             $table->foreign('turma_id')->references('id')->on('turmas');
             $table->unsignedBigInteger('disciplina_id');
             $table->foreign('disciplina_id')->references('id')->on('disciplinas');
+            $table->date('data_utilizacao')->nullable();
             $table->string('arquivo')->nullable();
-            $table->boolean('conferido')->default(false);
-            $table->longText('comentario')->nullable();
+            $table->boolean('impresso')->default(false);
             $table->timestamps();
         });
     }
@@ -37,6 +35,6 @@ class CreateAnexoPlanejamentosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('anexo_planejamentos');
+        Schema::dropIfExists('anexo_atividade_complementars');
     }
 }

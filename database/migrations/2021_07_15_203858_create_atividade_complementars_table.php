@@ -15,16 +15,11 @@ class CreateAtividadeComplementarsTable extends Migration
     {
         Schema::create('atividades_complementares', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('prof_id');
-            $table->foreign('prof_id')->references('id')->on('profs');
-            $table->unsignedBigInteger('turma_id');
-            $table->foreign('turma_id')->references('id')->on('turmas');
-            $table->unsignedBigInteger('disciplina_id');
-            $table->foreign('disciplina_id')->references('id')->on('disciplinas');
-            $table->date('data')->nullable();
-            $table->string('descricao')->nullable();
-            $table->string('arquivo')->nullable();
-            $table->boolean('impresso')->default(false);
+            $table->date('data_inicio');
+            $table->date('data_fim');
+            $table->string('descricao');
+            $table->integer('bimestre');
+            $table->integer('ano');
             $table->timestamps();
         });
     }

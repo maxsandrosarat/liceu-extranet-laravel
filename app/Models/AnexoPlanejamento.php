@@ -13,6 +13,10 @@ class AnexoPlanejamento extends Model
         return $this->belongsTo('App\Models\Planejamento');
     }
 
+    public function turma(){
+        return $this->belongsTo('App\Models\Turma');
+    }
+
     public function disciplina(){
         return $this->belongsTo('App\Models\Disciplina');
     }

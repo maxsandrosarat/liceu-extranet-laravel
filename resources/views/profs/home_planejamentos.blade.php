@@ -3,11 +3,13 @@
 @section('body')
     <div class="card border">
         <div class="card-body">
+            <a href="/prof" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="Voltar"><i class="material-icons white">reply</i></a>
+            <br/><br/>
             @if(session('mensagem'))
-            <div class="alert alert-success" role="alert">
-                <button type="button" class="close" data-dismiss="alert">x</button>
-                <p>{{session('mensagem')}}</p>
-            </div>
+                <div class="alert @if(session('type')=="success") alert-success @else @if(session('type')=="warning") alert-warning @else @if(session('type')=="danger") alert-danger @else alert-info @endif @endif @endif alert-dismissible fade show" role="alert">
+                    {{session('mensagem')}}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
             @endif
             @if(count($planejamentos)==0)
                 <div class="alert alert-danger" role="alert">
@@ -17,7 +19,7 @@
             <form action="/prof/planejamentos" method="GET">
                 @csrf
                 <label for="ano">Selecione o ano:
-                <select class="custom-select" id="ano" name="ano">
+                <select class="form-select" id="ano" name="ano">
                     <option value="">Selecione</option>
                     @foreach ($anos as $an)
                     <option value="{{$an->ano}}">{{$an->ano}}</option>
@@ -28,7 +30,7 @@
             <h5 class="card-title">Planejamentos - {{$ano}}</h5>
             <div class="table-responsive-xl">
             <table class="table table-striped table-ordered table-hover">
-                <thead class="thead-dark">
+                <thead class="table-dark">
                     <tr>
                         <th>Código</th>
                         <th>Descrição</th>
@@ -51,7 +53,7 @@
                             </ul>
                         </td>
                         <td>
-                            <a href="/prof/planejamentos/painel/{{$plan->id}}" class="badge badge-primary" data-toggle="tooltip" data-placement="right" title="Painel"><i class="material-icons md-48">attach_file</i></a>
+                            <a href="/prof/planejamentos/painel/{{$plan->id}}" class="badge bg-primary" data-toggle="tooltip" data-placement="right" title="Painel"><i class="material-icons md-48">attach_file</i></a>
                         </td>
                     </tr>
                     @endforeach
@@ -61,6 +63,4 @@
             @endif
         </div>
     </div>
-    <br>
-    <a href="/prof" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="Voltar"><i class="material-icons white">reply</i></a>
 @endsection

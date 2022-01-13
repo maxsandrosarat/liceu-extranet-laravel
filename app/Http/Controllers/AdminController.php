@@ -2433,30 +2433,35 @@ class AdminController extends Controller
         $sim->descricao = $request->input('descricao');
         $sim->ano = $request->input('ano');
         $sim->save();
-        $turmas = Turma::where('ativo',true)->where('turma','A')->get();
-        $discs = Disciplina::where('ativo',true)->get();
+        $turmas = Turma::where('ativo',true)->get();
+        $turmasIds = array();
         foreach($turmas as $turma){
-            $serie = $turma->serie;
-            $ensino = $turma->ensino;
+            $turmasIds[] = $turma->id;
+        }
+        $discs = Disciplina::where('ativo',true)->get();
+        foreach($turmasIds as $turmaId){
+            $turma = Turma::find($turmaId);
             foreach($discs as $disc){
-                if($disc->ensino=="fund" && $ensino=="fund"){
-                    $validador = AnexoPlanejamento::where('planejamento_id', "$sim->id")->where('serie', "$serie")->where('ensino', 'fund')->where('disciplina_id', "$disc->id")->count();
+                if($disc->ensino=="fund" && $turma->ensino=="fund"){
+                    $validador = AnexoPlanejamento::where('planejamento_id', "$sim->id")->where('turma_id', "$turmaId")->where('disciplina_id', "$disc->id")->count();
                     if($validador == 0){
                         $quest = new AnexoPlanejamento();
                         $quest->planejamento_id = $sim->id;
-                        $quest->serie = $serie;
-                        $quest->ensino = "fund";
+                        $quest->turma_id = $turmaId;
                         $quest->disciplina_id = $disc->id;
+                        $quest->serie = $turma->serie;
+                        $quest->ensino = "fund";
                         $quest->save();
                     }
-                } else if($disc->ensino=="medio" && $ensino=="medio"){
-                    $validador = AnexoPlanejamento::where('planejamento_id', "$sim->id")->where('serie', "$serie")->where('ensino', 'medio')->where('disciplina_id', "$disc->id")->count();
+                } else if($disc->ensino=="medio" && $turma->ensino=="medio"){
+                    $validador = AnexoPlanejamento::where('planejamento_id', "$sim->id")->where('turma_id', "$turmaId")->where('disciplina_id', "$disc->id")->count();
                     if($validador == 0){
                         $quest = new AnexoPlanejamento();
                         $quest->planejamento_id = $sim->id;
-                        $quest->serie = $serie;
-                        $quest->ensino = "medio";
+                        $quest->turma_id = $turmaId;
                         $quest->disciplina_id = $disc->id;
+                        $quest->serie = $turma->serie;
+                        $quest->ensino = "medio";
                         $quest->save();
                     }
                 }
@@ -2465,34 +2470,68 @@ class AdminController extends Controller
         return back()->with('mensagem', 'Campos para anexar os planejamentos gerados com sucesso!')->with('type', 'success');
     }
 
-    public function painelPlanejamentos($simId){
-        $planejamento = Planejamento::find($simId);
-        $ano = $planejamento->ano;
+    public function painelPlanejamentos($provaId){
+        $prova = Planejamento::find($provaId);
+        $ano = $prova->ano;
+        $fundSeries = "";
         $fundTurmas = "";
         $fundDiscs = "";
         $contFunds = "";
         $medioTurmas = "";
         $medioDiscs = "";
         $contMedios = "";
+        $medioSeries = "";
         $ensino = "";
-        $anexosFund = AnexoPlanejamento::where('planejamento_id',"$simId")->where('ensino','fund')->distinct('disciplina_id')->get();
-        $discIdsFund = array();
-        foreach($anexosFund as $anexo){
-            $discIdsFund[] = $anexo->disciplina_id;
+        $provaTurmas = array();
+        $turmasSimulado = AnexoPlanejamento::where('planejamento_id', "$provaId")->select(DB::raw("turma_id"))->groupBy('turma_id')->get();
+        foreach($turmasSimulado as $turma){
+            $provaTurmas[] = $turma->turma_id;
         }
-        $fundTurmas = DB::table('anexo_planejamentos')->where('planejamento_id', "$simId")->where('ensino','fund')->select(DB::raw("serie"))->groupBy('serie')->get();
-        $fundDiscs = Disciplina::orWhereIn('id', $discIdsFund)->where('ativo',true)->with('turmas')->orderBy('nome')->get();
-        $contFunds = AnexoPlanejamento::where('planejamento_id', "$simId")->where('ensino','fund')->orderBy('disciplina_id')->get();
-
-        $anexosMed = AnexoPlanejamento::where('planejamento_id',"$simId")->where('ensino','medio')->distinct('disciplina_id')->get();
-        $discIdsMed = array();
-        foreach($anexosMed as $anexo){
-            $discIdsMed[] = $anexo->disciplina_id;
+        $fundTurmas = Turma::whereIn('id',$provaTurmas)->where('ensino','fund')->where('ativo',true)->orderBy('serie')->orderBy('turma')->get();
+        if(isset($fundTurmas)){
+            $turmaIdsFund = array();
+            foreach($fundTurmas as $fundTurma){
+                $turmaIdsFund[] = $fundTurma->id;
+            }
+            $validadorFund = AnexoPlanejamento::where('planejamento_id', "$provaId")->whereIn('turma_id', $turmaIdsFund)->count();
+            if($validadorFund!=0){
+                $ensino = "fund";
+                $anexosFund = AnexoPlanejamento::where('planejamento_id',"$provaId")->whereIn('turma_id', $turmaIdsFund)->distinct('disciplina_id')->get();
+                $discIdsFund = array();
+                foreach($anexosFund as $anexo){
+                    $discIdsFund[] = $anexo->disciplina_id;
+                }
+                $fundSeries = Turma::whereIn('id', $turmaIdsFund)->select(DB::raw("serie"))->groupBy('serie')->get();
+                $fundDiscs = Disciplina::orWhereIn('id', $discIdsFund)->where('ativo',true)->with('turmas')->orderBy('nome')->get();
+                $contFunds = AnexoPlanejamento::where('planejamento_id', "$provaId")->whereIn('turma_id', $turmaIdsFund)->orderBy('disciplina_id')->get();
+            }
         }
-        $medioTurmas = DB::table('anexo_planejamentos')->where('planejamento_id', "$simId")->where('ensino','medio')->select(DB::raw("serie"))->groupBy('serie')->get();
-        $medioDiscs = Disciplina::orWhereIn('id', $discIdsMed)->where('ativo',true)->with('turmas')->orderBy('nome')->get();
-        $contMedios = AnexoPlanejamento::where('planejamento_id', "$simId")->where('ensino','medio')->orderBy('disciplina_id')->get();
-        return view('admin.planejamentos',compact('planejamento','ano','fundTurmas','medioTurmas','fundDiscs','medioDiscs','contFunds','contMedios'));
+        $medioTurmas = Turma::whereIn('id',$provaTurmas)->where('ensino','medio')->where('ativo',true)->orderBy('serie')->orderBy('turma')->get();
+        if(isset($medioTurmas)){
+            $turmaIdsMedio = array();
+            foreach($medioTurmas as $medioTurma){
+                $turmaIdsMedio[] = $medioTurma->id;
+            }
+            $validadorMedio = AnexoPlanejamento::where('planejamento_id', "$provaId")->whereIn('turma_id', $turmaIdsMedio)->count();
+            if($validadorMedio!=0){
+                $ensino = "medio";
+                $anexosMed = AnexoPlanejamento::where('planejamento_id',"$provaId")->whereIn('turma_id', $turmaIdsMedio)->distinct('disciplina_id')->get();
+                $discIdsMed = array();
+                foreach($anexosMed as $anexo){
+                    $discIdsMed[] = $anexo->disciplina_id;
+                }
+                $medioSeries = Turma::whereIn('id', $turmaIdsMedio)->select(DB::raw("serie"))->groupBy('serie')->get();
+                $medioDiscs = Disciplina::orWhereIn('id', $discIdsMed)->where('ativo',true)->with('turmas')->orderBy('nome')->get();
+                $contMedios = AnexoPlanejamento::where('planejamento_id', "$provaId")->whereIn('turma_id', $turmaIdsMedio)->orderBy('disciplina_id')->get();
+            }
+        }
+        if($validadorFund!=0 && $validadorMedio!=0){
+            $ensino = "todos";
+        }
+        if($validadorFund==0 && $validadorMedio==0){
+            return back()->with('mensagem', 'Não foram criados campos de conteúdos para essa prova!')->with('type', 'warning');
+        }
+        return view('admin.planejamentos',compact('ensino','prova','ano','fundSeries','fundTurmas','medioSeries','medioTurmas','fundDiscs','medioDiscs','contFunds','contMedios'));
     }
 
     public function anexarPlanejamento(Request $request, $id)
@@ -2517,7 +2556,7 @@ class AdminController extends Controller
         $discId = $cont->disciplina_id;
         $disciplina = Disciplina::find($discId);
         $planejamento = Planejamento::find($cont->planejamento_id);
-        $nameFile = $cont->serie."º - Planejamento ".$planejamento->descricao." - ".$disciplina->nome;
+        $nameFile = $cont->serie."º ". $cont->turma->turma ." - Planejamento ".$planejamento->descricao." - ".$disciplina->nome;
         if(isset($cont)){
             $path = Storage::disk('public')->getDriver()->getAdapter()->applyPathPrefix($cont->arquivo);
             $extension = pathinfo($path, PATHINFO_EXTENSION);

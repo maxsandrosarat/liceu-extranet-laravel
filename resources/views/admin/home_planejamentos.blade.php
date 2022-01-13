@@ -4,15 +4,15 @@
     <div class="card border">
         <div class="card-body">
             @if(session('mensagem'))
-            <div class="alert alert-success" role="alert">
-                <button type="button" class="close" data-dismiss="alert">x</button>
-                <p>{{session('mensagem')}}</p>
-            </div>
+                <div class="alert @if(session('type')=="success") alert-success @else @if(session('type')=="warning") alert-warning @else @if(session('type')=="danger") alert-danger @else alert-info @endif @endif @endif alert-dismissible fade show" role="alert">
+                    {{session('mensagem')}}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
             @endif
             <form action="/admin/planejamentos" method="GET">
                 @csrf
                 <label for="ano">Selecione o ano:
-                <select class="custom-select" id="ano" name="ano">
+                <select class="form-select" id="ano" name="ano">
                     <option value="">Selecione</option>
                     @foreach ($anos as $an)
                     <option value="{{$an->ano}}">{{$an->ano}}</option>
@@ -28,7 +28,7 @@
             <h5 class="card-title">Planejamentos - {{$ano}}</h5>
             <div class="table-responsive-xl">
             <table class="table table-striped table-ordered table-hover">
-                <thead class="thead-dark">
+                <thead class="table-dark">
                     <tr>
                         <th>Código</th>
                         <th>Descrição</th>
@@ -51,8 +51,8 @@
                             </ul>
                         </td>
                         <td>
-                            <a href="/admin/planejamentos/painel/{{$plan->id}}" class="badge badge-primary" data-toggle="tooltip" data-placement="right" title="Painel"><i class="material-icons md-48">attach_file</i></a>
-                            <button type="button" class="badge badge-danger" data-toggle="modal" data-target="#exampleModalDelete{{$plan->id}}"><i class="material-icons md-48">delete</i></button></td>
+                            <a href="/admin/planejamentos/painel/{{$plan->id}}" class="badge bg-primary" data-toggle="tooltip" data-placement="right" title="Painel"><i class="material-icons md-48">attach_file</i></a>
+                            <button type="button" class="badge bg-danger" data-toggle="modal" data-target="#exampleModalDelete{{$plan->id}}"><i class="material-icons md-48">delete</i></button></td>
                             <!-- Modal -->
                             <div class="modal fade bd-example-modal-lg" id="exampleModalDelete{{$plan->id}}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
@@ -82,7 +82,7 @@
     </div>
     <br>
     <!-- Button trigger modal -->
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" onclick="habilitarSubmit();">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="habilitarSubmit();">
         Gerar Painel
     </button>
 
@@ -92,20 +92,23 @@
         <div class="modal-content">
         <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Gerar Painel</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            </button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
             <div class="form-group">
                 <form action="/admin/planejamentos/gerar" method="POST">
                     @csrf
-                <label for="descricao">Descrição: </label>
-                <input class="form-control" type="text"  name="descricao" id="descricao" required>
-                <label for="ano">Ano: </label>
-                <input class="form-control" type="number"  name="ano" id="ano" required>
-                <br/><br/>
-                <button type="submit" id="processamento" class="btn btn-primary">Gerar</button>
+                    <div class="col-12 form-floating">
+                        <input class="form-control" type="text" name="descricao" id="descricao" placeholder="Descrição" required>
+                        <label for="descricao">Descrição</label>
+                    </div>
+                    <div class="col-12 form-floating">
+                        <input class="form-control" type="number" name="ano" id="ano" placeholder="Ano" required>
+                        <label for="ano">Ano</label>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" id="processamento" class="btn btn-primary">Gerar</button>
+                    </div>
                 </form>
             </div>
         </div>

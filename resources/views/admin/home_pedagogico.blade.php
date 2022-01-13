@@ -124,7 +124,7 @@
                 </div>
             </div>
         </div>
-        {{-- <div class="col-auto">
+        <div class="col-auto">
             <div class="card border-primary text-center centralizado">
                 <div class="card-body">
                     <h5>Planejamentos</h5>
@@ -135,7 +135,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-auto">
+        {{--  <div class="col-auto">
             <div class="card border-primary text-center centralizado">
                 <div class="card-body">
                     <h5>Atividades Extras</h5>
@@ -145,7 +145,7 @@
                     <a href="/atividadeExtra" class="btn btn-primary">Atividades Extras</a>
                 </div>
             </div>
-        </div> --}}
+        </div>  --}}
     </div>
 </div>
 @endsection
