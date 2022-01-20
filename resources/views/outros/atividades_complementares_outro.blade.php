@@ -3,7 +3,7 @@
 @section('body')
 <div class="card border">
     <div class="card-body">
-    <a href="/admin/atividadeComplementar/{{$ano}}" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="Voltar"><i class="material-icons white">reply</i></a>
+    <a href="/outro/atividadeComplementar/{{$ano}}" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="Voltar"><i class="material-icons white">reply</i></a>
     <br/><br/>
     @if($ensino=="fund" || $ensino=="todos")
             <h5 class="card-title">Painel de Atividades Complementares - Ensino Fundamental - {{$atividade->descricao}} - {{$atividade->bimestre}}º Bimestre - Ano: {{$atividade->ano}}</h5>
@@ -55,7 +55,7 @@
                                         @if($fundPertence===0) <td style="color:blue; text-align: center; font-weight:bold;">Não se <br/>Aplica</td>
                                         @else
                                         @if($contFund->arquivo=='')
-                                        <td style="color:red; text-align: center;"> Pendente <br/> <button type="button" class="badge bg-warning" data-bs-toggle="modal" data-bs-target="#exampleModalAnexar{{$contFund->id}}"><i class="material-icons md-18">cloud_upload</i></button> 
+                                        <td style="color:red; text-align: center;"> Pendente <br/>
                                     @else
                                         @if($contFund->comentario!="")
                                         <td style="text-align: center;"><a href="#" data-bs-toggle="modal" data-bs-target="#exampleModalConf{{$contFund->id}}"><i class="material-icons md-48 yellow" data-toggle="tooltip" data-placement="left" title="Problemas Encontrados">report_problem</i></a><br/>
@@ -67,56 +67,9 @@
                                             @endif
                                         @endif
                                         <p><b>{{date("d/m/Y", strtotime($contFund->data_utilizacao))}}</b></p>
-                                        <a type="button" class="badge bg-success" href="/admin/atividadeComplementar/download/{{$contFund->id}}"><i class="material-icons md-18">cloud_download</i></a> <button type="button" class="badge bg-warning" data-bs-toggle="modal" data-bs-target="#exampleModalAnexar{{$contFund->id}}"><i class="material-icons md-18">edit</i></button> <a type="button" class="badge bg-danger" data-bs-toggle="modal" data-bs-target="#exampleModalDelete{{$contFund->id}}"><i class="material-icons md-18 white">delete</i></a>
-                                        <!-- Modal Deletar -->
-                                        <div style="text-align: center;" class="modal fade" id="exampleModalDelete{{$contFund->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="exampleModalLabel">Excluir Atividade Complementar {{$atividade->descricao}} - {{$contFund->disciplina->nome}} - {{$contFund->turma->serie}}º ANO {{$contFund->turma->turma}}</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <h5>Tem certeza que deseja excluir esse arquivo?</h5>
-                                                        <p>Não será possivel reverter esta ação.</p>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                                        <a href="/admin/atividadeComplementar/apagar/{{$contFund->id}}" class="btn btn-sm btn-danger" data-toggle="tooltip" data-placement="right" title="Inativar">Excluir</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <a type="button" class="badge bg-success" href="/outro/atividadeComplementar/download/{{$contFund->id}}"><i class="material-icons md-18">cloud_download</i></a>
                                     @endif
                                     </td>
-                                    <!-- Modal Anexar -->
-                                            <div style="text-align: center;" class="modal fade" id="exampleModalAnexar{{$contFund->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog" role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalLabel">Anexar Atividade Complementar {{$atividade->descricao}} - {{$contFund->disciplina->nome}} - {{$contFund->turma->serie}}º ANO {{$contFund->turma->turma}}</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <form method="POST" action="/admin/atividadeComplementar/anexar/{{$contFund->id}}" enctype="multipart/form-data">
-                                                            @csrf
-                                                            <div class="col-12 form-floating">
-                                                                <input class="form-control" type="date" name="data" id="data" @if($contFund->data_utilizacao!="") value="{{date("Y-m-d", strtotime($contFund->data_utilizacao))}}" @endif required>
-                                                                <label for="dataInicio">Data Utilização</label>
-                                                            </div>
-                                                            <div class="col-12 input-group mb-3">
-                                                                <label for="arquivo" class="input-group-text" data-toggle="tooltip" data-placement="bottom" title="Adicionar Arquivo"><i class="material-icons blue md-24">note_add</i></label>
-                                                                <input class="form-control" type="file" id="arquivo" name="arquivo" accept=".doc,.docx,.pdf" required>
-                                                            </div>
-                                                            <b style="font-size: 80%;">Aceito apenas Arquivos Word e PDF (".doc", ".docx" e ".pdf")</b>
-                                                            <div class="modal-footer">
-                                                                <button type="submit" class="btn btn-outline-primary">Enviar</button>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                                </div>
-                                            </div>
                                             <!-- Modal Conferir -->
                                                 <div style="text-align: center;" class="modal fade bd-example-modal-lg" id="exampleModalConf{{$contFund->id}}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
                                                     <div class="modal-dialog" role="document">
@@ -131,7 +84,7 @@
                                                             </div>
                                                             <div class="modal-footer">
                                                                 <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                                                <a href="/admin/atividadeComplementar/impresso/{{$contFund->id}}" class="btn btn-sm btn-success" data-toggle="tooltip" data-placement="right" title="Inativar">Marcar como Impresso</a>
+                                                                <a href="/outro/atividadeComplementar/impresso/{{$contFund->id}}" class="btn btn-sm btn-success" data-toggle="tooltip" data-placement="right" title="Inativar">Marcar como Impresso</a>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -196,7 +149,7 @@
                                     @if($medioPertence===0) <td style="color:blue; text-align: center; font-weight:bold;">Não se <br/>Aplica</td> 
                                     @else
                                     @if($contMedio->arquivo=='')
-                                    <td style="color:red; text-align: center;"> Pendente <br/> <button type="button" class="badge bg-warning" data-bs-toggle="modal" data-bs-target="#exampleModalAnexar{{$contMedio->id}}"><i class="material-icons md-18">cloud_upload</i></button> 
+                                    <td style="color:red; text-align: center;"> Pendente <br/> 
                                 @else
                                         @if($contMedio->comentario!="")
                                         <td style="text-align: center;"><a href="#" data-bs-toggle="modal" data-bs-target="#exampleModalConf{{$contMedio->id}}"><i class="material-icons md-48 yellow" data-toggle="tooltip" data-placement="left" title="Problemas Encontrados">report_problem</i></a><br/>
@@ -208,53 +161,9 @@
                                             @endif
                                         @endif
                                     <p><b>{{date("d/m/Y", strtotime($contMedio->data_utilizacao))}}</b></p>
-                                    <a type="button" class="badge bg-success" href="/admin/atividadeComplementar/download/{{$contMedio->id}}"><i class="material-icons md-18">cloud_download</i></a> <button type="button" class="badge bg-warning" data-bs-toggle="modal" data-bs-target="#exampleModalAnexar{{$contMedio->id}}"><i class="material-icons md-18">edit</i></button> <a type="button" class="badge bg-danger" data-bs-toggle="modal" data-bs-target="#exampleModalDelete{{$contMedio->id}}"><i class="material-icons md-18 white">delete</i></a>
-                                    <!-- Modal Deletar -->
-                                        <div style="text-align: center;" class="modal fade bd-example-modal-lg" id="exampleModalDelete{{$contMedio->id}}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog" role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="exampleModalLabel">Excluir Atividade Complementar {{$atividade->descricao}} - {{$contMedio->disciplina->nome}} - {{$contMedio->turma->serie}}º ANO {{$contMedio->turma->turma}}</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <h5>Tem certeza que deseja excluir esse arquivo?</h5>
-                                                        <p>Não será possivel reverter esta ação.</p>
-                                                        <a href="/admin/atividadeComplementar/apagar/{{$contMedio->id}}" class="btn btn-sm btn-danger" data-toggle="tooltip" data-placement="right" title="Inativar">Excluir</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                    <a type="button" class="badge bg-success" href="/outro/atividadeComplementar/download/{{$contMedio->id}}"><i class="material-icons md-18">cloud_download</i></a>
                                     @endif
                                 </td>
-                                <!-- Modal Anexar -->
-                                        <div style="text-align: center;" class="modal fade" id="exampleModalAnexar{{$contMedio->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabel">Anexar Atividade Complementar {{$atividade->descricao}} - {{$contMedio->disciplina->nome}} - {{$contMedio->turma->serie}}º ANO {{$contMedio->turma->turma}}</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <form method="POST" action="/admin/atividadeComplementar/anexar/{{$contMedio->id}}" enctype="multipart/form-data">
-                                                        @csrf
-                                                        <div class="col-12 form-floating">
-                                                            <input class="form-control" type="date" name="data" id="data" @if($contMedio->data_utilizacao!="") value="{{date("Y-m-d", strtotime($contMedio->data_utilizacao))}}" @endif required>
-                                                            <label for="dataInicio">Data Utilização</label>
-                                                        </div>
-                                                        <div class="col-12 input-group mb-3">
-                                                            <label for="arquivo" class="input-group-text" data-toggle="tooltip" data-placement="bottom" title="Adicionar Arquivo"><i class="material-icons blue md-24">note_add</i></label>
-                                                            <input class="form-control" type="file" id="arquivo" name="arquivo" accept=".doc,.docx,.pdf" required>
-                                                        </div>
-                                                        <b style="font-size: 80%;">Aceito apenas Arquivos Word e PDF (".doc", ".docx" e ".pdf")</b>
-                                                        <div class="modal-footer">
-                                                            <button type="submit" class="btn btn-outline-primary">Enviar</button>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                            </div>
-                                        </div>
                                         <!-- Modal Conferir -->
                                             <div style="text-align: center;" class="modal fade bd-example-modal-lg" id="exampleModalConf{{$contMedio->id}}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
                                                 <div class="modal-dialog" role="document">
@@ -269,7 +178,7 @@
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                                            <a href="/admin/atividadeComplementar/impresso/{{$contMedio->id}}" class="btn btn-sm btn-success" data-toggle="tooltip" data-placement="right" title="Inativar">Marcar como Impresso</a>
+                                                            <a href="/outro/atividadeComplementar/impresso/{{$contMedio->id}}" class="btn btn-sm btn-success" data-toggle="tooltip" data-placement="right" title="Inativar">Marcar como Impresso</a>
                                                         </div>
                                                     </div>
                                                 </div>

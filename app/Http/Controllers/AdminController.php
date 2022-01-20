@@ -40,6 +40,7 @@ use App\Models\Simulado;
 use App\Models\TurmaDisciplina;
 use App\Exports\AlunoExport;
 use App\Exports\AlunoExportView;
+use App\Models\AnexoAtividadeComplementar;
 use Excel;
 use PDF;
 use Illuminate\Support\Facades\Storage;
@@ -1236,128 +1237,165 @@ class AdminController extends Controller
     }
 
     //ATIVIDADES COMPLEMENTARES
-    public function painelAtividadesComplementares(){
-        $profs = Prof::where('ativo',true)->orderBy('name')->get();
-        $discs = Disciplina::where('ativo',true)->orderBy('nome')->get();
-        $turmas = Turma::where('ativo',true)->get();
-        $atividades = AtividadeComplementar::orderBy('id','desc')->paginate(10);
+    public function indexAtividadesComplementares(Request $request){
+        $ano = $request->input('ano');
+        $anos = DB::table('atividades_complementares')->select(DB::raw("ano"))->groupBy('ano')->get();
+        $atividades = AtividadeComplementar::orderBy('id','desc')->paginate(20);
         $view = "inicial";
-        return view('admin.atividades_complementares_admin', compact('view','profs','discs','turmas','atividades'));
+        return view('admin.home_atividades_complementares',compact('ano','anos','view','atividades'));
+    }
+
+    public function indexAtividadesComplementaresAno($ano){
+        if($ano==""){
+            $ano = date("Y");
+        }
+        $anos = DB::table('atividades_complementares')->select(DB::raw("ano"))->groupBy('ano')->get();
+        $atividades = AtividadeComplementar::orderBy('id','desc')->paginate(20);
+        $view = "inicial";
+        return view('admin.home_atividades_complementares',compact('ano','anos','view','atividades'));
     }
 
     public function novaAtividadeComplementar(Request $request)
     {
-        $discId = $request->input('disciplina');
-        $profId = $request->input('prof');
-        $path = $request->file('arquivo')->store('atividadesComplementares','public');
         $atividade = new AtividadeComplementar();
-        $atividade->prof_id = $profId;
-        $atividade->disciplina_id = $discId;
-        $atividade->turma_id = $request->input('turma');
-        $atividade->data = $request->input('data');
-        $atividade->descricao = $request->input('descricao');
-        $atividade->arquivo = $path;
+        $atividade->data_inicio = $request->dataInicio;
+        $atividade->data_fim = $request->dataFim;
+        $atividade->descricao = $request->descricao;
+        $atividade->bimestre = $request->bimestre;
+        $atividade->ano = $request->ano;
         $atividade->save();
-        
-        return back();
-    }
-
-    public function filtroAtividadesComplementares(Request $request)
-    {
-        $turma = $request->input('turma');
-        $disciplina = $request->input('disciplina');
-        $descricao = $request->input('descricao');
-        $data = $request->input('data');
-        if(isset($turma)){
-            if(isset($disciplina)){
-                if(isset($descricao)){
-                    if(isset($data)){
-                        $atividades = AtividadeComplementar::where('descricao','like',"%$descricao%")->where('disciplina_id',"$disciplina")->where('turma_id',"$turma")->where('data',"$data")->orderBy('id','desc')->paginate(50);
-                    } else {
-                        $atividades = AtividadeComplementar::where('descricao','like',"%$descricao%")->where('disciplina_id',"$disciplina")->where('turma_id',"$turma")->orderBy('id','desc')->paginate(50);
+        $turmas = Turma::where('ativo',true)->get();
+        $discs = Disciplina::where('ativo',true)->get();
+        foreach($turmas as $turma){
+            foreach($discs as $disc){
+                if($disc->ensino=="fund" && $turma->ensino=="fund"){
+                    $validador = AnexoAtividadeComplementar::where('atividade_complementar_id', "$atividade->id")->where('turma_id', "$turma->id")->where('disciplina_id', "$disc->id")->count();
+                    if($validador == 0){
+                        $quest = new AnexoAtividadeComplementar();
+                        $quest->atividade_complementar_id = $atividade->id;
+                        $quest->turma_id = $turma->id;
+                        $quest->disciplina_id = $disc->id;
+                        $quest->save();
                     }
-                } else {
-                    $atividades = AtividadeComplementar::where('turma_id',"$turma")->where('disciplina_id',"$disciplina")->orderBy('id','desc')->paginate(50);
-                }
-            } else {
-                $atividades = AtividadeComplementar::where('turma_id',"$turma")->orderBy('id','desc')->paginate(50);
-            }
-        } else {
-            if(isset($disciplina)){
-                if(isset($descricao)){
-                    if(isset($data)){
-                        $atividades = AtividadeComplementar::where('descricao','like',"%$descricao%")->where('disciplina_id',"$disciplina")->where('data',"$data")->orderBy('id','desc')->paginate(50);
-                    } else {
-                        $atividades = AtividadeComplementar::where('descricao','like',"%$descricao%")->where('disciplina_id',"$disciplina")->orderBy('id','desc')->paginate(50);
-                    }
-                } else {
-                    $atividades = AtividadeComplementar::where('disciplina_id',"$disciplina")->orderBy('id','desc')->paginate(50);
-                }
-            } else {
-                if(isset($descricao)){
-                    if(isset($data)){
-                        $atividades = AtividadeComplementar::where('descricao','like',"%$descricao%")->where('data',"$data")->orderBy('id','desc')->paginate(50);
-                    } else {
-                        $atividades = AtividadeComplementar::where('descricao','like',"%$descricao%")->orderBy('id','desc')->paginate(50);
-                    }
-                } else {
-                    if(isset($data)){
-                        $atividades = AtividadeComplementar::where('data',"$data")->orderBy('id','desc')->paginate(50);
-                    } else {
-                        $atividades = AtividadeComplementar::orderBy('id','desc')->paginate(10);
+                } else if($disc->ensino=="medio" && $turma->ensino=="medio"){
+                    $validador = AnexoAtividadeComplementar::where('atividade_complementar_id', "$atividade->id")->where('turma_id', "$turma->id")->where('disciplina_id', "$disc->id")->count();
+                    if($validador == 0){
+                        $quest = new AnexoAtividadeComplementar();
+                        $quest->atividade_complementar_id = $atividade->id;
+                        $quest->turma_id = $turma->id;
+                        $quest->disciplina_id = $disc->id;
+                        $quest->save();
                     }
                 }
             }
         }
-        $profs = Prof::where('ativo',true)->orderBy('name')->get();
-        $discs = Disciplina::where('ativo',true)->orderBy('nome')->get();
-        $turmas = Turma::where('ativo',true)->get();
-        $view = "filtro";
-        return view('admin.atividades_complementares_admin', compact('view','profs','discs','turmas','atividades'));
+        return back();
     }
 
     public function editarAtividadeComplementar(Request $request, $id)
     {
         $atividade = AtividadeComplementar::find($id);
-        if($request->file('arquivo')!=""){
-            $arquivo = $atividade->arquivo;
-            Storage::disk('public')->delete($arquivo);
-            $path = $request->file('arquivo')->store('atividadesComplementares','public');
-        } else {
-            $path = "";
+        if($request->dataInicio!=""){
+            $atividade->data_inicio = $request->dataInicio;
         }
-        if($request->input('turma')!=""){
-            $atividade->turma_id = $request->input('turma');
+        if($request->dataFim!=""){
+            $atividade->data_fim = $request->dataFim;
         }
-        if($request->input('data')!=""){
-            $atividade->data = $request->input('data');
-        }
-        if($request->input('descricao')!=""){
-            $atividade->descricao = $request->input('descricao');
-        }
-        if($path!=""){
-            $atividade->arquivo = $path;
+        if($request->descricao!=""){
+            $atividade->descricao = $request->descricao;
         }
         $atividade->save();
         
         return back();
     }
 
-    public function apagarAtividadeComplementar($id){
-        $atividade = AtividadeComplementar::find($id);
-        if(isset($atividade)){
-            Storage::disk('public')->delete($atividade->arquivo);
-            $atividade->delete();
+    public function painelAtividadesComplementares($atvddId){
+        $atividade = AtividadeComplementar::find($atvddId);
+        $ano = $atividade->ano;
+        $fundSeries = "";
+        $fundTurmas = "";
+        $fundDiscs = "";
+        $contFunds = "";
+        $medioTurmas = "";
+        $medioDiscs = "";
+        $contMedios = "";
+        $medioSeries = "";
+        $ensino = "";
+        $provaTurmas = array();
+        $turmasSimulado = AnexoAtividadeComplementar::where('atividade_complementar_id', "$atvddId")->select(DB::raw("turma_id"))->groupBy('turma_id')->get();
+        foreach($turmasSimulado as $turma){
+            $provaTurmas[] = $turma->turma_id;
+        }
+        $fundTurmas = Turma::whereIn('id',$provaTurmas)->where('ensino','fund')->where('ativo',true)->orderBy('serie')->orderBy('turma')->get();
+        if(isset($fundTurmas)){
+            $turmaIdsFund = array();
+            foreach($fundTurmas as $fundTurma){
+                $turmaIdsFund[] = $fundTurma->id;
+            }
+            $validadorFund = AnexoAtividadeComplementar::where('atividade_complementar_id', "$atvddId")->whereIn('turma_id', $turmaIdsFund)->count();
+            if($validadorFund!=0){
+                $ensino = "fund";
+                $anexosFund = AnexoAtividadeComplementar::where('atividade_complementar_id',"$atvddId")->whereIn('turma_id', $turmaIdsFund)->distinct('disciplina_id')->get();
+                $discIdsFund = array();
+                foreach($anexosFund as $anexo){
+                    $discIdsFund[] = $anexo->disciplina_id;
+                }
+                $fundSeries = Turma::whereIn('id', $turmaIdsFund)->select(DB::raw("serie"))->groupBy('serie')->get();
+                $fundDiscs = Disciplina::orWhereIn('id', $discIdsFund)->where('ativo',true)->with('turmas')->orderBy('nome')->get();
+                $contFunds = AnexoAtividadeComplementar::where('atividade_complementar_id', "$atvddId")->whereIn('turma_id', $turmaIdsFund)->orderBy('disciplina_id')->get();
+            }
+        }
+        $medioTurmas = Turma::whereIn('id',$provaTurmas)->where('ensino','medio')->where('ativo',true)->orderBy('serie')->orderBy('turma')->get();
+        if(isset($medioTurmas)){
+            $turmaIdsMedio = array();
+            foreach($medioTurmas as $medioTurma){
+                $turmaIdsMedio[] = $medioTurma->id;
+            }
+            $validadorMedio = AnexoAtividadeComplementar::where('atividade_complementar_id', "$atvddId")->whereIn('turma_id', $turmaIdsMedio)->count();
+            if($validadorMedio!=0){
+                $ensino = "medio";
+                $anexosMed = AnexoAtividadeComplementar::where('atividade_complementar_id',"$atvddId")->whereIn('turma_id', $turmaIdsMedio)->distinct('disciplina_id')->get();
+                $discIdsMed = array();
+                foreach($anexosMed as $anexo){
+                    $discIdsMed[] = $anexo->disciplina_id;
+                }
+                $medioSeries = Turma::whereIn('id', $turmaIdsMedio)->select(DB::raw("serie"))->groupBy('serie')->get();
+                $medioDiscs = Disciplina::orWhereIn('id', $discIdsMed)->where('ativo',true)->with('turmas')->orderBy('nome')->get();
+                $contMedios = AnexoAtividadeComplementar::where('atividade_complementar_id', "$atvddId")->whereIn('turma_id', $turmaIdsMedio)->orderBy('disciplina_id')->get();
+            }
+        }
+        if($validadorFund!=0 && $validadorMedio!=0){
+            $ensino = "todos";
+        }
+        if($validadorFund==0 && $validadorMedio==0){
+            return back()->with('mensagem', 'Não foram criados campos de conteúdos para essa prova!')->with('type', 'warning');
+        }
+        return view('admin.atividades_complementares_admin',compact('ensino','atividade','ano','fundSeries','fundTurmas','medioSeries','medioTurmas','fundDiscs','medioDiscs','contFunds','contMedios'));
+    }
+
+    public function anexarAtividadeComplementar(Request $request, $id)
+    {
+        $path = $request->file('arquivo')->store('atividadesComplementares','public');
+        $cont = AnexoAtividadeComplementar::find($id);
+        if($cont->arquivo=="" || $cont->arquivo==null){
+            $cont->arquivo = $path;
+            $cont->data_utilizacao = $request->data;
+            $cont->save();
+        } else {
+            $arquivo = $cont->arquivo;
+            Storage::disk('public')->delete($arquivo);
+            $cont->arquivo = $path;
+            $cont->save();
         }
         return back();
     }
 
     public function downloadAtividadeComplementar($id)
     {
-        $atividade = AtividadeComplementar::find($id);
+        $atividade = AnexoAtividadeComplementar::find($id);
         $disc = Disciplina::find($atividade->disciplina_id);
         $turma = Turma::find($atividade->turma_id);
-        $nameFile = $turma->serie."º - Atividade Complementar ".$atividade->descricao." - ".$disc->nome;
+        $nameFile = $turma->serie."º ".$turma->turma." - Atividade Complementar ".$atividade->descricao." - ".$disc->nome;
         if(isset($atividade)){
             $path = Storage::disk('public')->getDriver()->getAdapter()->applyPathPrefix($atividade->arquivo);
             $extension = pathinfo($path, PATHINFO_EXTENSION);
@@ -1367,8 +1405,20 @@ class AdminController extends Controller
         return back();
     }
 
+    public function apagarAtividadeComplementar($id){
+        $atividade = AnexoAtividadeComplementar::find($id);
+        if(isset($atividade)){
+            Storage::disk('public')->delete($atividade->arquivo);
+            $atividade->arquivo = null;
+            $atividade->data_utilizacao = null;
+            $atividade->impresso = 0;
+            $atividade->save();
+        }
+        return back();
+    }
+
     public function imprimirAtividadeComplementar($id){
-        $atividade = AtividadeComplementar::find($id);
+        $atividade = AnexoAtividadeComplementar::find($id);
         if(isset($atividade)){
             if($atividade->impresso==false){
                 $atividade->impresso = true;

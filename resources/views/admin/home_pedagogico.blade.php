@@ -10,7 +10,7 @@
                     <p class="card-text">
                         Consultar as Atividades
                     </p>
-                    <a href="/admin/atividadeComplementar" class="btn btn-primary">Atividades</a>
+                    <a href="/admin/atividadeComplementar/{{date("Y")}}" class="btn btn-primary">Atividades</a>
                 </div>
             </div>
         </div>

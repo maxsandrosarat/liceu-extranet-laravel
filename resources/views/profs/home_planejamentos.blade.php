@@ -16,17 +16,25 @@
                     Sem planejamentos cadastrados!
                 </div>
             @else
-            <form action="/prof/planejamentos" method="GET">
-                @csrf
-                <label for="ano">Selecione o ano:
-                <select class="form-select" id="ano" name="ano">
-                    <option value="">Selecione</option>
-                    @foreach ($anos as $an)
-                    <option value="{{$an->ano}}">{{$an->ano}}</option>
-                    @endforeach
-                  </select></label>
-                <input type="submit" class="btn btn-primary" value="Selecionar">
-            </form>
+            <div class="row">
+                <div class="col">
+                    <form action="/prof/planejamentos" method="GET">
+                        @csrf
+                        <label for="ano">Selecione o ano:
+                        <select class="form-select" id="ano" name="ano">
+                            <option value="">Selecione</option>
+                            @foreach ($anos as $an)
+                            <option value="{{$an->ano}}">{{$an->ano}}</option>
+                            @endforeach
+                          </select></label>
+                        <input type="submit" class="btn btn-primary" value="Selecionar">
+                    </form>
+                </div>
+                <div class="col" style="text-align: right;">
+                    <h5>Baixe o modelo da Máscara</h5>
+                    <a type="button" class="btn btn-info" href="/prof/templates/download/mascara-planejamento">Baixar Máscara</a>
+                </div>
+            </div>
             <h5 class="card-title">Planejamentos - {{$ano}}</h5>
             <div class="table-responsive-xl">
             <table class="table table-striped table-ordered table-hover">

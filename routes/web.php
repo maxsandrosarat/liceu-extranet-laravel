@@ -138,12 +138,14 @@ Route::group(['prefix' => 'admin'], function() {
     });
 
     Route::group(['prefix' => 'atividadeComplementar'], function() {
-        Route::get('/', 'AdminController@painelAtividadesComplementares');
+        Route::get('/{a}', 'AdminController@indexAtividadesComplementaresAno');
+        Route::get('/', 'AdminController@indexAtividadesComplementares');
         Route::post('/', 'AdminController@novaAtividadeComplementar');
-        Route::get('/filtro', 'AdminController@filtroAtividadesComplementares');
         Route::post('/editar/{id}', 'AdminController@editarAtividadeComplementar');
-        Route::get('/apagar/{id}', 'AdminController@apagarAtividadeComplementar');
+        Route::get('/painel/{id}', 'AdminController@painelAtividadesComplementares');
+        Route::post('/anexar/{id}', 'AdminController@anexarAtividadeComplementar');
         Route::get('/download/{id}', 'AdminController@downloadAtividadeComplementar');
+        Route::get('/apagar/{id}', 'AdminController@apagarAtividadeComplementar');
         Route::get('/impresso/{id}', 'AdminController@imprimirAtividadeComplementar');
     });
     
@@ -275,12 +277,12 @@ Route::group(['prefix' => 'prof'], function() {
     });
 
     Route::group(['prefix' => 'atividadeComplementar'], function() {
-        Route::get('/', 'ProfController@painelAtividadesComplementares');
-        Route::post('/', 'ProfController@novaAtividadeComplementar');
-        Route::get('/filtro', 'ProfController@filtroAtividadesComplementares');
-        Route::post('/editar/{id}', 'ProfController@editarAtividadeComplementar');
-        Route::get('/apagar/{id}', 'ProfController@apagarAtividadeComplementar');
+        Route::get('/{a}', 'ProfController@indexAtividadesComplementaresAno');
+        Route::get('/', 'ProfController@indexAtividadesComplementares');
+        Route::get('/painel/{id}', 'ProfController@painelAtividadesComplementares');
+        Route::post('/anexar/{id}', 'ProfController@anexarAtividadeComplementar');
         Route::get('/download/{id}', 'ProfController@downloadAtividadeComplementar');
+        Route::get('/apagar/{id}', 'ProfController@apagarAtividadeComplementar');
     });
 
     Route::group(['prefix' => 'listaAtividade'], function() {
@@ -446,6 +448,14 @@ Route::group(['prefix' => 'outro'], function() {
     Route::group(['prefix' => 'lembretes'], function() {
         Route::get('/', 'OutroController@painelLembretes');
         Route::get('/filtro', 'OutroController@filtroLembrete');
+    });
+
+    Route::group(['prefix' => 'atividadeComplementar'], function() {
+        Route::get('/{a}', 'OutroController@indexAtividadesComplementaresAno');
+        Route::get('/', 'OutroController@indexAtividadesComplementares');
+        Route::get('/painel/{id}', 'OutroController@painelAtividadesComplementares');
+        Route::get('/download/{id}', 'OutroController@downloadAtividadeComplementar');
+        Route::get('/impresso/{id}', 'OutroController@imprimirAtividadeComplementar');
     });
 });
 

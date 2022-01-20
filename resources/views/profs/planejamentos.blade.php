@@ -121,17 +121,13 @@
                                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                             </div>
                                                             <div class="modal-body">
-                                                                <form action="/prof/planejamentos/conferir" method="POST" enctype="multipart/form-data">
-                                                                    @csrf
+                                                               
                                                                     <div class="form-group">
-                                                                        <input type="hidden" name="id" value="{{$contFund->id}}">
+                                                                        
                                                                         <h5>Comentário</h5>
                                                                         <textarea class="form-control" name="comentario" id="comentario" rows="10" cols="40" maxlength="500" @if($contFund->comentario=="") placeholder="Escreva um comentário apenas se encontrar algum problema, caso contrário não escreva." @endif>@if($contFund->comentario!=""){{$contFund->comentario}}@endif</textarea>
                                                                     </div>
-                                                                    <div class="modal-footer">
-                                                                        <button type="submit" class="btn btn-primary btn-sm">Salvar</button>
-                                                                    </div>
-                                                                </form>
+                                        
                                                             </div>
                                                         </div>
                                                     </div>
@@ -259,17 +255,14 @@
                                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                         </div>
                                                         <div class="modal-body">
-                                                            <form action="/prof/planejamentos/conferir" method="POST" enctype="multipart/form-data">
-                                                                @csrf
+                                                            
                                                                 <div class="form-group">
-                                                                    <input type="hidden" name="id" value="{{$contMedio->id}}">
+           
                                                                     <h5>Comentário</h5>
                                                                     <textarea class="form-control" name="comentario" id="comentario" rows="10" cols="40" maxlength="500" @if($contMedio->comentario=="") placeholder="Escreva um comentário apenas se encontrar algum problema, caso contrário não escreva." @endif>@if($contMedio->comentario!=""){{$contMedio->comentario}}@endif</textarea>
                                                                 </div>
-                                                                <div class="modal-footer">
-                                                                    <button type="submit" class="btn btn-primary btn-sm">Salvar</button>
-                                                                </div>
-                                                            </form>
+  
+                                                            
                                                         </div>
                                                     </div>
                                                 </div>

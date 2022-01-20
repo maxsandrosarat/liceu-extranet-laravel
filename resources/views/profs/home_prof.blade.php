@@ -36,7 +36,7 @@
                     <p class="card-text">
                         Gerenciar as Atividades
                     </p>
-                    <a href="/prof/atividadeComplementar" class="btn btn-primary">Atividades</a>
+                    <a href="/prof/atividadeComplementar/{{date("Y")}}" class="btn btn-primary">Atividades</a>
                 </div>
             </div>
         </div>

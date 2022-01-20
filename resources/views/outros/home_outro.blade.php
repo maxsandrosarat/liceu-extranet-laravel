@@ -6,6 +6,17 @@
         <div class="col-auto">
             <div class="card border-primary text-center centralizado">
                 <div class="card-body">
+                    <h5>Atividades Complementares</h5>
+                    <p class="card-text">
+                        Consultar as Atividades
+                    </p>
+                    <a href="/outro/atividadeComplementar/{{date("Y")}}" class="btn btn-primary">Atividades</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-auto">
+            <div class="card border-primary text-center centralizado">
+                <div class="card-body">
                     <h5>Estoque</h5>
                     <p class="card-text">
                         Gerenciar o Estoque
