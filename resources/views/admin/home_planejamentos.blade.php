@@ -9,17 +9,25 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             @endif
-            <form action="/admin/planejamentos" method="GET">
-                @csrf
-                <label for="ano">Selecione o ano:
-                <select class="form-select" id="ano" name="ano">
-                    <option value="">Selecione</option>
-                    @foreach ($anos as $an)
-                    <option value="{{$an->ano}}">{{$an->ano}}</option>
-                    @endforeach
-                  </select></label>
-                <input type="submit" class="btn btn-primary" value="Selecionar">
-            </form>
+            <div class="row">
+                <div class="col">
+                    <form action="/admin/planejamentos" method="GET">
+                        @csrf
+                        <label for="ano">Selecione o ano:
+                        <select class="form-select" id="ano" name="ano">
+                            <option value="">Selecione</option>
+                            @foreach ($anos as $an)
+                            <option value="{{$an->ano}}">{{$an->ano}}</option>
+                            @endforeach
+                          </select></label>
+                        <input type="submit" class="btn btn-primary" value="Selecionar">
+                    </form>
+                </div>
+                <div class="col" style="text-align: right;">
+                    <h5>Baixe o modelo da Máscara</h5>
+                    <a type="button" class="btn btn-info" href="/admin/templates/download/mascara-planejamento">Baixar Máscara</a>
+                </div>
+            </div>
             @if(count($planejamentos)==0)
                 <div class="alert alert-danger" role="alert">
                     Sem planejamentos cadastrados para o ano {{$ano}}! Tente consultar outros anos!

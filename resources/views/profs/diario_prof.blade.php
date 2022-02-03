@@ -7,16 +7,10 @@
             <br/><br/>
             <h3 class="card-title" style="text-align: center;">Diário de Turma</h3>
             @if(session('mensagem'))
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-md-8">
-                        <div class="alert alert-success" role="alert">
-                            <button type="button" class="close" data-dismiss="alert">x</button>
-                            <p>{{session('mensagem')}}</p>
-                        </div>
-                    </div>
+                <div class="alert @if(session('type')=="success") alert-success @else @if(session('type')=="warning") alert-warning @else @if(session('type')=="danger") alert-danger @else alert-info @endif @endif @endif alert-dismissible fade show" role="alert">
+                    {{session('mensagem')}}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
-            </div>
             @endif
             @foreach ($diarios as $diario)
             <div class="container">
@@ -60,7 +54,7 @@
                             </div>
                         </div>
                         <br/>
-                        <form class="row g-3" method="POST" action="/prof/diario">
+                        <form id="form-diario" class="row g-3" method="POST" action="/prof/diario">
                             @csrf
                             <input type="hidden" name="diario" value="{{$diario->id}}">
                             <b>
@@ -241,19 +235,19 @@
                     <div class="row justify-content-center">
                         <div class="col-md-8">
                             <div class="col-auto form-floating">
-                                <input class="form-control" type="text" name="tema" id="tema" @if($diario->tema!="") value="{{$diario->tema}}" @else placeholder="Tema da Aula" @endif required>
+                                <input class="form-control" type="text" form="form-diario" name="tema" id="tema" @if($diario->tema!="") value="{{$diario->tema}}" @else placeholder="Tema da Aula" @endif required>
                                 <label for="tema">Tema da Aula</label>
                             </div>
                             <div class="col-auto form-floating">
-                                <textarea class="form-control" name="conteudo" id="conteudo" rows="5" cols="40" maxlength="245" placeholder="Conteúdo" required>@if($diario->conteudo!=""){{$diario->conteudo}}@endif</textarea>
+                                <textarea class="form-control" form="form-diario" name="conteudo" id="conteudo" rows="5" cols="40" maxlength="245" placeholder="Conteúdo" required>@if($diario->conteudo!=""){{$diario->conteudo}}@endif</textarea>
                                 <label for="conteudo">Conteúdo</label>
                             </div>
                             <div class="col-auto form-floating">
-                                <input class="form-control" type="text" name="referencias" id="referencias" @if($diario->referencias!="") value="{{$diario->referencias}}" @else placeholder="Referências" @endif required>
+                                <input class="form-control" type="text" form="form-diario" name="referencias" id="referencias" @if($diario->referencias!="") value="{{$diario->referencias}}" @else placeholder="Referências" @endif required>
                                 <label for="referencias">Referências</label>
                             </div>
                             <div class="col-auto form-floating">
-                                <select class="form-select" id="tipoTarefa" name="tipoTarefa" required>
+                                <select class="form-select" form="form-diario" id="tipoTarefa" name="tipoTarefa" required>
                                     @if($diario->tipo_tarefa=="")
                                     <option value="">Selecione tipo de tarefa</option>
                                     <option value="AULA"> VISTADA EM AULA </option>
@@ -270,15 +264,15 @@
                                 <label for="tempo">Tipo de Tarefa</label>
                             </div>
                             <div class="col-auto form-floating">
-                                <textarea class="form-control" name="tarefa" id="tarefa" rows="5" cols="40" maxlength="245" placeholder="Tarefa" required>@if($diario->tarefa!=""){{$diario->tarefa}}@endif</textarea>
+                                <textarea class="form-control" form="form-diario" name="tarefa" id="tarefa" rows="5" cols="40" maxlength="245" placeholder="Tarefa" required>@if($diario->tarefa!=""){{$diario->tarefa}}@endif</textarea>
                                 <label for="tarefa">Tarefa</label>
                             </div>
                             <div class="col-auto form-floating">
-                                <input class="form-control" type="date" name="entregaTarefa" @if($diario->entrega_tarefa!="") value="{{date("Y-m-d", strtotime($diario->entrega_tarefa))}}" @endif required>
+                                <input class="form-control" type="date" form="form-diario" name="entregaTarefa" @if($diario->entrega_tarefa!="") value="{{date("Y-m-d", strtotime($diario->entrega_tarefa))}}" @endif required>
                                 <label for="data">Data da Entrega da Tarefa</label>
                             </div></b>
                             <div class="modal-footer">
-                                <button type="submit" class="btn btn-outline-primary">Salvar Diário</button>
+                                <button type="submit" form="form-diario" class="btn btn-outline-primary">Salvar Diário</button>
                             </div>
                         </form>
                     </div>
@@ -302,7 +296,7 @@
                                     <h5 style="color: red;"><u>Clique sobre o nome do aluno para ver a foto, e clique em qualquer área fora da foto para sair da visualização da foto.</u></h5>
                                     <div class="table-responsive-xl">
                                     <table class="table table-striped table-sm">
-                                        <thead class="thead-dark">
+                                        <thead class="table-dark">
                                             <tr>
                                                 <th>Marcar</th>
                                                 <th style="text-align: center;">Aluno</th>
@@ -336,13 +330,15 @@
                                     </table>
                                     </div>
                                     <br/>
-                                    <label for="tipo">Tipo de Ocorrência
-                                    <select class="custom-select" id="tipo" name="tipo" required style="width:300px;">
-                                        <option value="">Selecione o tipo</option>
-                                        @foreach ($tipos as $tipo)
-                                        <option value="{{$tipo->id}}">{{$tipo->codigo}} - {{$tipo->descricao}} - @if($tipo->tipo=="despontuacao") Despontuar: @else Elogio: @endif{{$tipo->pontuacao}}</option>
-                                        @endforeach
-                                    </select></label>
+                                    <div class="col-auto form-floating">
+                                        <select class="form-select" id="tipo" name="tipo" required style="width:300px;">
+                                            <option value="">Selecione o tipo</option>
+                                            @foreach ($tipos as $tipo)
+                                            <option value="{{$tipo->id}}">{{$tipo->codigo}} - {{$tipo->descricao}} - @if($tipo->tipo=="despontuacao") Despontuar: @else Elogio: @endif{{$tipo->pontuacao}}</option>
+                                            @endforeach
+                                        </select>
+                                        <label for="tipo">Tipo de Ocorrência</label>
+                                    </div>
                                     <br/><br/>
                                     <input type="hidden" name="disciplina" value="{{$disciplina->id}}">
                                     <input type="hidden" name="data" value="{{$dia}}" required>
@@ -363,7 +359,7 @@
                         @else
                         <div class="table-responsive-xl">
                         <table class="table table-striped table-ordered table-hover" style="text-align: center;">
-                            <thead class="thead-dark">
+                            <thead class="table-dark">
                                 <tr>
                                     <th>Ocorrência</th>
                                     <th>Aluno</th>

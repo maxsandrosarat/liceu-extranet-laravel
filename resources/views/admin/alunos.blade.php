@@ -238,7 +238,7 @@
         <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Cadastro de Aluno <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModalFile" class="close" data-dismiss="modal" aria-label="Close">
+            <h5 class="modal-title" id="exampleModalLabel">Cadastro de Aluno <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModalFile" class="close" data-bs-dismiss="modal" aria-label="Close">
                 Ou importe um arquivo do Excel
             </button></h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>

@@ -66,26 +66,7 @@
                                             <td style="text-align: center;"><a href="#" data-bs-toggle="modal" data-bs-target="#exampleModalConf{{$contFund->id}}"><i class="material-icons md-48 red" data-toggle="tooltip" data-placement="left" title="Não Conferido">highlight_off</i></a><br/>
                                             @endif
                                         @endif
-                                        <a type="button" class="badge bg-success" href="/prof/planejamentos/download/{{$contFund->id}}"><i class="material-icons md-18">cloud_download</i></a> <button type="button" class="badge bg-warning" data-bs-toggle="modal" data-bs-target="#exampleModalAnexar{{$contFund->id}}"><i class="material-icons md-18">edit</i></button> <a type="button" class="badge bg-danger" data-bs-toggle="modal" data-bs-target="#exampleModalDelete{{$contFund->id}}"><i class="material-icons md-18 white">delete</i></a>
-                                        <!-- Modal Deletar -->
-                                        <div style="text-align: center;" class="modal fade" id="exampleModalDelete{{$contFund->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="exampleModalLabel">Excluir Questões do(a) {{$prova->descricao}} - {{$contFund->disciplina->nome}} - {{$contFund->turma->serie}}º ANO {{$contFund->turma->turma}}</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <h5>Tem certeza que deseja excluir esse arquivo?</h5>
-                                                        <p>Não será possivel reverter esta ação.</p>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                                        <a href="/prof/planejamentos/apagar/{{$contFund->id}}" class="btn btn-sm btn-danger" data-toggle="tooltip" data-placement="right" title="Inativar">Excluir</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <a type="button" class="badge bg-success" href="/prof/planejamentos/download/{{$contFund->id}}"><i class="material-icons md-18">cloud_download</i></a> <button type="button" class="badge bg-warning" data-bs-toggle="modal" data-bs-target="#exampleModalAnexar{{$contFund->id}}"><i class="material-icons md-18">edit</i></button>
                                     @endif
                                     </td>
                                     <!-- Modal Anexar -->
@@ -203,23 +184,7 @@
                                             <td style="text-align: center;"><a href="#" data-bs-toggle="modal" data-bs-target="#exampleModalConf{{$contMedio->id}}"><i class="material-icons md-48 red" data-toggle="tooltip" data-placement="left" title="Não Conferido">highlight_off</i></a><br/>
                                             @endif
                                         @endif
-                                    <a type="button" class="badge bg-success" href="/prof/planejamentos/download/{{$contMedio->id}}"><i class="material-icons md-18">cloud_download</i></a> <button type="button" class="badge bg-warning" data-bs-toggle="modal" data-bs-target="#exampleModalAnexar{{$contMedio->id}}"><i class="material-icons md-18">edit</i></button> <a type="button" class="badge bg-danger" data-bs-toggle="modal" data-bs-target="#exampleModalDelete{{$contMedio->id}}"><i class="material-icons md-18 white">delete</i></a>
-                                    <!-- Modal Deletar -->
-                                        <div style="text-align: center;" class="modal fade bd-example-modal-lg" id="exampleModalDelete{{$contMedio->id}}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog" role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="exampleModalLabel">Excluir Questões do {{$prova->descricao}} - {{$contMedio->disciplina->nome}} - {{$contMedio->turma->serie}}º ANO {{$contMedio->turma->turma}}</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <h5>Tem certeza que deseja excluir esse arquivo?</h5>
-                                                        <p>Não será possivel reverter esta ação.</p>
-                                                        <a href="/prof/planejamentos/apagar/{{$contMedio->id}}" class="btn btn-sm btn-danger" data-toggle="tooltip" data-placement="right" title="Inativar">Excluir</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                    <a type="button" class="badge bg-success" href="/prof/planejamentos/download/{{$contMedio->id}}"><i class="material-icons md-18">cloud_download</i></a> <button type="button" class="badge bg-warning" data-bs-toggle="modal" data-bs-target="#exampleModalAnexar{{$contMedio->id}}"><i class="material-icons md-18">edit</i></button>
                                     @endif
                                 </td>
                                 <!-- Modal Anexar -->

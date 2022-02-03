@@ -7,16 +7,10 @@
             <div class="card border">
                 <div class="card-body">
                     @if(session('mensagem'))
-                    <div class="container">
-                        <div class="row justify-content-center">
-                            <div class="col-md-8">
-                                <div class="alert alert-success" role="alert">
-                                    <button type="button" class="close" data-dismiss="alert">x</button>
-                                    <p>{{session('mensagem')}}</p>
-                                </div>
-                            </div>
+                        <div class="alert @if(session('type')=="success") alert-success @else @if(session('type')=="warning") alert-warning @else @if(session('type')=="danger") alert-danger @else alert-info @endif @endif @endif alert-dismissible fade show" role="alert">
+                            {{session('mensagem')}}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
-                    </div>
                     @endif
                     <div class="row">
                         <div class="col" style="text-align: left">

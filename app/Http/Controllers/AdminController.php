@@ -309,6 +309,12 @@ class AdminController extends Controller
             $extension = pathinfo($path, PATHINFO_EXTENSION);
             $name = $nameFile.".".$extension;
             return response()->download($path, $name);
+        } else if($nome=="mascara-planejamento"){
+            $nameFile = "mascara-planejamento";
+            $path = Storage::disk('public')->getDriver()->getAdapter()->applyPathPrefix("templates/mascara_planejamento.docx");
+            $extension = pathinfo($path, PATHINFO_EXTENSION);
+            $name = $nameFile.".".$extension;
+            return response()->download($path, $name);
         } else {
             return back();
         }
@@ -415,7 +421,7 @@ class AdminController extends Controller
             }
             $prof->save();
             $disciplinas = $request->input('disciplinas');
-            ProfDisciplina::where('prof_id',"$id")->delete();
+            //ProfDisciplina::where('prof_id',"$id")->delete();
             foreach ($disciplinas as $disciplina) {
                 $profDiscs = ProfDisciplina::where('prof_id',"$id")->where('disciplina_id',"$disciplina")->get();
                 if($profDiscs->count()==0){
@@ -1406,13 +1412,14 @@ class AdminController extends Controller
     }
 
     public function apagarAtividadeComplementar($id){
-        $atividade = AnexoAtividadeComplementar::find($id);
+        $atividade = AtividadeComplementar::find($id);
         if(isset($atividade)){
-            Storage::disk('public')->delete($atividade->arquivo);
-            $atividade->arquivo = null;
-            $atividade->data_utilizacao = null;
-            $atividade->impresso = 0;
-            $atividade->save();
+            $anexos = AnexoAtividadeComplementar::where('atividade_complementar_id',"$id")->get();
+            foreach($anexos as $anexo){
+                Storage::disk('public')->delete($anexo->arquivo);
+                $anexo->delete();
+            }
+            $atividade->delete();
         }
         return back();
     }
@@ -2628,6 +2635,18 @@ class AdminController extends Controller
                 $questao->delete();
             }
             $sim->delete();
+        }
+        return back();
+    }
+
+    public function apagarAnexoPlanejamento($id){
+        $anexo = AnexoPlanejamento::find($id);
+        if(isset($anexo)){
+            if($anexo->arquivo!=""){
+                Storage::disk('public')->delete($anexo->arquivo);
+            }
+            $anexo->arquivo = "";
+            $anexo->save();
         }
         return back();
     }

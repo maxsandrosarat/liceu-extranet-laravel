@@ -235,6 +235,7 @@ Route::group(['prefix' => 'admin'], function() {
         Route::post('/anexar/{id}', 'AdminController@anexarPlanejamento');
         Route::get('/download/{id}', 'AdminController@downloadPlanejamento');
         Route::get('/apagar/{id}', 'AdminController@apagarPlanejamento');
+        Route::get('/apagarAnexo/{id}', 'AdminController@apagarAnexoPlanejamento');
         Route::post('/conferir', 'AdminController@conferirPlanejamento');
     });
 

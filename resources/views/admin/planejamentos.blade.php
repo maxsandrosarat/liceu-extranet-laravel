@@ -81,7 +81,7 @@
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                                        <a href="/admin/planejamentos/apagar/{{$contFund->id}}" class="btn btn-sm btn-danger" data-toggle="tooltip" data-placement="right" title="Inativar">Excluir</a>
+                                                        <a href="/admin/planejamentos/apagarAnexo/{{$contFund->id}}" class="btn btn-sm btn-danger" data-toggle="tooltip" data-placement="right" title="Inativar">Excluir</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -219,7 +219,7 @@
                                                     <div class="modal-body">
                                                         <h5>Tem certeza que deseja excluir esse arquivo?</h5>
                                                         <p>Não será possivel reverter esta ação.</p>
-                                                        <a href="/admin/planejamentos/apagar/{{$contMedio->id}}" class="btn btn-sm btn-danger" data-toggle="tooltip" data-placement="right" title="Inativar">Excluir</a>
+                                                        <a href="/admin/planejamentos/apagarAnexo/{{$contMedio->id}}" class="btn btn-sm btn-danger" data-toggle="tooltip" data-placement="right" title="Inativar">Excluir</a>
                                                     </div>
                                                 </div>
                                             </div>
