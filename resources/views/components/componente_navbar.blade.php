@@ -90,14 +90,8 @@
                 <a class="nav-link @if($current=="estoque") active @endif" href="/outro/estoque">Estoque</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link @if($current=="diario") active @endif" href="/outro/diario">Diário</a>
+                <a class="nav-link @if($current=="pedagogico") active @endif" href="/outro/pedagogico">Pedagógico</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link @if($current=="provas") active @endif" href="/outro/provas/{{date("Y")}}">Provas</a>
-            </li>
-            {{-- <li class="nav-item">
-                <a class="nav-link @if($current=="conteudos") active @endif" href="/outro/conteudosProvas/{{date("Y")}}">Conteúdos</a>
-            </li> --}}
             @endauth
 
             <!--WEB

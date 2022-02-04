@@ -388,6 +388,7 @@ Route::group(['prefix' => 'outro'], function() {
     Route::post('/login', 'Auth\OutroLoginController@login')->name('outro.login.submit');
     Route::get('/', 'OutroController@index')->name('outro.dashboard');
     Route::get('/estoque', function () { return view('outros.home_estoque'); })->middleware('auth:outro');
+    Route::get('/pedagogico', function () { return view('outros.home_pedagogico'); })->middleware('auth:outro');
 
     Route::group(['prefix' => 'categorias'], function() {
         Route::get('/', 'OutroController@indexCategorias');
@@ -457,6 +458,14 @@ Route::group(['prefix' => 'outro'], function() {
         Route::get('/painel/{id}', 'OutroController@painelAtividadesComplementares');
         Route::get('/download/{id}', 'OutroController@downloadAtividadeComplementar');
         Route::get('/impresso/{id}', 'OutroController@imprimirAtividadeComplementar');
+    });
+
+    Route::group(['prefix' => 'planejamentos'], function() {
+        Route::get('/{a}', 'OutroController@indexPlanejamentosAno');
+        Route::get('/', 'OutroController@indexPlanejamentos');
+        Route::get('/painel/{id}', 'OutroController@painelPlanejamentos');
+        Route::get('/download/{id}', 'OutroController@downloadPlanejamento');
+        Route::post('/conferir', 'OutroController@conferirPlanejamento');
     });
 });
 
