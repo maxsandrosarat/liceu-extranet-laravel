@@ -2638,7 +2638,7 @@ class AdminController extends Controller
         }
         return back();
     }
-
+    
     public function apagarAnexoPlanejamento($id){
         $anexo = AnexoPlanejamento::find($id);
         if(isset($anexo)){

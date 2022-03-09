@@ -60,7 +60,7 @@
                         </td>
                         <td>
                             <a href="/admin/planejamentos/painel/{{$plan->id}}" class="badge bg-primary" data-toggle="tooltip" data-placement="right" title="Painel"><i class="material-icons md-48">attach_file</i></a>
-                            <button type="button" class="badge bg-danger" data-toggle="modal" data-target="#exampleModalDelete{{$plan->id}}"><i class="material-icons md-48">delete</i></button></td>
+                            <button type="button" class="badge bg-danger" data-bs-toggle="modal" data-bs-target="#exampleModalDelete{{$plan->id}}"><i class="material-icons md-48">delete</i></button></td>
                             <!-- Modal -->
                             <div class="modal fade bd-example-modal-lg" id="exampleModalDelete{{$plan->id}}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">

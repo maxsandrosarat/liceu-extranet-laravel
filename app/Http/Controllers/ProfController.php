@@ -856,7 +856,7 @@ class ProfController extends Controller
             $simuladosIds[] = $simId->simulado_id;
         }
         $anos = DB::table('simulados')->select(DB::raw("ano"))->groupBy('ano')->get();
-        $provas = Simulado::whereIn('id', $simuladosIds)->where('ano',"$ano")->orderBy('created_at', 'desc')->get();
+        $provas = Simulado::whereIn('id', $simuladosIds)->where('ano',"$ano")->orderBy('prazo', 'desc')->get();
         return view('profs.home_provas',compact('ano','anos','provas'));
     }
 
@@ -880,7 +880,7 @@ class ProfController extends Controller
             $ano = date("Y");
         }
         $anos = DB::table('simulados')->select(DB::raw("ano"))->groupBy('ano')->get();
-        $provas = Simulado::whereIn('id', $simuladosIds)->where('ano',"$ano")->orderBy('created_at', 'desc')->get();
+        $provas = Simulado::whereIn('id', $simuladosIds)->where('ano',"$ano")->orderBy('prazo', 'desc')->get();
         return view('profs.home_provas',compact('ano','anos','provas'));
     }
 
