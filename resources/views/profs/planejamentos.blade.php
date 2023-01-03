@@ -185,6 +185,7 @@
                                             @endif
                                         @endif
                                     <a type="button" class="badge bg-success" href="/prof/planejamentos/download/{{$contMedio->id}}"><i class="material-icons md-18">cloud_download</i></a> <button type="button" class="badge bg-warning" data-bs-toggle="modal" data-bs-target="#exampleModalAnexar{{$contMedio->id}}"><i class="material-icons md-18">edit</i></button>
+                                    
                                     @endif
                                 </td>
                                 <!-- Modal Anexar -->

@@ -65,7 +65,7 @@
                 <a class="nav-link @if($current=="home") active @endif" href="/prof">Home</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link @if($current=="atividade") active @endif" href="/prof/atividadeComplementar">Atividades</a>
+                <a class="nav-link @if($current=="atividade") active @endif" href="/prof/atividadeDiaria/disciplinas">Atividades</a>
             </li>
             {{-- <li class="nav-item">
                 <a class="nav-link @if($current=="la") active @endif" href="/prof/listaAtividade/{{date("Y")}}">Rotinas Semanais</a>
@@ -79,6 +79,9 @@
             <li class="nav-item">
                 <a class="nav-link @if($current=="provas") active @endif" href="/prof/provas/{{date("Y")}}">Provas</a>
             </li>
+            {{--  <li class="nav-item">
+                <a class="nav-link @if($current=="notas") active @endif" href="/prof/notas/{{date("Y")}}">Notas</a>
+            </li>  --}}
             @endauth
 
             <!--OUTRO-->

@@ -7,6 +7,7 @@ use App\Models\AnexoAtividadeComplementar;
 use App\Models\AnexoPlanejamento;
 use App\Models\Atividade;
 use App\Models\AtividadeComplementar;
+use App\Models\AtividadeDiaria;
 use App\Models\AtividadeRetorno;
 use App\Models\Conteudo;
 use App\Models\ConteudoProva;
@@ -14,13 +15,16 @@ use App\Models\Diario;
 use App\Models\Disciplina;
 use App\Models\Documento;
 use App\Models\La;
+use App\Models\LancamentoNota;
 use App\Models\Lembrete;
 use App\Models\ListaAtividade;
+use App\Models\Nota;
 use App\Models\ProfDisciplina;
 use App\Models\Turma;
 use App\Models\TurmaDisciplina;
 use App\Models\Ocorrencia;
 use App\Models\Planejamento;
+use App\Models\Prof;
 use App\Models\ProfTurma;
 use App\Models\Questao;
 use App\Models\Simulado;
@@ -236,6 +240,147 @@ class ProfController extends Controller
             return response()->download($path, $name);
         }
         return back();
+    }
+
+    //ATIVIDADES DIARIAS
+    public function disciplinasAtividadesDiarias(){
+        $profId = Auth::user()->id;
+        $profDiscs = ProfDisciplina::where('prof_id',"$profId")->get();
+        return view('profs.atividade_diaria_disciplinas', compact('profDiscs'));
+    }
+
+    public function painelAtividadesDiarias($discId){
+        $profId = Auth::user()->id;
+        $disciplina = Disciplina::find($discId);
+        $turmas = TurmaDisciplina::where('disciplina_id',"$discId")->get();
+        $atividades = AtividadeDiaria::where('prof_id',"$profId")->where('disciplina_id',"$discId")->orderBy('id','desc')->paginate(10);
+        $view = "inicial";
+        return view('profs.atividade_diaria_prof', compact('view','disciplina','turmas','atividades'));
+    }
+
+    public function novaAtividadeDiaria(Request $request)
+    {
+        $profId = Auth::user()->id;
+        $disc = Disciplina::find($request->disciplina);
+        $turma = Turma::find($request->turma);
+        $profDisc = ProfDisciplina::where('prof_id',$profId)->where('disciplina_id',$request->disciplina)->first();
+        if(!isset($profDisc)){
+            return back()->with('mensagem', 'Professor(a), você não ministra a disciplina '.$disc->nome.'('.$disc->ensino.')')->with('type', 'warning');
+        } else {
+            $profTurma = ProfTurma::where('prof_disciplina_id',$profDisc->id)->where('turma_id',$request->turma)->first();
+            if(!isset($profTurma)){
+                return back()->with('mensagem', 'Professor(a), você não ministra aulas na turma '.$turma->serie.'º'.$turma->turma)->with('type', 'warning');
+            }
+        }
+        $path = $request->file('arquivo')->store('atividadesDiarias','public');
+        $atividade = new AtividadeDiaria();
+        $atividade->prof_id = $profId;
+        $atividade->turma_id = $request->turma;
+        $atividade->disciplina_id = $request->disciplina;
+        $atividade->data = $request->data;
+        $atividade->descricao = $request->descricao;
+        $atividade->usuario = Auth::user()->name;
+        $atividade->arquivo = $path;
+        $atividade->save();
+
+        return back();
+    }
+
+    public function filtroAtividadeDiaria(Request $request, $discId)
+    {
+        $prof = Auth::user()->id;
+        $turma = $request->turma;
+        $descricao = $request->descricao;
+        $data = $request->data;
+        $query = AtividadeDiaria::query();
+        $query->where('prof_id', $prof);
+        $query->where('disciplina_id', $discId);
+        if(isset($turma)){
+            $query->where('turma_id', $turma);
+        }
+        if(isset($descricao)){
+            $query->where('descricao','like',"%$descricao%");
+        }
+        if(isset($data)){
+            $query->where('data', $data);
+        }
+        $atividades = $query->orderBy('id','desc')->paginate(50);
+        $disciplina = Disciplina::find($discId);
+        $turmas = TurmaDisciplina::where('disciplina_id',"$discId")->get();
+        $view = "filtro";
+        return view('profs.atividade_diaria_prof', compact('view','disciplina','turmas','atividades'));
+    }
+
+    public function editarAtividadeDiaria(Request $request, $id)
+    {
+        $atividade = AtividadeDiaria::find($id);
+        if(isset($atividade)){
+            $profId = Auth::user()->id;
+            $disc = Disciplina::find($request->disciplina);
+            $turma = Turma::find($request->turma);
+            $profDisc = ProfDisciplina::where('prof_id',$profId)->where('disciplina_id',$request->disciplina)->first();
+            if(!isset($profDisc)){
+                return back()->with('mensagem', 'Professor(a), você não ministra a disciplina '.$disc->nome.' ('.$disc->ensino.')')->with('type', 'warning');
+            } else {
+                $profTurma = ProfTurma::where('prof_disciplina_id',$profDisc->id)->where('turma_id',$request->turma)->first();
+                if(!isset($profTurma)){
+                    return back()->with('mensagem', 'Professor(a), você não ministra aulas na turma '.$turma->serie.'º'.$turma->turma)->with('type', 'warning');
+                }
+            }
+        } else {
+            return back()->with('mensagem', 'Atividade não encontrada!')->with('type', 'danger');
+        }
+        if($request->file('arquivo')!=""){
+            Storage::disk('public')->delete($atividade->arquivo);
+            $atividade->arquivo = $request->file('arquivo')->store('atividadesDiarias','public');
+        }
+        if($request->input('turma')!=""){
+            $atividade->turma_id = $request->input('turma');
+        }
+        if($request->input('data')!=""){
+            $atividade->data = $request->input('data');
+        }
+        if($request->input('descricao')!=""){
+            $atividade->descricao = $request->input('descricao');
+        }
+        $atividade->save();
+        
+        return back();
+    }
+
+    public function apagarAtividadeDiaria($id){
+        $atividade = AtividadeDiaria::find($id);
+        if(isset($atividade)){
+            if($atividade->prof->id==Auth::user()->id){
+                Storage::disk('public')->delete($atividade->arquivo);
+                $atividade->delete();
+                return back()->with('mensagem', 'Atividade excluída com Sucesso!')->with('type', 'success');
+            } else {
+                return back()->with('mensagem', 'Atividade não pode ser excluída!')->with('type', 'warning');
+            }
+        } else {
+            return back()->with('mensagem', 'Atividade não encontrada!')->with('type', 'danger');
+        }
+    }
+
+    public function downloadAtividadeDiaria($id)
+    {
+        $atividade = AtividadeDiaria::find($id);
+        $disc = Disciplina::find($atividade->disciplina_id);
+        $turma = Turma::find($atividade->turma_id);
+        $nameFile = $turma->serie."º".$turma->turma." - Atividade ".$atividade->descricao." - ".$disc->nome;
+        if(isset($atividade)){
+            if($atividade->prof->id==Auth::user()->id){
+                $path = Storage::disk('public')->getDriver()->getAdapter()->applyPathPrefix($atividade->arquivo);
+                $extension = pathinfo($path, PATHINFO_EXTENSION);
+                $name = $nameFile.".".$extension;
+                return response()->download($path, $name);
+            } else {
+                return back()->with('mensagem', 'Atividade indisponível!')->with('type', 'warning');
+            }
+        } else {
+            return back()->with('mensagem', 'Atividade não encontrada!')->with('type', 'danger');
+        }
     }
 
     //ATIVIDADES COMPLEMENTARES
@@ -619,18 +764,21 @@ class ProfController extends Controller
         return view('profs.ocorrencias_disciplinas', compact('profDiscs'));
     }
 
-    public function turmasOcorrencias($disciplina){
-        $turmaDiscs = TurmaDisciplina::where('disciplina_id',"$disciplina")->get();
+    public function turmasOcorrencias($disc){
+        $disciplina = Disciplina::find($disc);
+        $turmaDiscs = TurmaDisciplina::where('disciplina_id',"$disc")->get();
         return view('profs.ocorrencias_turmas', compact('turmaDiscs','disciplina'));
     }
 
-    public function indexOcorrencias($disciplina, $turma){
+    public function indexOcorrencias($disc, $tm){
+        $disciplina = Disciplina::find($disc);
+        $turma = Turma::find($tm);
         $profId = Auth::user()->id;
-        $alunos = Aluno::where('ativo',true)->where('turma_id',"$turma")->get();
+        $alunos = Aluno::where('ativo',true)->where('turma_id',"$tm")->get();
         $tipos = TipoOcorrencia::where('ativo',true)->orderBy('codigo')->get();
-        $ocorrencias = Ocorrencia::where('prof_id',"$profId")->where('disciplina_id',"$disciplina")->paginate(10);
+        $ocorrencias = Ocorrencia::where('prof_id',"$profId")->where('turma_id',"$tm")->where('disciplina_id',"$disc")->orderBy('data','desc')->paginate(10);
         $view = "inicial";
-        return view('profs.ocorrencias_prof', compact('view','alunos','tipos','disciplina','ocorrencias','turma'));
+        return view('profs.ocorrencias_prof', compact('view','alunos','tipos','turma','disciplina','ocorrencias','turma'));
     }
 
     public function novasOcorrencias(Request $request){
@@ -650,6 +798,7 @@ class ProfController extends Controller
             foreach($alunos as $aluno) {
                 $ocorrencia = new Ocorrencia();
                 $ocorrencia->aluno_id = $aluno;
+                $ocorrencia->turma_id = Aluno::find($aluno)->turma_id;
                 $ocorrencia->tipo_ocorrencia_id = $tipo;
                 $ocorrencia->prof_id = $profId;
                 $ocorrencia->disciplina_id = $disciplina;
@@ -661,7 +810,7 @@ class ProfController extends Controller
         return back()->with('mensagem', 'Ocorrência(s) cadastrada(s) com Sucesso!');
     }
 
-    public function filtroOcorrencias(Request $request, $disciplina, $turma)
+    public function filtroOcorrencias(Request $request, $disc, $tm)
     {
         $profId = Auth::user()->id;
         $tipo = $request->input('tipo');
@@ -672,29 +821,29 @@ class ProfController extends Controller
             if(isset($aluno)){
                 if(isset($dataInicio)){
                     if(isset($dataFim)){
-                        $ocorrencias = Ocorrencia::where('tipo_ocorrencia_id',"$tipo")->where('aluno_id',"$aluno")->whereBetween('data',["$dataInicio", "$dataFim"])->where('prof_id',"$profId")->where('disciplina_id',"$disciplina")->get();
+                        $ocorrencias = Ocorrencia::where('tipo_ocorrencia_id',"$tipo")->where('aluno_id',"$aluno")->whereBetween('data',["$dataInicio", "$dataFim"])->where('prof_id',"$profId")->where('turma_id',"$tm")->where('disciplina_id',"$disc")->paginate(100);
                     } else {
-                        $ocorrencias = Ocorrencia::where('tipo_ocorrencia_id',"$tipo")->where('aluno_id',"$aluno")->whereBetween('data',["$dataInicio", date("Y/m/d")])->where('prof_id',"$profId")->where('disciplina_id',"$disciplina")->get();
+                        $ocorrencias = Ocorrencia::where('tipo_ocorrencia_id',"$tipo")->where('aluno_id',"$aluno")->whereBetween('data',["$dataInicio", date("Y/m/d")])->where('prof_id',"$profId")->where('turma_id',"$tm")->where('disciplina_id',"$disc")->paginate(100);
                     }
                 } else {
                     if(isset($dataFim)){
-                        $ocorrencias = Ocorrencia::where('tipo_ocorrencia_id',"$tipo")->where('aluno_id',"$aluno")->whereBetween('data',["", "$dataFim"])->where('prof_id',"$profId")->where('disciplina_id',"$disciplina")->get();
+                        $ocorrencias = Ocorrencia::where('tipo_ocorrencia_id',"$tipo")->where('aluno_id',"$aluno")->whereBetween('data',["", "$dataFim"])->where('prof_id',"$profId")->where('turma_id',"$tm")->where('disciplina_id',"$disc")->paginate(100);
                     } else {
-                        $ocorrencias = Ocorrencia::where('tipo_ocorrencia_id',"$tipo")->where('aluno_id',"$aluno")->where('prof_id',"$profId")->where('disciplina_id',"$disciplina")->get();
+                        $ocorrencias = Ocorrencia::where('tipo_ocorrencia_id',"$tipo")->where('aluno_id',"$aluno")->where('prof_id',"$profId")->where('turma_id',"$tm")->where('disciplina_id',"$disc")->paginate(100);
                     }
                 }
             } else {
                 if(isset($dataInicio)){
                     if(isset($dataFim)){
-                        $ocorrencias = Ocorrencia::where('tipo_ocorrencia_id',"$tipo")->whereBetween('data',["$dataInicio", "$dataFim"])->where('prof_id',"$profId")->where('disciplina_id',"$disciplina")->get();
+                        $ocorrencias = Ocorrencia::where('tipo_ocorrencia_id',"$tipo")->whereBetween('data',["$dataInicio", "$dataFim"])->where('prof_id',"$profId")->where('turma_id',"$tm")->where('disciplina_id',"$disc")->paginate(100);
                     } else {
-                        $ocorrencias = Ocorrencia::where('tipo_ocorrencia_id',"$tipo")->whereBetween('data',["$dataInicio", date("Y/m/d")])->where('prof_id',"$profId")->where('disciplina_id',"$disciplina")->get();
+                        $ocorrencias = Ocorrencia::where('tipo_ocorrencia_id',"$tipo")->whereBetween('data',["$dataInicio", date("Y/m/d")])->where('prof_id',"$profId")->where('turma_id',"$tm")->where('disciplina_id',"$disc")->paginate(100);
                     }
                 } else {
                     if(isset($dataFim)){
-                        $ocorrencias = Ocorrencia::where('tipo_ocorrencia_id',"$tipo")->whereBetween('data',["", "$dataFim"])->where('prof_id',"$profId")->where('disciplina_id',"$disciplina")->get();
+                        $ocorrencias = Ocorrencia::where('tipo_ocorrencia_id',"$tipo")->whereBetween('data',["", "$dataFim"])->where('prof_id',"$profId")->where('turma_id',"$tm")->where('disciplina_id',"$disc")->paginate(100);
                     } else {
-                        $ocorrencias = Ocorrencia::where('tipo_ocorrencia_id',"$tipo")->where('prof_id',"$profId")->where('disciplina_id',"$disciplina")->get();
+                        $ocorrencias = Ocorrencia::where('tipo_ocorrencia_id',"$tipo")->where('prof_id',"$profId")->where('turma_id',"$tm")->where('disciplina_id',"$disc")->paginate(100);
                     }
                 }
             }
@@ -702,34 +851,36 @@ class ProfController extends Controller
             if(isset($aluno)){
                 if(isset($dataInicio)){
                     if(isset($dataFim)){
-                        $ocorrencias = Ocorrencia::where('aluno_id',"$aluno")->whereBetween('data',["$dataInicio", "$dataFim"])->where('prof_id',"$profId")->where('disciplina_id',"$disciplina")->get();
+                        $ocorrencias = Ocorrencia::where('aluno_id',"$aluno")->whereBetween('data',["$dataInicio", "$dataFim"])->where('prof_id',"$profId")->where('turma_id',"$tm")->where('disciplina_id',"$disc")->paginate(100);
                     } else {
-                        $ocorrencias = Ocorrencia::where('aluno_id',"$aluno")->whereBetween('data',["$dataInicio", date("Y/m/d")])->where('prof_id',"$profId")->where('disciplina_id',"$disciplina")->get();
+                        $ocorrencias = Ocorrencia::where('aluno_id',"$aluno")->whereBetween('data',["$dataInicio", date("Y/m/d")])->where('prof_id',"$profId")->where('turma_id',"$tm")->where('disciplina_id',"$disc")->paginate(100);
                     }
                 } else {
                     if(isset($dataFim)){
-                        $ocorrencias = Ocorrencia::where('aluno_id',"$aluno")->whereBetween('data',["", "$dataFim"])->where('prof_id',"$profId")->where('disciplina_id',"$disciplina")->get();
+                        $ocorrencias = Ocorrencia::where('aluno_id',"$aluno")->whereBetween('data',["", "$dataFim"])->where('prof_id',"$profId")->where('turma_id',"$tm")->where('disciplina_id',"$disc")->paginate(100);
                     } else {
-                        $ocorrencias = Ocorrencia::where('aluno_id',"$aluno")->where('prof_id',"$profId")->where('disciplina_id',"$disciplina")->get();
+                        $ocorrencias = Ocorrencia::where('aluno_id',"$aluno")->where('prof_id',"$profId")->where('turma_id',"$tm")->where('disciplina_id',"$disc")->paginate(100);
                     }
                 }
             } else {
                 if(isset($dataInicio)){
                     if(isset($dataFim)){
-                        $ocorrencias = Ocorrencia::whereBetween('data',["$dataInicio", "$dataFim"])->where('prof_id',"$profId")->where('disciplina_id',"$disciplina")->get();
+                        $ocorrencias = Ocorrencia::whereBetween('data',["$dataInicio", "$dataFim"])->where('prof_id',"$profId")->where('turma_id',"$tm")->where('disciplina_id',"$disc")->paginate(100);
                     } else {
-                        $ocorrencias = Ocorrencia::whereBetween('data',["$dataInicio", date("Y/m/d")])->where('prof_id',"$profId")->where('disciplina_id',"$disciplina")->get();
+                        $ocorrencias = Ocorrencia::whereBetween('data',["$dataInicio", date("Y/m/d")])->where('prof_id',"$profId")->where('turma_id',"$tm")->where('disciplina_id',"$disc")->paginate(100);
                     }
                 } else {
                     if(isset($dataFim)){
-                        $ocorrencias = Ocorrencia::whereBetween('data',["", "$dataFim"])->where('prof_id',"$profId")->where('disciplina_id',"$disciplina")->get();
+                        $ocorrencias = Ocorrencia::whereBetween('data',["", "$dataFim"])->where('prof_id',"$profId")->where('turma_id',"$tm")->where('disciplina_id',"$disc")->paginate(100);
                     } else {
-                        $ocorrencias = Ocorrencia::where('prof_id',"$profId")->where('disciplina_id',"$disciplina")->get();
+                        return redirect('/prof/ocorrencias/'.$disc.'/'.$tm);
                     }
                 }
             }
         }
-        $alunos = Aluno::where('ativo',true)->where('turma_id',"$turma")->get();
+        $disciplina = Disciplina::find($disc);
+        $turma = Turma::find($tm);
+        $alunos = Aluno::where('ativo',true)->where('turma_id',"$tm")->get();
         $tipos = TipoOcorrencia::where('ativo',true)->get();
         $view = "filtro";
         return view('profs.ocorrencias_prof', compact('view','alunos','tipos','disciplina','ocorrencias','turma'));
@@ -755,10 +906,9 @@ class ProfController extends Controller
         return back()->with('mensagem', 'Ocorrência atualizada com Sucesso!');
     }
 
-    public function apagarOcorrencia(Request $request, $id)
+    public function apagarOcorrencia($id)
     {
-        $ocorrenciaId = $request->input('ocorrencia');
-        $ocorrencia = Ocorrencia::find($ocorrenciaId);
+        $ocorrencia = Ocorrencia::find($id);
         if(isset($ocorrencia)){
             $ocorrencia->delete();
         }
@@ -1016,6 +1166,93 @@ class ProfController extends Controller
         Storage::disk('public')->delete($arquivo);
         $cont->arquivo = "";
         $cont->save();
+        return back();
+    }
+
+    //NOTAS
+    public function indexNotas(Request $request){
+        $ano = $request->input('ano');
+        $profId = Auth::user()->id;
+        $profDiscs = ProfDisciplina::where('prof_id',"$profId")->get();
+        $turmas = array();
+        foreach($profDiscs as $profDisc){
+            $profDisc = ProfDisciplina::where('prof_id',"$profId")->where('disciplina_id',"$profDisc->disciplina_id")->first();
+            $profTurmas = ProfTurma::where('prof_disciplina_id',"$profDisc->id")->get();
+            foreach($profTurmas as $turma){
+                $turmas[] = $turma->turma_id;
+            }
+        }
+        $simIds = DB::table('lancamento_notas')->whereIn('turma_id', $turmas)->select(DB::raw("nota_id"))->groupBy('nota_id')->get();
+        $simuladosIds = array();
+        foreach($simIds as $simId){
+            $simuladosIds[] = $simId->nota_id;
+        }
+        $anos = DB::table('notas')->select(DB::raw("ano"))->groupBy('ano')->get();
+        $notas = Nota::whereIn('id', $simuladosIds)->where('ano',"$ano")->orderBy('prazo', 'desc')->get();
+        return view('profs.home_notas',compact('profDiscs','ano','anos','notas'));
+    }
+
+    public function indexNotasAno($ano){
+        $profId = Auth::user()->id;
+        $profDiscs = ProfDisciplina::where('prof_id',"$profId")->get();
+        $turmas = array();
+        foreach($profDiscs as $profDisc){
+            $profDisc = ProfDisciplina::where('prof_id',"$profId")->where('disciplina_id',"$profDisc->disciplina_id")->first();
+            $profTurmas = ProfTurma::where('prof_disciplina_id',"$profDisc->id")->get();
+            foreach($profTurmas as $turma){
+                $turmas[] = $turma->turma_id;
+            }
+        }
+        $simIds = DB::table('lancamento_notas')->whereIn('turma_id', $turmas)->select(DB::raw("nota_id"))->groupBy('nota_id')->get();
+        $simuladosIds = array();
+        foreach($simIds as $simId){
+            $simuladosIds[] = $simId->nota_id;
+        }
+        if($ano==""){
+            $ano = date("Y");
+        }
+        $anos = DB::table('notas')->select(DB::raw("ano"))->groupBy('ano')->get();
+        $notas = Nota::whereIn('id', $simuladosIds)->where('ano',"$ano")->orderBy('prazo', 'desc')->get();
+        return view('profs.home_notas',compact('profDiscs','ano','anos','notas'));
+    }
+
+    public function painelNotas($notaId, $turmaId){
+        $nota = Nota::find($notaId);
+        $turma = Turma::find($turmaId);
+        if(isset($nota)){
+            $ano = $nota->ano;
+            $profId = Auth::user()->id; 
+            $profDiscs = ProfDisciplina::where('prof_id',"$profId")->get();
+            $discsIds = array();
+            foreach ($profDiscs as $disc) {
+                $discsIds[] = $disc->disciplina_id;
+            }
+            $alunos = Aluno::where('ativo',true)->where('turma_id',$turmaId)->get();
+            $lancamentos = LancamentoNota::where('nota_id',$notaId)->where('turma_id',$turmaId)->whereIn('disciplina_id',$discsIds)->get();
+            return view('profs.notas',compact('nota','turma','ano','profDiscs','alunos','lancamentos'));
+        } else {
+            return back()->with('mensagem', 'Não foram criados campos para essa nota!')->with('type', 'warning');
+        }
+    }
+
+    public function lancarNota(Request $request, $id)
+    {
+        $cont = LancamentoNota::find($id);
+        if(isset($cont)){
+            $cont->prof_id = Auth::user()->id;
+            $cont->nota = $request->nota;
+            $cont->save();
+        }
+        return back();
+    }
+
+    public function zerarNota($id){
+        $cont = LancamentoNota::find($id);
+        if(isset($cont)){
+            $cont->prof_id = NULL;
+            $cont->nota = NULL;
+            $cont->save();
+        }
         return back();
     }
 

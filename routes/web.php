@@ -137,6 +137,16 @@ Route::group(['prefix' => 'admin'], function() {
         Route::get('/retorno/download/{id}', 'AdminController@downloadRetorno');
     });
 
+    Route::group(['prefix' => 'atividadeDiaria'], function() {
+        Route::get('/', 'AdminController@painelAtividadesDiarias');
+        Route::post('/', 'AdminController@novaAtividadeDiaria');
+        Route::get('/filtro', 'AdminController@filtroAtividadeDiaria');
+        Route::post('/editar/{id}', 'AdminController@editarAtividadeDiaria');
+        Route::get('/apagar/{id}', 'AdminController@apagarAtividadeDiaria');
+        Route::get('/download/{id}', 'AdminController@downloadAtividadeDiaria');
+        Route::get('/impresso/{id}', 'AdminController@imprimirAtividadeDiaria');
+    });
+
     Route::group(['prefix' => 'atividadeComplementar'], function() {
         Route::get('/{a}', 'AdminController@indexAtividadesComplementaresAno');
         Route::get('/', 'AdminController@indexAtividadesComplementares');
@@ -227,6 +237,18 @@ Route::group(['prefix' => 'admin'], function() {
         Route::post('/conferir', 'AdminController@conferirSimulado');
     });
 
+    Route::group(['prefix' => 'notas'], function() {
+        Route::get('/{a}', 'AdminController@indexNotasAno');
+        Route::get('/', 'AdminController@indexNotas');
+        Route::post('/gerar', 'AdminController@gerarNotas');
+        Route::post('/editar/{id}', 'AdminController@editarNota');
+        Route::get('/apagar/{id}', 'AdminController@apagarNota');
+        Route::get('/painel/{n}/{t}', 'AdminController@painelNotas');
+        Route::post('/lancar/{id}', 'AdminController@lancarNota');
+        Route::get('/zerar/{id}', 'AdminController@zerarNota');
+        Route::post('/pdf/{n}/{t}', 'AdminController@gerarPdfNota');
+    });
+
     Route::group(['prefix' => 'planejamentos'], function() {
         Route::get('/{a}', 'AdminController@indexPlanejamentosAno');
         Route::get('/', 'AdminController@indexPlanejamentos');
@@ -275,6 +297,16 @@ Route::group(['prefix' => 'prof'], function() {
         Route::get('/apagar/{id}', 'ProfController@apagarAtividade');
         Route::get('/retornos/{id}', 'ProfController@retornos');
         Route::get('/retorno/download/{id}', 'ProfController@downloadRetorno');
+    });
+
+    Route::group(['prefix' => 'atividadeDiaria'], function() {
+        Route::get('/disciplinas', 'ProfController@disciplinasAtividadesDiarias');
+        Route::get('/{id}', 'ProfController@painelAtividadesDiarias');
+        Route::post('/', 'ProfController@novaAtividadeDiaria');
+        Route::get('/filtro/{id}', 'ProfController@filtroAtividadeDiaria');
+        Route::post('/editar/{id}', 'ProfController@editarAtividadeDiaria');
+        Route::get('/apagar/{id}', 'ProfController@apagarAtividadeDiaria');
+        Route::get('/download/{id}', 'ProfController@downloadAtividadeDiaria');
     });
 
     Route::group(['prefix' => 'atividadeComplementar'], function() {
@@ -339,6 +371,14 @@ Route::group(['prefix' => 'prof'], function() {
         Route::post('/anexar/{id}', 'ProfController@anexarSimulado');
         Route::get('/download/{id}', 'ProfController@downloadSimulado');
         Route::get('/apagar/{id}', 'ProfController@apagarSimulado');
+    });
+
+    Route::group(['prefix' => 'notas'], function() {
+        Route::get('/{a}', 'ProfController@indexNotasAno');
+        Route::get('/', 'ProfController@indexNotas');
+        Route::get('/painel/{n}/{t}', 'ProfController@painelNotas');
+        Route::post('/lancar/{id}', 'ProfController@lancarNota');
+        Route::get('/zerar/{id}', 'ProfController@zerarNota');
     });
 
     Route::group(['prefix' => 'planejamentos'], function() {
@@ -436,6 +476,12 @@ Route::group(['prefix' => 'outro'], function() {
         Route::post('/conferir', 'OutroController@conferirSimulado');
     });
 
+    Route::group(['prefix' => 'notas'], function() {
+        Route::get('/{a}', 'OutroController@indexNotasAno');
+        Route::get('/', 'OutroController@indexNotas');
+        Route::get('/painel/{n}/{t}', 'OutroController@painelNotas');
+    });
+
     Route::group(['prefix' => 'conteudosProvas'], function() {
         Route::get('/painel/{id}', 'OutroController@painelConteudoProvas');
         Route::post('/pdf/{prova}/{serie}', 'OutroController@gerarPdfConteudo');
@@ -458,6 +504,13 @@ Route::group(['prefix' => 'outro'], function() {
         Route::get('/painel/{id}', 'OutroController@painelAtividadesComplementares');
         Route::get('/download/{id}', 'OutroController@downloadAtividadeComplementar');
         Route::get('/impresso/{id}', 'OutroController@imprimirAtividadeComplementar');
+    });
+
+    Route::group(['prefix' => 'atividadeDiaria'], function() {
+        Route::get('/', 'OutroController@painelAtividadesDiarias');
+        Route::get('/filtro', 'OutroController@filtroAtividadeDiaria');
+        Route::get('/download/{id}', 'OutroController@downloadAtividadeDiaria');
+        Route::get('/impresso/{id}', 'OutroController@imprimirAtividadeDiaria');
     });
 
     Route::group(['prefix' => 'planejamentos'], function() {

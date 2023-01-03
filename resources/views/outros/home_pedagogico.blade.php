@@ -3,7 +3,7 @@
 @section('body')
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-auto">
+        {{--  <div class="col-auto">
             <div class="card border-primary text-center centralizado">
                 <div class="card-body">
                     <h5>Atividades Complementares</h5>
@@ -11,6 +11,17 @@
                         Consultar as Atividades
                     </p>
                     <a href="/outro/atividadeComplementar/{{date("Y")}}" class="btn btn-primary">Atividades</a>
+                </div>
+            </div>
+        </div>  --}}
+        <div class="col-auto">
+            <div class="card border-primary text-center centralizado">
+                <div class="card-body">
+                    <h5>Atividades Complementares</h5>{{-- Diárias --}}
+                    <p class="card-text">
+                        Consultar as Atividades
+                    </p>
+                    <a href="/outro/atividadeDiaria" class="btn btn-primary">Atividades</a>
                 </div>
             </div>
         </div>
@@ -36,6 +47,17 @@
                 </div>
             </div>
         </div>
+        {{--  <div class="col-auto">
+            <div class="card border-primary text-center centralizado">
+                <div class="card-body">
+                    <h5>Notas</h5>
+                    <p class="card-text">
+                        Consultar Notas
+                    </p>
+                    <a href="/outro/notas/{{date("Y")}}" class="btn btn-primary">Notas</a>
+                </div>
+            </div>
+        </div>  --}}
         <div class="col-auto">
             <div class="card border-primary text-center centralizado">
                 <div class="card-body">

@@ -32,6 +32,28 @@
         <div class="col-auto">
             <div class="card border-primary text-center centralizado">
                 <div class="card-body">
+                    <h5>Planejamentos</h5>
+                    <p class="card-text">
+                        Cadastrar e Consultar Planejamentos
+                    </p>
+                    <a href="/prof/planejamentos/{{date("Y")}}" class="btn btn-primary">Planejamentos</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-auto">
+            <div class="card border-primary text-center centralizado">
+                <div class="card-body">
+                    <h5>Atividades Complementares</h5>{{--Diárias--}}
+                    <p class="card-text">
+                        Consultar as Atividades
+                    </p>
+                    <a href="/prof/atividadeDiaria/disciplinas" class="btn btn-primary">Atividades</a>
+                </div>
+            </div>
+        </div>
+        {{--  <div class="col-auto">
+            <div class="card border-primary text-center centralizado">
+                <div class="card-body">
                     <h5>Atividades Complementares</h5>
                     <p class="card-text">
                         Gerenciar as Atividades
@@ -39,7 +61,7 @@
                     <a href="/prof/atividadeComplementar/{{date("Y")}}" class="btn btn-primary">Atividades</a>
                 </div>
             </div>
-        </div>
+        </div>  --}}
         <div class="col-auto">
             <div class="card border-primary text-center centralizado">
                 <div class="card-body">
@@ -62,14 +84,25 @@
                 </div>
             </div>
         </div>
+        {{--  <div class="col-auto">
+            <div class="card border-primary text-center centralizado">
+                <div class="card-body">
+                    <h5>Notas</h5>
+                    <p class="card-text">
+                        Lançamento de Notas
+                    </p>
+                    <a href="/prof/notas/{{date("Y")}}" class="btn btn-primary">Notas</a>
+                </div>
+            </div>
+        </div>  --}}
         <div class="col-auto">
             <div class="card border-primary text-center centralizado">
                 <div class="card-body">
-                    <h5>Planejamentos</h5>
+                    <h5>Ocorrências</h5>
                     <p class="card-text">
-                        Cadastrar e Consultar Planejamentos
+                        Consultar as Ocorrências
                     </p>
-                    <a href="/prof/planejamentos/{{date("Y")}}" class="btn btn-primary">Planejamentos</a>
+                    <a href="/prof/ocorrencias/disciplinas" class="btn btn-primary">Ocorrências</a>
                 </div>
             </div>
         </div>
@@ -106,17 +139,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-auto">
-            <div class="card border-primary text-center centralizado">
-                <div class="card-body">
-                    <h5>Ocorrências</h5>
-                    <p class="card-text">
-                        Lançar as Ocorrências
-                    </p>
-                    <a href="/prof/ocorrencias/disciplinas" class="btn btn-primary">Ocorrências</a>
-                </div>
-            </div>
-        </div>
+        
         <div class="col-auto">
             <div class="card border-primary text-center centralizado">
                 <div class="card-body">

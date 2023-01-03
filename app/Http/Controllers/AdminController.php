@@ -41,6 +41,9 @@ use App\Models\TurmaDisciplina;
 use App\Exports\AlunoExport;
 use App\Exports\AlunoExportView;
 use App\Models\AnexoAtividadeComplementar;
+use App\Models\AtividadeDiaria;
+use App\Models\LancamentoNota;
+use App\Models\Nota;
 use Excel;
 use PDF;
 use Illuminate\Support\Facades\Storage;
@@ -1242,6 +1245,162 @@ class AdminController extends Controller
         return back();
     }
 
+    //ATIVIDADES DIARIAS
+    public function painelAtividadesDiarias(){
+        $profs = Prof::where('ativo',true)->orderBy('name')->get();
+        $discs = Disciplina::where('ativo',true)->orderBy('nome')->get();
+        $turmas = Turma::where('ativo',true)->get();
+        $atividades = AtividadeDiaria::orderBy('id','desc')->paginate(10);
+        $view = "inicial";
+        return view('admin.atividade_diaria_admin', compact('view','profs','discs','turmas','atividades'));
+    }
+
+    public function novaAtividadeDiaria(Request $request)
+    {
+        $prof = Prof::find($request->prof);
+        $disc = Disciplina::find($request->disciplina);
+        $turma = Turma::find($request->turma);
+        $profDisc = ProfDisciplina::where('prof_id',$request->prof)->where('disciplina_id',$request->disciplina)->first();
+        if(!isset($profDisc)){
+            return back()->with('mensagem', 'Professor(a) '.$prof->name.' não ministra a disciplina '.$disc->nome.'('.$disc->ensino.')')->with('type', 'warning');
+        } else {
+            $profTurma = ProfTurma::where('prof_disciplina_id',$profDisc->id)->where('turma_id',$request->turma)->first();
+            if(!isset($profTurma)){
+                return back()->with('mensagem', 'Professor(a) '.$prof->name.' não ministra aulas na turma '.$turma->serie.'º'.$turma->turma)->with('type', 'warning');
+            }
+        }
+        $path = $request->file('arquivo')->store('atividadesDiarias','public');
+        $atividade = new AtividadeDiaria();
+        $atividade->prof_id = $request->prof;
+        $atividade->turma_id = $request->turma;
+        $atividade->disciplina_id = $request->disciplina;
+        $atividade->data = $request->data;
+        $atividade->descricao = $request->descricao;
+        $atividade->usuario = Auth::user()->name;
+        $atividade->arquivo = $path;
+        $atividade->save();
+
+        return back();
+    }
+
+    public function filtroAtividadeDiaria(Request $request)
+    {
+        $prof = $request->prof;
+        $disciplina = $request->disciplina;
+        $turma = $request->turma;
+        $descricao = $request->descricao;
+        $data = $request->data;
+        $query = AtividadeDiaria::query();
+        if(isset($prof)){
+            $query->where('prof_id', $prof);
+        }
+        if(isset($disciplina)){
+            $query->where('disciplina_id', $disciplina);
+        }
+        if(isset($turma)){
+            $query->where('turma_id', $turma);
+        }
+        if(isset($descricao)){
+            $query->where('descricao','like',"%$descricao%");
+        }
+        if(isset($data)){
+            $query->where('data', $data);
+        }
+        $atividades = $query->orderBy('id','desc')->paginate(50);
+        $profs = Prof::where('ativo',true)->orderBy('name')->get();
+        $discs = Disciplina::where('ativo',true)->orderBy('nome')->get();
+        $turmas = Turma::where('ativo',true)->get();
+        $view = "filtro";
+        return view('admin.atividade_diaria_admin', compact('view','profs','discs','turmas','atividades'));
+    }
+
+    public function editarAtividadeDiaria(Request $request, $id)
+    {
+        $atividade = AtividadeDiaria::find($id);
+        if(isset($atividade)){
+            $prof = Prof::find($request->prof);
+            $disc = Disciplina::find($request->disciplina);
+            $turma = Turma::find($request->turma);
+            $profDisc = ProfDisciplina::where('prof_id',$request->prof)->where('disciplina_id',$request->disciplina)->first();
+            if(!isset($profDisc)){
+                return back()->with('mensagem', 'Professor(a) '.$prof->name.' não ministra a disciplina '.$disc->nome.' ('.$disc->ensino.')')->with('type', 'warning');
+            } else {
+                $profTurma = ProfTurma::where('prof_disciplina_id',$profDisc->id)->where('turma_id',$request->turma)->first();
+                if(!isset($profTurma)){
+                    return back()->with('mensagem', 'Professor(a) '.$prof->name.' não ministra aulas na turma '.$turma->serie.'º'.$turma->turma)->with('type', 'warning');
+                }
+            }
+        } else {
+            return back()->with('mensagem', 'Atividade não encontrada!')->with('type', 'danger');
+        }
+        if($request->file('arquivo')!=""){
+            Storage::disk('public')->delete($atividade->arquivo);
+            $atividade->arquivo = $request->file('arquivo')->store('atividadesDiarias','public');
+        }
+        if($request->prof!=""){
+            $atividade->prof_id = $request->prof;
+        }
+        if($request->turma!=""){
+            $atividade->turma_id = $request->turma;
+        }
+        if($request->disciplina!=""){
+            $atividade->disciplina_id = $request->disciplina;
+        }
+        if($request->input('data')!=""){
+            $atividade->data = $request->input('data');
+        }
+        if($request->input('descricao')!=""){
+            $atividade->descricao = $request->input('descricao');
+        }
+        $atividade->save();
+        
+        return back();
+    }
+
+    public function apagarAtividadeDiaria($id){
+        $atividade = AtividadeDiaria::find($id);
+        if(isset($atividade)){
+            Storage::disk('public')->delete($atividade->arquivo);
+            $atividade->delete();
+            return back()->with('mensagem', 'Atividade excluída com Sucesso!')->with('type', 'success');
+        } else {
+            return back()->with('mensagem', 'Atividade não encontrada!')->with('type', 'danger');
+        }
+    }
+
+    public function downloadAtividadeDiaria($id)
+    {
+        $atividade = AtividadeDiaria::find($id);
+        $disc = Disciplina::find($atividade->disciplina_id);
+        $turma = Turma::find($atividade->turma_id);
+        $nameFile = $turma->serie."º".$turma->turma." - Atividade ".$atividade->descricao." - ".$disc->nome;
+        if(isset($atividade)){
+            $path = Storage::disk('public')->getDriver()->getAdapter()->applyPathPrefix($atividade->arquivo);
+            $extension = pathinfo($path, PATHINFO_EXTENSION);
+            $name = $nameFile.".".$extension;
+            return response()->download($path, $name);
+        } else {
+            return back()->with('mensagem', 'Atividade não encontrada!')->with('type', 'danger');
+        }
+    }
+
+    public function imprimirAtividadeDiaria($id){
+        $atividade = AtividadeDiaria::find($id);
+        if(isset($atividade)){
+            if($atividade->impresso==false){
+                $atividade->impresso = true;
+                $atividade->save();
+                return back()->with('mensagem', 'Atividade marcada como Impresso com Sucesso!')->with('type', 'success');
+            } else {
+                $atividade->impresso = false;
+                $atividade->save();
+                return back()->with('mensagem', 'Atividade marcada como Não Impresso com Sucesso!')->with('type', 'success');
+            }
+        } else {
+            return back()->with('mensagem', 'Atividade não encontrada!')->with('type', 'danger');
+        }
+    }
+
     //ATIVIDADES COMPLEMENTARES
     public function indexAtividadesComplementares(Request $request){
         $ano = $request->input('ano');
@@ -2348,6 +2507,10 @@ class AdminController extends Controller
                 }
                 $questao->delete();
             }
+            $conts = ConteudoProva::where('simulado_id',"$id")->get(); //CORREÇÃO
+            foreach($conts as $cont){
+                ConteudoProva::find($cont->id)->delete();
+            }
             $prova->delete();
         }
         return back();
@@ -2361,6 +2524,136 @@ class AdminController extends Controller
         $cont->conferido = true;
         $cont->save();
         return back();
+    }
+
+    //NOTAS
+    public function indexNotas(Request $request){
+        $ano = $request->input('ano');
+        $turmas = Turma::where('ativo',true)->orderBy('serie')->get();
+        $anos = DB::table('notas')->select(DB::raw("ano"))->groupBy('ano')->get();
+        $notas = Nota::where('ano',"$ano")->orderBy('prazo', 'desc')->get();
+        return view('admin.home_notas',compact('ano','turmas','anos','notas'));
+    }
+
+    public function indexNotasAno($ano){
+        if($ano==""){
+            $ano = date("Y");
+        }
+        $turmas = Turma::where('ativo',true)->orderBy('serie')->get();
+        $anos = DB::table('notas')->select(DB::raw("ano"))->groupBy('ano')->get();
+        $notas = Nota::where('ano',"$ano")->orderBy('prazo', 'desc')->get();
+        return view('admin.home_notas',compact('ano','turmas','anos','notas'));
+    }
+    //DB::table('questao_simulados')->select(DB::raw('id, descricao, bimestre, ano'))->groupByRaw('id, descricao, bimestre, ano')->get();
+    
+    public function gerarNotas(Request $request){
+        $nota = new Nota();
+        $nota->prazo = $request->input('prazo');
+        $nota->descricao = $request->input('descricao');
+        $nota->ano = $request->input('ano');
+        $nota->bimestre = $request->input('bimestre');
+        $nota->save();
+        $turmas = $request->input('turmas');
+        foreach($turmas as $turmaId){
+            $turma = Turma::find($turmaId);
+            $alunos = Aluno::where('turma_id',$turmaId)->get();
+            foreach($alunos as $aluno){
+                $discs = Disciplina::where('ensino',$turma->ensino)->where('ativo',true)->get();
+                foreach($discs as $disc){
+                    $validador = LancamentoNota::where('nota_id', "$nota->id")->where('aluno_id', "$aluno->id")->where('turma_id', "$turmaId")->where('disciplina_id', "$disc->id")->count();
+                    if($validador == 0){
+                        $quest = new LancamentoNota();
+                        $quest->nota_id = $nota->id;
+                        $quest->aluno_id = $aluno->id;
+                        $quest->turma_id = $turmaId;
+                        $quest->disciplina_id = $disc->id;
+                        $quest->save();
+                    }
+                }
+            }
+        }
+        return back()->with('mensagem', 'Campos para anexar os conteúdos e questões gerados com sucesso!')->with('type', 'success');
+    }
+
+    public function editarNota(Request $request, $id){
+        $nota = Nota::find($id);
+        $nota->prazo = $request->input('prazo');
+        $nota->descricao = $request->input('descricao');
+        $nota->save();
+        return back();
+    }
+
+    public function apagarNota($id){
+        $nota = Nota::find($id);
+        if(isset($nota)){
+            LancamentoNota::where('nota_id',"$id")->delete();
+            $nota->delete();
+        }
+        return back();
+    }
+
+    public function painelNotas($notaId, $turmaId){
+        $nota = Nota::find($notaId);
+        $turma = Turma::find($turmaId);
+        if(isset($nota)){
+            $ano = $nota->ano;
+            $turmaDiscs = TurmaDisciplina::where('turma_id',"$turmaId")->get();
+            $discsIds = array();
+            foreach ($turmaDiscs as $disc) {
+                $discsIds[] = $disc->disciplina_id;
+            }
+            $disciplinas = Disciplina::whereIn('id',$discsIds)->where('ativo',true)->orderBy('nome')->get();
+            $alunos = Aluno::where('ativo',true)->where('turma_id',$turmaId)->get();
+            $lancamentos = LancamentoNota::where('nota_id',$notaId)->where('turma_id',$turmaId)->get();
+            return view('admin.notas',compact('nota','turma','ano','disciplinas','alunos','lancamentos'));
+        } else {
+            return back()->with('mensagem', 'Não foram criados campos para essa nota!')->with('type', 'warning');
+        }
+    }
+
+    public function lancarNota(Request $request, $id)
+    {
+        $nota = LancamentoNota::find($id);
+        if(isset($nota)){
+            $nota->nota = $request->input('nota');
+            $nota->save();
+        }
+        return back();
+    }
+
+    public function zerarNota($id){
+        $nota = LancamentoNota::find($id);
+        if(isset($nota)){
+            $nota->nota = NULL;
+            $nota->save();
+        }
+        return back();
+    }
+
+    public function gerarPdfNota($notaId, $turmaId, Request $request)
+    {
+        $turma = Turma::find($turmaId);
+        $nota = Simulado::find($notaId);
+        $turmaDiscs = TurmaDisciplina::where('turma_id',"$turmaId")->get();
+        if(isset($request->disciplinas)){
+            $discIds = $request->disciplinas;
+        } else{
+            $discIds = array();
+            foreach($turmaDiscs as $turmaDisc){
+                $discIds[] = $turmaDisc->disciplina_id;
+            }
+        }
+        $discs = Disciplina::whereIn('id', $discIds)->where('ativo',true)->orderBy('nome')->get();
+        $profTurmas = ProfTurma::where('turma_id',"$turmaId")->get();
+        $profIds = array();
+            foreach($profTurmas as $profTurma){
+                 $profDisc = ProfDisciplina::find($profTurma->prof_disciplina_id);
+                 $profIds[] = $profDisc->prof_id;
+            }
+        $profs = Prof::whereIn('id', $profIds)->where('ativo',true)->get();
+        $conteudos = ConteudoProva::where('simulado_id',"$notaId")->where('turma_id',"$turmaId")->get();
+        $pdf = \PDF::loadView('admin.conteudos_pdf', compact('turma','prova','discs','profs','conteudos'));
+        return $pdf->setPaper('a4')->stream($turma->serie.'º'. $turma->turma .' - Conteúdos '.$nota->descricao.' - '.$nota->bimestre.'º Bimestre'.'.pdf');
     }
 
     //CONTEUDOS DE PROVAS

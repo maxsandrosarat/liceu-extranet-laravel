@@ -68,6 +68,7 @@
             </div>
             <br/>
             <div class="table-responsive-xl">
+            <b><h5 class="font-italic">Exibindo {{$ocorrencias->count()}} de {{$ocorrencias->total()}} de Ocorrências ({{$ocorrencias->firstItem()}} a {{$ocorrencias->lastItem()}})</u></h5></b>
             <table class="table table-striped table-hover">
                 <thead class="table-dark">
                     <tr>

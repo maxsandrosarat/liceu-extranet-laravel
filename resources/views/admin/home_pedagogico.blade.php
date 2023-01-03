@@ -3,7 +3,7 @@
 @section('body')
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-auto">
+        {{--  <div class="col-auto">
             <div class="card border-primary text-center centralizado">
                 <div class="card-body">
                     <h5>Atividades Complementares</h5>
@@ -13,8 +13,19 @@
                     <a href="/admin/atividadeComplementar/{{date("Y")}}" class="btn btn-primary">Atividades</a>
                 </div>
             </div>
+        </div>  --}}
+        <div class="col-auto">
+            <div class="card border-primary text-center centralizado">
+                <div class="card-body">
+                    <h5>Atividades Complementares</h5>{{-- Diárias --}}
+                    <p class="card-text">
+                        Consultar as Atividades
+                    </p>
+                    <a href="/admin/atividadeDiaria" class="btn btn-primary">Atividades</a>
+                </div>
+            </div>
         </div>
-        {{-- <div class="col-auto">
+        {{--  <div class="col-auto">
             <div class="card border-primary text-center centralizado">
                 <div class="card-body">
                     <h5>Atividades</h5>
@@ -24,8 +35,8 @@
                     <a href="/admin/atividade" class="btn btn-primary">Atividades</a>
                 </div>
             </div>
-        </div>
-        <div class="col-auto">
+        </div>  --}}
+        {{--  <div class="col-auto">
             <div class="card border-primary text-center centralizado">
                 <div class="card-body">
                     <h5>Listas Atividades</h5>
@@ -35,7 +46,7 @@
                     <a href="/admin/listaAtividade/{{date("Y")}}" class="btn btn-primary">Listas Atividades</a>
                 </div>
             </div>
-        </div> --}}
+        </div>  --}}
         <div class="col-auto">
             <div class="card border-primary text-center centralizado">
                 <div class="card-body">
@@ -102,6 +113,17 @@
                 </div>
             </div>
         </div>
+        {{--  <div class="col-auto">
+            <div class="card border-primary text-center centralizado">
+                <div class="card-body">
+                    <h5>Notas</h5>
+                    <p class="card-text">
+                        Consultar Notas
+                    </p>
+                    <a href="/admin/notas/{{date("Y")}}" class="btn btn-primary">Notas</a>
+                </div>
+            </div>
+        </div>  --}}
         <div class="col-auto">
             <div class="card border-primary text-center centralizado">
                 <div class="card-body">

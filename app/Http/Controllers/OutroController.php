@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Aluno;
 use App\Models\AnexoAtividadeComplementar;
 use App\Models\AnexoPlanejamento;
 use App\Models\AtividadeComplementar;
+use App\Models\AtividadeDiaria;
 use Illuminate\Http\Request;
 use App\Models\Turma;
 use App\Models\Categoria;
@@ -15,8 +17,10 @@ use App\Models\Diario;
 use App\Models\Disciplina;
 use App\Models\Documento;
 use App\Models\EntradaSaida;
+use App\Models\LancamentoNota;
 use App\Models\Lembrete;
 use App\Models\ListaCompra;
+use App\Models\Nota;
 use App\Models\Planejamento;
 use App\Models\Produto;
 use App\Models\ProdutoExtra;
@@ -511,6 +515,44 @@ class OutroController extends Controller
         return back();
     }
 
+    //NOTAS
+    public function indexNotas(Request $request){
+        $ano = $request->input('ano');
+        $turmas = Turma::where('ativo',true)->orderBy('serie')->get();
+        $anos = DB::table('notas')->select(DB::raw("ano"))->groupBy('ano')->get();
+        $notas = Nota::where('ano',"$ano")->orderBy('prazo', 'desc')->get();
+        return view('outros.home_notas',compact('ano','turmas','anos','notas'));
+    }
+
+    public function indexNotasAno($ano){
+        if($ano==""){
+            $ano = date("Y");
+        }
+        $turmas = Turma::where('ativo',true)->orderBy('serie')->get();
+        $anos = DB::table('notas')->select(DB::raw("ano"))->groupBy('ano')->get();
+        $notas = Nota::where('ano',"$ano")->orderBy('prazo', 'desc')->get();
+        return view('outros.home_notas',compact('ano','turmas','anos','notas'));
+    }
+
+    public function painelNotas($notaId, $turmaId){
+        $nota = Nota::find($notaId);
+        $turma = Turma::find($turmaId);
+        if(isset($nota)){
+            $ano = $nota->ano;
+            $turmaDiscs = TurmaDisciplina::where('turma_id',"$turmaId")->get();
+            $discsIds = array();
+            foreach ($turmaDiscs as $disc) {
+                $discsIds[] = $disc->disciplina_id;
+            }
+            $disciplinas = Disciplina::whereIn('id',$discsIds)->where('ativo',true)->orderBy('nome')->get();
+            $alunos = Aluno::where('ativo',true)->where('turma_id',$turmaId)->get();
+            $lancamentos = LancamentoNota::where('nota_id',$notaId)->where('turma_id',$turmaId)->get();
+            return view('outros.notas',compact('nota','turma','ano','disciplinas','alunos','lancamentos'));
+        } else {
+            return back()->with('mensagem', 'Não foram criados campos para essa nota!')->with('type', 'warning');
+        }
+    }
+
     //CONTEUDOS DE PROVAS
     public function painelConteudoProvas($provaId){
         $prova = Simulado::find($provaId);
@@ -654,7 +696,81 @@ class OutroController extends Controller
         return view('outros.lembretes_outro', compact('view','lembretes'));
     }
 
-    //ATIVIDADES COMPLEMENTARES
+    //ATIVIDADES DIARIAS
+    public function painelAtividadesDiarias(){
+        $profs = Prof::where('ativo',true)->orderBy('name')->get();
+        $discs = Disciplina::where('ativo',true)->orderBy('nome')->get();
+        $turmas = Turma::where('ativo',true)->get();
+        $atividades = AtividadeDiaria::orderBy('id','desc')->paginate(10);
+        $view = "inicial";
+        return view('outros.atividade_diaria_outro', compact('view','profs','discs','turmas','atividades'));
+    }
+
+    public function filtroAtividadeDiaria(Request $request)
+    {
+        $prof = $request->prof;
+        $disciplina = $request->disciplina;
+        $turma = $request->turma;
+        $descricao = $request->descricao;
+        $data = $request->data;
+        $query = AtividadeDiaria::query();
+        if(isset($prof)){
+            $query->where('prof_id', $prof);
+        }
+        if(isset($disciplina)){
+            $query->where('disciplina_id', $disciplina);
+        }
+        if(isset($turma)){
+            $query->where('turma_id', $turma);
+        }
+        if(isset($descricao)){
+            $query->where('descricao','like',"%$descricao%");
+        }
+        if(isset($data)){
+            $query->where('data', $data);
+        }
+        $atividades = $query->orderBy('id','desc')->paginate(50);
+        $profs = Prof::where('ativo',true)->orderBy('name')->get();
+        $discs = Disciplina::where('ativo',true)->orderBy('nome')->get();
+        $turmas = Turma::where('ativo',true)->get();
+        $view = "filtro";
+        return view('outros.atividade_diaria_outro', compact('view','profs','discs','turmas','atividades'));
+    }
+
+    public function downloadAtividadeDiaria($id)
+    {
+        $atividade = AtividadeDiaria::find($id);
+        $disc = Disciplina::find($atividade->disciplina_id);
+        $turma = Turma::find($atividade->turma_id);
+        $nameFile = $turma->serie."º".$turma->turma." - Atividade ".$atividade->descricao." - ".$disc->nome;
+        if(isset($atividade)){
+            $path = Storage::disk('public')->getDriver()->getAdapter()->applyPathPrefix($atividade->arquivo);
+            $extension = pathinfo($path, PATHINFO_EXTENSION);
+            $name = $nameFile.".".$extension;
+            return response()->download($path, $name);
+        } else {
+            return back()->with('mensagem', 'Atividade não encontrada!')->with('type', 'danger');
+        }
+    }
+
+    public function imprimirAtividadeDiaria($id){
+        $atividade = AtividadeDiaria::find($id);
+        if(isset($atividade)){
+            if($atividade->impresso==false){
+                $atividade->impresso = true;
+                $atividade->save();
+                return back()->with('mensagem', 'Atividade marcada como Impresso com Sucesso!')->with('type', 'success');
+            } else {
+                $atividade->impresso = false;
+                $atividade->save();
+                return back()->with('mensagem', 'Atividade marcada como Não Impresso com Sucesso!')->with('type', 'success');
+            }
+        } else {
+            return back()->with('mensagem', 'Atividade não encontrada!')->with('type', 'danger');
+        }
+    }
+
+    
     //ATIVIDADES COMPLEMENTARES
     public function indexAtividadesComplementares(Request $request){
         $ano = $request->input('ano');
