@@ -3,8 +3,16 @@
 @section('body')
 <div class="card border">
     <div class="card-body">
-        <a href="/admin/pedagogico" class="btn btn-success"data-toggle="tooltip" data-placement="bottom" title="Voltar"><i class="material-icons white">reply</i></a>
-        <br/><br/>
+        <div class="row">
+            <div class="col-9" style="text-align: left">
+                <a href="/admin/pedagogico" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="Voltar"><i class="material-icons white">reply</i></a>
+            </div>
+            <div class="col-3" style="text-align: right">
+                <a type="button" data-bs-toggle="modal" data-bs-target="#exampleModalDeleteAll" data-toggle="tooltip" data-placement="bottom" title="Excluir Todas as Atividades">
+                    <i class="material-icons red md-50">delete_forever</i>
+                </a>
+            </div>
+        </div>
         <h5 class="card-title">Painel de Atividades Diárias - {{date("d/m/Y H:i")}}</h5>
             @if(session('mensagem'))
                 <div class="alert @if(session('type')=="success") alert-success @else @if(session('type')=="warning") alert-warning @else @if(session('type')=="danger") alert-danger @else alert-info @endif @endif @endif alert-dismissible fade show" role="alert">
@@ -253,6 +261,24 @@
             </div>
         </div>
         @endif
+    </div>
+</div>
+<!-- Modal Deletar Todos -->
+<div class="modal fade" id="exampleModalDeleteAll" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Excluir Todas as Atividades</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h5>Tem certeza que deseja excluir todas as atividades?</h5>
+            </div>
+            <div class="modal-footer">
+                <a type="button" class="btn btn-danger" href="/admin/atividadeDiaria/apagar/-1">Excluir</a>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
     </div>
 </div>
 @endsection

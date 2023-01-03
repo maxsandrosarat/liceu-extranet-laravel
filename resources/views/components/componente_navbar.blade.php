@@ -10,9 +10,9 @@
             <li class="nav-item">
                 <a class="nav-link @if($current=="home") active @endif" href="/admin">Home</a>
             </li>
-            <li class="nav-item">
+            {{-- <li class="nav-item">
                 <a class="nav-link @if($current=="estoque") active @endif" href="/admin/estoque">Estoque</a>
-            </li>
+            </li> --}}
             <li class="nav-item">
                 <a class="nav-link @if($current=="administrativo") active @endif" href="/admin/administrativo">Administrativo</a>
             </li>
@@ -89,9 +89,9 @@
             <li class="nav-item">
                 <a class="nav-link @if($current=="home") active @endif" href="/outro">Home</a>
             </li>
-            <li class="nav-item">
+            {{-- <li class="nav-item">
                 <a class="nav-link @if($current=="estoque") active @endif" href="/outro/estoque">Estoque</a>
-            </li>
+            </li> --}}
             <li class="nav-item">
                 <a class="nav-link @if($current=="pedagogico") active @endif" href="/outro/pedagogico">Pedagógico</a>
             </li>

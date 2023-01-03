@@ -3,7 +3,7 @@
 @section('body')
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-auto">
+        {{-- <div class="col-auto">
             <div class="card border-primary text-center centralizado">
                 <div class="card-body">
                     <h5>Estoque</h5>
@@ -13,7 +13,7 @@
                     <a href="/admin/estoque" class="btn btn-primary">Estoque</a>
                 </div>
             </div>
-        </div>
+        </div> --}}
         <div class="col-auto">
             <div class="card border-primary text-center centralizado">
                 <div class="card-body">

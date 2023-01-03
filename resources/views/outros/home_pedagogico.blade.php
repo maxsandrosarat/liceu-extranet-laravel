@@ -58,7 +58,7 @@
                 </div>
             </div>
         </div>  --}}
-        <div class="col-auto">
+        {{-- <div class="col-auto">
             <div class="card border-primary text-center centralizado">
                 <div class="card-body">
                     <h5>Documentos</h5>
@@ -79,7 +79,7 @@
                     <a href="/outro/lembretes" class="btn btn-primary">Lembretes</a>
                 </div>
             </div>
-        </div>
+        </div> --}}
         <div class="col-auto">
             <div class="card border-primary text-center centralizado">
                 <div class="card-body">

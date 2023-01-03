@@ -1358,7 +1358,16 @@ class AdminController extends Controller
     }
 
     public function apagarAtividadeDiaria($id){
-        $atividade = AtividadeDiaria::find($id);
+        if($id==-1){
+            $atividades = AtividadeDiaria::all();
+            foreach($atividades as $atividade){
+                Storage::disk('public')->delete($atividade->arquivo);
+                $atividade->delete();
+            }
+            return back()->with('mensagem', 'Todas Atividades excluídas com Sucesso!')->with('type', 'success');
+        } else {
+            $atividade = AtividadeDiaria::find($id);
+        }
         if(isset($atividade)){
             Storage::disk('public')->delete($atividade->arquivo);
             $atividade->delete();

@@ -24,7 +24,7 @@
         @endforeach
       </div>
 @else
-    <h2 class="text-center">Sem lembretes</h2>
+    {{-- <h2 class="text-center">Sem lembretes</h2> --}}
 @endif
 </div>
 <div class="container">
@@ -180,7 +180,7 @@
             @endforeach
         </div>
     @else
-        <h2 class="text-center">Sem documentos</h2>
+        {{-- <h2 class="text-center">Sem documentos</h2> --}}
     @endif
 </div>
 @endsection
