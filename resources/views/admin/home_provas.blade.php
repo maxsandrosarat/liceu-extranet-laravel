@@ -76,10 +76,10 @@
                             </ul>
                         </td>
                         <td>
-                            <a href="/admin/conteudosProvas/painel/{{$prova->id}}" class="badge bg-primary" data-toggle="tooltip" data-placement="right" title="Painel"><i class="material-icons md-18">attach_file</i></a>
+                            <a href="/admin/conteudosProvas/painel/{{$prova->id}}" class="badge bg-primary" data-toggle="tooltip" data-placement="right" title="Painel de Conteúdos"><i class="material-icons md-18">attach_file</i></a>
                         </td>
                         <td> 
-                            <a href="/admin/provas/painel/{{$prova->id}}" class="badge bg-primary" data-toggle="tooltip" data-placement="right" title="Painel"><i class="material-icons md-18">attach_file</i></a>
+                            <a href="/admin/provas/painel/{{$prova->id}}" class="badge bg-primary" data-toggle="tooltip" data-placement="right" title="Painel de Questões"><i class="material-icons md-18">attach_file</i></a>
                         </td>
                         <td> 
                             <button type="button" class="badge bg-warning" data-bs-toggle="modal" data-bs-target="#exampleModalEdit{{$prova->id}}" data-toggle="tooltip" data-placement="left" title="Editar"><i class="material-icons md-18">edit</i></button>

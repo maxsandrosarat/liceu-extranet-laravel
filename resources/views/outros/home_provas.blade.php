@@ -72,10 +72,10 @@
                         </ul>
                     </td>
                     <td>
-                        <a href="/outro/conteudosProvas/painel/{{$prova->id}}" class="badge bg-primary" data-toggle="tooltip" data-placement="right" title="Painel"><i class="material-icons md-18">attach_file</i></a>
+                        <a href="/outro/conteudosProvas/painel/{{$prova->id}}" class="badge bg-primary" data-toggle="tooltip" data-placement="right" title="Painel de Conteúdos"><i class="material-icons md-18">attach_file</i></a>
                     </td>
                     <td> 
-                        <a href="/outro/provas/painel/{{$prova->id}}" class="badge bg-primary" data-toggle="tooltip" data-placement="right" title="Painel"><i class="material-icons md-18">attach_file</i></a>
+                        <a href="/outro/provas/painel/{{$prova->id}}" class="badge bg-primary" data-toggle="tooltip" data-placement="right" title="Painel de Questões"><i class="material-icons md-18">attach_file</i></a>
                     </td>
                 </tr>
                 @endforeach

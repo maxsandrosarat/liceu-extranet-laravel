@@ -73,8 +73,12 @@
                                                                 <form method="POST" action="/prof/conteudosProvas/anexar/{{$contFund->id}}" enctype="multipart/form-data">
                                                                     @csrf
                                                                     <div class="col-12 form-floating">
-                                                                        <textarea class="form-control" name="descricao" id="descricao" rows="10" cols="40" placeholder="Escreva aqui ou copei e cole do arquivo, a descrição completa dos conteúdos que serão cobrados.">@if($contFund->descricao!=''){{$contFund->descricao}}@endif</textarea>
+                                                                        <textarea class="form-control" name="descricao" id="descricao" rows="50" cols="40" placeholder="Escreva aqui ou copei e cole do arquivo, a descrição completa dos conteúdos que serão cobrados." @if($contFund->descricao=='') required @endif>@if($contFund->descricao!=''){{$contFund->descricao}}@endif</textarea>
                                                                         <label for="descricao">Descrição</label>
+                                                                    </div>
+                                                                    <div class="col-3 form-floating">
+                                                                        <input class="form-control" type="date" id="dataAplicacao" name="dataAplicacao" @if($contFund->data_aplicacao==null) placeholder="Data Aplicação" required @else value="{{date("Y-m-d", strtotime($contFund->data_aplicacao))}}" @endif>
+                                                                        <label for="dataAplicacao">Data Aplicação</label>
                                                                     </div>
                                                                     <div class="modal-footer">
                                                                         <button type="submit" class="btn btn-outline-primary">Salvar</button>
@@ -162,8 +166,12 @@
                                                         <form method="POST" action="/prof/conteudosProvas/anexar/{{$contMedio->id}}" enctype="multipart/form-data">
                                                             @csrf
                                                             <div class="col-12 form-floating">
-                                                                <textarea class="form-control" name="descricao" id="descricao" rows="10" cols="40" placeholder="Escreva aqui ou copei e cole do arquivo, a descrição completa dos conteúdos que serão cobrados.">@if($contMedio->descricao!=''){{$contMedio->descricao}}@endif</textarea>
+                                                                <textarea class="form-control" name="descricao" id="descricao" rows="50" cols="40" placeholder="Escreva aqui ou copei e cole do arquivo, a descrição completa dos conteúdos que serão cobrados." @if($contMedio->descricao=='') required @endif>@if($contMedio->descricao!=''){{$contMedio->descricao}}@endif</textarea>
                                                                 <label for="descricao">Descrição</label>
+                                                            </div>
+                                                            <div class="col-3 form-floating">
+                                                                <input class="form-control" type="date" id="dataAplicacao" name="dataAplicacao" @if($contMedio->data_aplicacao==null) placeholder="Data Aplicação" required @else value="{{date("Y-m-d", strtotime($contMedio->data_aplicacao))}}" @endif>
+                                                                <label for="dataAplicacao">Data Aplicação</label>
                                                             </div>
                                                             <div class="modal-footer">
                                                                 <button type="submit" class="btn btn-outline-primary">Salvar</button>

@@ -74,6 +74,10 @@
                                                                     <textarea class="form-control" name="descricao" id="descricao" rows="10" cols="40" placeholder="Escreva aqui ou copei e cole do arquivo, a descrição completa dos conteúdos que serão cobrados.">@if($contFund->descricao!=''){{$contFund->descricao}}@endif</textarea>
                                                                     <label for="descricao">Descrição</label>
                                                                 </div>
+                                                                <div class="col-3 form-floating">
+                                                                    <input class="form-control" type="date" id="dataAplicacao" name="dataAplicacao" @if($contFund->data_aplicacao==null) placeholder="Data Aplicação" @else value="{{date("Y-m-d", strtotime($contFund->data_aplicacao))}}" @endif disabled>
+                                                                    <label for="dataAplicacao">Data Aplicação</label>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                         </div>
@@ -198,6 +202,10 @@
                                                         <div class="col-12 form-floating">
                                                             <textarea class="form-control" name="descricao" id="descricao" rows="10" cols="40" placeholder="Escreva aqui ou copei e cole do arquivo, a descrição completa dos conteúdos que serão cobrados.">@if($contMedio->descricao!=''){{$contMedio->descricao}}@endif</textarea>
                                                             <label for="descricao">Descrição</label>
+                                                        </div>
+                                                        <div class="col-3 form-floating">
+                                                            <input class="form-control" type="date" id="dataAplicacao" @if($contMedio->data_aplicacao==null) placeholder="Data Aplicação" @else value="{{date("Y-m-d", strtotime($contMedio->data_aplicacao))}}" @endif disabled>
+                                                            <label for="dataAplicacao">Data Aplicação</label>
                                                         </div>
                                                     </div>
                                                 </div>

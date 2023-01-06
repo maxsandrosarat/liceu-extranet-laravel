@@ -1355,7 +1355,8 @@ class ProfController extends Controller
     public function anexarConteudoProva(Request $request, $id)
     {
         $cont = ConteudoProva::find($id);
-        $cont->descricao = $request->input('descricao');
+        $cont->descricao = $request->descricao;
+        $cont->data_aplicacao = $request->dataAplicacao;
         $cont->save();
 
         return back();

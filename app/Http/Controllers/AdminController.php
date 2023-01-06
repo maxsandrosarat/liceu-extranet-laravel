@@ -2076,13 +2076,11 @@ class AdminController extends Controller
         $cont = Conteudo::find($id);
         if($cont->arquivo=="" || $cont->arquivo==null){
             $cont->arquivo = $path;
-            $cont->save();
         } else {
             $arquivo = $cont->arquivo;
             Storage::disk('public')->delete($arquivo);
-            $cont->arquivo = $path;
-            $cont->save();
         }
+        $cont->save();
         return back();
     }
 
@@ -2736,7 +2734,8 @@ class AdminController extends Controller
     public function anexarConteudoProva(Request $request, $id)
     {
         $cont = ConteudoProva::find($id);
-        $cont->descricao = $request->input('descricao');
+        $cont->descricao = $request->descricao;
+        $cont->data_aplicacao = $request->dataAplicacao;
         $cont->save();
 
         return back();
