@@ -240,7 +240,7 @@
                                 <label for="tema">Tema da Aula</label>
                             </div>
                             <div class="col-auto form-floating">
-                                <textarea class="form-control" form="form-diario" name="conteudo" id="conteudo" rows="5" cols="40" maxlength="245" placeholder="Conteúdo" required><?php if($diario->conteudo!=""): ?><?php echo e($diario->conteudo); ?><?php endif; ?></textarea>
+                                <textarea class="form-control" form="form-diario" name="conteudo" id="conteudo" rows="50" cols="40" placeholder="Conteúdo" required><?php if($diario->conteudo!=""): ?><?php echo e($diario->conteudo); ?><?php endif; ?></textarea>
                                 <label for="conteudo">Conteúdo</label>
                             </div>
                             <div class="col-auto form-floating">
@@ -248,7 +248,7 @@
                                 <label for="referencias">Referências</label>
                             </div>
                             <div class="col-auto form-floating">
-                                <select class="form-select" form="form-diario" id="tipoTarefa" name="tipoTarefa" required>
+                                <select class="form-select" id="tipoTarefa" form="form-diario" name="tipoTarefa" required>
                                     <?php if($diario->tipo_tarefa==""): ?>
                                     <option value="">Selecione tipo de tarefa</option>
                                     <option value="AULA"> VISTADA EM AULA </option>
@@ -265,7 +265,7 @@
                                 <label for="tempo">Tipo de Tarefa</label>
                             </div>
                             <div class="col-auto form-floating">
-                                <textarea class="form-control" form="form-diario" name="tarefa" id="tarefa" rows="5" cols="40" maxlength="245" placeholder="Tarefa" required><?php if($diario->tarefa!=""): ?><?php echo e($diario->tarefa); ?><?php endif; ?></textarea>
+                                <textarea class="form-control" form="form-diario" name="tarefa" id="tarefa" rows="50" cols="40" placeholder="Tarefa" required><?php if($diario->tarefa!=""): ?><?php echo e($diario->tarefa); ?><?php endif; ?></textarea>
                                 <label for="tarefa">Tarefa</label>
                             </div>
                             <div class="col-auto form-floating">
@@ -446,10 +446,13 @@
                                             <div class="modal-dialog" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title" id="exampleModalLabel">Ocorrência Nº <?php echo e($ocorrencia->id); ?></h5>
+                                                        <h5 class="modal-title" id="exampleModalLabel">Excluir Ocorrência Nº <?php echo e($ocorrencia->id); ?></h5>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body">
+                                                        <h6><b>Aluno: <?php echo e($ocorrencia->aluno->name); ?></b></h6>
+                                                        <h6><b>Tipo de Ocorrência: <?php echo e($ocorrencia->tipo_ocorrencia->codigo); ?> - <?php echo e($ocorrencia->tipo_ocorrencia->descricao); ?></b></h6>
+                                                        <h6><b>Disciplina: <?php echo e($ocorrencia->disciplina->nome); ?></b></h6>
                                                         <h5>Tem certeza que deseja excluir essa ocorrência?</h5>
                                                         <p>Não será possivel reverter esta ação.</p>
                                                         <form action="/prof/ocorrencias/apagar/<?php echo e($ocorrencia->id); ?>" method="POST">

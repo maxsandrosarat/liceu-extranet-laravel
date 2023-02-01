@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Aluno;
 use App\Models\AnexoAtividadeComplementar;
+use App\Models\AnexoAtividadeDiaria;
 use App\Models\AnexoPlanejamento;
 use App\Models\Atividade;
 use App\Models\AtividadeComplementar;
@@ -272,7 +273,6 @@ class ProfController extends Controller
                 return back()->with('mensagem', 'Professor(a), você não ministra aulas na turma '.$turma->serie.'º'.$turma->turma)->with('type', 'warning');
             }
         }
-        $path = $request->file('arquivo')->store('atividadesDiarias','public');
         $atividade = new AtividadeDiaria();
         $atividade->prof_id = $profId;
         $atividade->turma_id = $request->turma;
@@ -280,10 +280,21 @@ class ProfController extends Controller
         $atividade->data = $request->data;
         $atividade->descricao = $request->descricao;
         $atividade->usuario = Auth::user()->name;
-        $atividade->arquivo = $path;
+        // $atividade->arquivo = $path;
         $atividade->save();
-
-        return back();
+        for($i=0; $i<=$request->qtdArq; $i++){
+            if($request->file('arquivo'.$i)!=null){
+                $path = $request->file('arquivo'.$i)->store('atividadesDiarias','public');
+                if($path!=""){
+                    $anexo = new AnexoAtividadeDiaria();
+                    $anexo->atividade_diaria_id = $atividade->id;
+                    $anexo->arquivo = $path;
+                    $anexo->descricao = $request->file('arquivo'.$i)->getClientOriginalName();
+                    $anexo->save();
+                }
+            }
+        }
+        return back()->with('mensagem', 'Atividade cadastrada com Sucesso!')->with('type', 'success');
     }
 
     public function filtroAtividadeDiaria(Request $request, $discId)
@@ -311,48 +322,51 @@ class ProfController extends Controller
         return view('profs.atividade_diaria_prof', compact('view','disciplina','turmas','atividades'));
     }
 
-    public function editarAtividadeDiaria(Request $request, $id)
-    {
-        $atividade = AtividadeDiaria::find($id);
-        if(isset($atividade)){
-            $profId = Auth::user()->id;
-            $disc = Disciplina::find($request->disciplina);
-            $turma = Turma::find($request->turma);
-            $profDisc = ProfDisciplina::where('prof_id',$profId)->where('disciplina_id',$request->disciplina)->first();
-            if(!isset($profDisc)){
-                return back()->with('mensagem', 'Professor(a), você não ministra a disciplina '.$disc->nome.' ('.$disc->ensino.')')->with('type', 'warning');
-            } else {
-                $profTurma = ProfTurma::where('prof_disciplina_id',$profDisc->id)->where('turma_id',$request->turma)->first();
-                if(!isset($profTurma)){
-                    return back()->with('mensagem', 'Professor(a), você não ministra aulas na turma '.$turma->serie.'º'.$turma->turma)->with('type', 'warning');
-                }
-            }
-        } else {
-            return back()->with('mensagem', 'Atividade não encontrada!')->with('type', 'danger');
-        }
-        if($request->file('arquivo')!=""){
-            Storage::disk('public')->delete($atividade->arquivo);
-            $atividade->arquivo = $request->file('arquivo')->store('atividadesDiarias','public');
-        }
-        if($request->input('turma')!=""){
-            $atividade->turma_id = $request->input('turma');
-        }
-        if($request->input('data')!=""){
-            $atividade->data = $request->input('data');
-        }
-        if($request->input('descricao')!=""){
-            $atividade->descricao = $request->input('descricao');
-        }
-        $atividade->save();
+    // public function editarAtividadeDiaria(Request $request, $id)
+    // {
+    //     $atividade = AtividadeDiaria::find($id);
+    //     if(isset($atividade)){
+    //         $profId = Auth::user()->id;
+    //         $disc = Disciplina::find($request->disciplina);
+    //         $turma = Turma::find($request->turma);
+    //         $profDisc = ProfDisciplina::where('prof_id',$profId)->where('disciplina_id',$request->disciplina)->first();
+    //         if(!isset($profDisc)){
+    //             return back()->with('mensagem', 'Professor(a), você não ministra a disciplina '.$disc->nome.' ('.$disc->ensino.')')->with('type', 'warning');
+    //         } else {
+    //             $profTurma = ProfTurma::where('prof_disciplina_id',$profDisc->id)->where('turma_id',$request->turma)->first();
+    //             if(!isset($profTurma)){
+    //                 return back()->with('mensagem', 'Professor(a), você não ministra aulas na turma '.$turma->serie.'º'.$turma->turma)->with('type', 'warning');
+    //             }
+    //         }
+    //     } else {
+    //         return back()->with('mensagem', 'Atividade não encontrada!')->with('type', 'danger');
+    //     }
+    //     if($request->file('arquivo')!=""){
+    //         Storage::disk('public')->delete($atividade->arquivo);
+    //         $atividade->arquivo = $request->file('arquivo')->store('atividadesDiarias','public');
+    //     }
+    //     if($request->input('turma')!=""){
+    //         $atividade->turma_id = $request->input('turma');
+    //     }
+    //     if($request->input('data')!=""){
+    //         $atividade->data = $request->input('data');
+    //     }
+    //     if($request->input('descricao')!=""){
+    //         $atividade->descricao = $request->input('descricao');
+    //     }
+    //     $atividade->save();
         
-        return back();
-    }
+    //     return back();
+    // }
 
     public function apagarAtividadeDiaria($id){
         $atividade = AtividadeDiaria::find($id);
         if(isset($atividade)){
             if($atividade->prof->id==Auth::user()->id){
-                Storage::disk('public')->delete($atividade->arquivo);
+                foreach ($atividade->anexos as $anexo) {
+                    Storage::disk('public')->delete($anexo->arquivo);
+                    $anexo->delete();
+                }
                 $atividade->delete();
                 return back()->with('mensagem', 'Atividade excluída com Sucesso!')->with('type', 'success');
             } else {
@@ -365,13 +379,15 @@ class ProfController extends Controller
 
     public function downloadAtividadeDiaria($id)
     {
-        $atividade = AtividadeDiaria::find($id);
-        $disc = Disciplina::find($atividade->disciplina_id);
+        $anexo = AnexoAtividadeDiaria::find($id);
+        $atividade = AtividadeDiaria::find($anexo->atividade_diaria->id);
+        $disc = Disciplina::find($atividade->disciplina->id);
         $turma = Turma::find($atividade->turma_id);
-        $nameFile = $turma->serie."º".$turma->turma." - Atividade ".$atividade->descricao." - ".$disc->nome;
-        if(isset($atividade)){
+        $arquivo = explode(".", $anexo->descricao);
+        $nameFile = $turma->serie."º".$turma->turma." - ".$disc->nome." - Atividade ".$atividade->descricao." - ".$arquivo[0];
+        if(isset($anexo)){
             if($atividade->prof->id==Auth::user()->id){
-                $path = Storage::disk('public')->getDriver()->getAdapter()->applyPathPrefix($atividade->arquivo);
+                $path = Storage::disk('public')->getDriver()->getAdapter()->applyPathPrefix($anexo->arquivo);
                 $extension = pathinfo($path, PATHINFO_EXTENSION);
                 $name = $nameFile.".".$extension;
                 return response()->download($path, $name);

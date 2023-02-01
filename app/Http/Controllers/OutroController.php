@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Aluno;
 use App\Models\AnexoAtividadeComplementar;
+use App\Models\AnexoAtividadeDiaria;
 use App\Models\AnexoPlanejamento;
 use App\Models\AtividadeComplementar;
 use App\Models\AtividadeDiaria;
@@ -739,12 +740,14 @@ class OutroController extends Controller
 
     public function downloadAtividadeDiaria($id)
     {
-        $atividade = AtividadeDiaria::find($id);
-        $disc = Disciplina::find($atividade->disciplina_id);
+        $anexo = AnexoAtividadeDiaria::find($id);
+        $atividade = AtividadeDiaria::find($anexo->atividade_diaria->id);
+        $disc = Disciplina::find($atividade->disciplina->id);
         $turma = Turma::find($atividade->turma_id);
-        $nameFile = $turma->serie."º".$turma->turma." - Atividade ".$atividade->descricao." - ".$disc->nome;
-        if(isset($atividade)){
-            $path = Storage::disk('public')->getDriver()->getAdapter()->applyPathPrefix($atividade->arquivo);
+        $arquivo = explode(".", $anexo->descricao);
+        $nameFile = $turma->serie."º".$turma->turma." - ".$disc->nome." - Atividade ".$atividade->descricao." - ".$arquivo[0];
+        if(isset($anexo)){
+            $path = Storage::disk('public')->getDriver()->getAdapter()->applyPathPrefix($anexo->arquivo);
             $extension = pathinfo($path, PATHINFO_EXTENSION);
             $name = $nameFile.".".$extension;
             return response()->download($path, $name);

@@ -239,7 +239,7 @@
                                 <label for="tema">Tema da Aula</label>
                             </div>
                             <div class="col-auto form-floating">
-                                <textarea class="form-control" form="form-diario" name="conteudo" id="conteudo" rows="5" cols="40" maxlength="245" placeholder="Conteúdo" required>@if($diario->conteudo!=""){{$diario->conteudo}}@endif</textarea>
+                                <textarea class="form-control" form="form-diario" name="conteudo" id="conteudo" rows="50" cols="40" placeholder="Conteúdo" required>@if($diario->conteudo!=""){{$diario->conteudo}}@endif</textarea>
                                 <label for="conteudo">Conteúdo</label>
                             </div>
                             <div class="col-auto form-floating">
@@ -264,7 +264,7 @@
                                 <label for="tempo">Tipo de Tarefa</label>
                             </div>
                             <div class="col-auto form-floating">
-                                <textarea class="form-control" form="form-diario" name="tarefa" id="tarefa" rows="5" cols="40" maxlength="245" placeholder="Tarefa" required>@if($diario->tarefa!=""){{$diario->tarefa}}@endif</textarea>
+                                <textarea class="form-control" form="form-diario" name="tarefa" id="tarefa" rows="50" cols="40" placeholder="Tarefa" required>@if($diario->tarefa!=""){{$diario->tarefa}}@endif</textarea>
                                 <label for="tarefa">Tarefa</label>
                             </div>
                             <div class="col-auto form-floating">

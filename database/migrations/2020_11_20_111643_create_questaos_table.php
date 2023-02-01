@@ -19,6 +19,7 @@ class CreateQuestaosTable extends Migration
             $table->foreign('simulado_id')->references('id')->on('simulados');
             $table->unsignedBigInteger('turma_id');
             $table->foreign('turma_id')->references('id')->on('turmas');
+            $table->string('ensino')->nullable();
             $table->unsignedBigInteger('disciplina_id');
             $table->foreign('disciplina_id')->references('id')->on('disciplinas');
             $table->string('arquivo')->nullable();

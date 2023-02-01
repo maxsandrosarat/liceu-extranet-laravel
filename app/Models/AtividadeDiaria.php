@@ -20,4 +20,9 @@ class AtividadeDiaria extends Model
     public function disciplina(){
         return $this->belongsTo('App\Models\Disciplina');
     }
+
+    public function anexos()
+    {
+        return $this->hasMany('App\Models\AnexoAtividadeDiaria');
+    }
 }

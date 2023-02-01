@@ -34,6 +34,53 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <script type="text/javascript">
+        var qtdArq = 0;
+
+        function addArquivo(){
+            qtdArq += 1;
+            s = "";
+            s = '<li class="list-group-item"><input class="form-control" type="file" id="arquivo'+ qtdArq +'" name="arquivo'+ qtdArq +'"></li>'
+            $('#arquivos').append(s);
+            $('#qtdArq').val(qtdArq);
+        }
+        
+        function enviar(){
+            var prof = 0;
+            var disciplina = 0;
+            var turma = $('#turma').val();
+            var data = $('#data').val();
+            var descricao = $('#descricao').val();
+            var arquivo = $('#arquivo0').val();
+            if($("#prof").length>0){
+                prof = $('#prof').val();
+            }
+            if($("#disciplina").length>0){
+                disciplina = $('#disciplina').val();
+            }
+            if($("#prof").length==1 && prof==""){
+                alert("Selecione um(a) professor(a)!");
+                $('#prof').focus();
+            } else if($("#disciplina").length==1 && disciplina==""){
+                alert("Selecione uma disciplina!");
+                $('#disciplina').focus();
+            } else if(turma==""){
+                alert("Selecione uma turma!");
+                $('#turma').focus();
+            } else if(data==""){
+                alert("Selecione uma data!");
+                $('#data').focus();
+            } else if(descricao==""){
+                alert("Preencha a descrição!");
+                $('#descricao').focus();
+            } else if(arquivo==""){
+                alert("Inclua um arquivo!");
+                $('#arquivo0').focus();
+            } else {
+                $('#nova-atividade').submit();
+                qtdArq = 0;
+            }
+        }
+        
         function id(campo){
             return document.getElementById(campo);
         }

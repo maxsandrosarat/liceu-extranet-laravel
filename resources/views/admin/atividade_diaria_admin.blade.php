@@ -31,7 +31,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                    <form method="POST" action="/admin/atividadeDiaria" enctype="multipart/form-data">
+                    <form id="nova-atividade" method="POST" action="/admin/atividadeDiaria" enctype="multipart/form-data">
                         @csrf
                         <div class="col-auto form-floating">
                             <select class="form-select" id="prof" name="prof" required>
@@ -69,12 +69,17 @@
                             <label for="descricao">Descrição</label>
                         </div>
                         <div class="col-auto form-floating">
-                        <input class="form-control" type="file" id="arquivo" name="arquivo" accept=".doc,.docx,.pdf" required>
+                            <ul id="arquivos" class="list-group">
+                                <li class="list-group-item"><input class="form-control" type="file" id="arquivo0" name="arquivo0" required></li>
+                            </ul>
+                            <input type="hidden" id="qtdArq" name="qtdArq" value="0">
+                            <div class="modal-footer">
+                                <a href="#" onclick="addArquivo();" class="badge bg-info" data-toggle="tooltip" data-placement="bottom" title="Adicionar Mais Arquivos"><i class="material-icons white md-24">add</i></a>
+                            </div>
                         </div>
-                        <b style="font-size: 80%;">Aceito apenas extensões do Word e PDF (".doc", ".docx" e ".pdf")</b>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-sm btn-primary">Enviar</button>
+                        <a onclick="enviar();" class="btn btn-sm btn-primary">Enviar</a>
                     </div>
                 </form>
                 </div>
@@ -96,7 +101,7 @@
                     <form class="row gy-2 gx-3 align-items-center" method="GET" action="/admin/atividadeDiaria/filtro">
                         @csrf
                         <div class="col-auto form-floating">
-                            <select class="form-select" id="prof" name="prof">
+                            <select class="form-select" name="prof">
                                 <option value="">Selecione</option>
                                 @foreach ($profs as $prof)
                                 <option value="{{$prof->id}}">{{$prof->name}}</option>
@@ -105,7 +110,7 @@
                             <label for="prof">Professor(a)</label>
                         </div>
                         <div class="col-auto form-floating">
-                            <select class="form-select" id="disciplina" name="disciplina">
+                            <select class="form-select" name="disciplina">
                                 <option value="">Selecione</option>
                                 @foreach ($discs as $disciplina)
                                 <option value="{{$disciplina->id}}">{{$disciplina->nome}}@if($disciplina->ensino=='fund') (Fundamental) @else @if($disciplina->ensino=='medio') (Médio) @endif @endif</option>
@@ -114,7 +119,7 @@
                             <label for="disciplina">Disciplina</label>
                         </div>
                         <div class="col-auto form-floating">
-                            <select class="form-select" id="turma" name="turma">
+                            <select class="form-select" name="turma">
                                 <option value="">Selecione</option>
                                 @foreach ($turmas as $turma)
                                 <option value="{{$turma->id}}">{{$turma->serie}}º ANO {{$turma->turma}} (@if($turma->turno=='M') Matutino @else @if($turma->turno=='V') Vespertino @else Noturno @endif @endif)</option>
@@ -123,7 +128,7 @@
                             <label for="turma">Turma</label>
                         </div>
                         <div class="col-auto form-floating">
-                            <input class="form-control" type="date" name="data" id="data">
+                            <input class="form-control" type="date" name="data">
                             <label for="data">Data</label>
                         </div>
                         <div class="col-auto form-floating">
@@ -162,77 +167,23 @@
                                 Turma: {{$atividade->turma->serie}}º ANO {{$atividade->turma->turma}} <br/> <hr/>
                                 Descrição: {{$atividade->descricao}} <br/> <hr/>
                                 Data: {{date("d/m/Y", strtotime($atividade->data))}} <br/> <hr/>
+                                <ol class="list-group list-group-numbered">
+                                @foreach ($atividade->anexos as $anexo)
+                                <li class="list-group-item d-flex justify-content-between align-items-start">
+                                    <div class="ms-2 me-auto">
+                                      <div class="fw-bold">{{$anexo->descricao}}</div>
+                                    </div>
+                                    <a type="button" class="badge bg-success rounded-pill" href="/admin/atividadeDiaria/download/{{$anexo->id}}"><i class="material-icons md-48">cloud_download</i></a>
+                                </li>
+                                @endforeach
+                                </ol>
+                                <hr/>
                                 Criado por: {{$atividade->usuario}}<br/>
-                                Data da Criação: {{date("d/m/Y H:i", strtotime($atividade->created_at))}}<br/>
-                                Última Alteração: {{date("d/m/Y H:i", strtotime($atividade->updated_at))}}
+                                Data da Criação: {{date("d/m/Y H:i", strtotime($atividade->created_at))}}
                             </p>
                         </div>
                         <div class="modal-footer">
-                            <a type="button" class="badge bg-success" href="/admin/atividadeDiaria/download/{{$atividade->id}}"><i class="material-icons md-48">cloud_download</i></a> <button type="button" class="badge bg-warning" data-bs-toggle="modal" data-bs-target="#modalEditar{{$atividade->id}}"><i class="material-icons md-48">edit</i></button> <a type="button" class="badge bg-danger" href="#" data-bs-toggle="modal" data-bs-target="#exampleModalDelete{{$atividade->id}}" data-bs-toggle="tooltip" data-placement="bottom" title="Excluir Atividade"><i class="material-icons md-48">delete</i></a> <br/> <hr/>
-                            <!-- Modal Editar -->
-                            <div class="modal fade" id="modalEditar{{$atividade->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Editar Atividade: {{$atividade->descricao}} - {{$atividade->turma->serie}}º ANO {{$atividade->turma->turma}}</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form method="POST" action="/admin/atividadeDiaria/editar/{{$atividade->id}}" enctype="multipart/form-data">
-                                        @csrf
-                                        <div class="col-auto form-floating">
-                                            <select id="disciplina" class="form-control" name="prof" required>
-                                                <option value="{{$atividade->prof->id}}">{{$atividade->prof->name}}</option>
-                                                @foreach ($profs as $prof)
-                                                @if($prof->id!=$atividade->prof->id)
-                                                <option value="{{$prof->id}}">{{$prof->name}}</option>
-                                                @endif
-                                                @endforeach
-                                            </select>
-                                            <label for="prof">Professor</label>
-                                        </div>
-                                        <div class="col-auto form-floating">
-                                            <select id="disciplina" class="form-control" name="disciplina" required>
-                                                <option value="{{$atividade->disciplina->id}}">{{$atividade->disciplina->nome}} (@if($atividade->disciplina->ensino=='fund') Fundamental @else Médio @endif)</option>
-                                                @foreach ($discs as $disc)
-                                                @if($disc->id!=$atividade->disciplina->id)
-                                                <option value="{{$disc->id}}">{{$disc->nome}} (@if($disc->ensino=='fund') Fundamental @else Médio @endif)</option>
-                                                @endif
-                                                @endforeach
-                                            </select>
-                                            <label for="disciplina">Disciplina</label>
-                                        </div>
-                                        <div class="col-auto form-floating">
-                                            <select id="disciplina" class="form-control" name="turma" required>
-                                                <option value="{{$atividade->turma->id}}">{{$atividade->turma->serie}}º ANO {{$atividade->turma->turma}}</option>
-                                                @foreach ($turmas as $turma)
-                                                @if($turma->id!=$atividade->turma->id)
-                                                <option value="{{$turma->id}}">{{$turma->serie}}º ANO {{$turma->turma}}</option>
-                                                @endif
-                                                @endforeach
-                                            </select>
-                                            <label for="turma">Turma</label>
-                                        </div>
-                                        <div class="col-auto form-floating">
-                                            <input class="form-control" type="date" name="data" id="data" value="{{date("Y-m-d", strtotime($atividade->data))}}" required>
-                                            <label for="data">Data</label>
-                                        </div>
-                                        <div class="col-auto form-floating">
-                                            <input type="text" class="form-control" name="descricao" id="descricao" value="{{$atividade->descricao}}" required>
-                                            <label for="descricao">Descrição</label>
-                                        </div>
-                                        <div class="col-auto form-floating">
-                                            <input class="form-control" type="file" id="arquivo" name="arquivo" accept=".doc,.docx,.pdf">
-                                        </div>
-                                        <b style="font-size: 80%;">Aceito apenas extensões do Word e PDF (".doc", ".docx" e ".pdf")</b>
-                                    </div>
-                                    <div class="modal-footer">
-                                    <button type="submit" class="btn btn-sm btn-primary">Enviar</button>
-                                    </div>
-                                </form>
-                                </div>
-                                </div>
-                            </div>
+                            <a type="button" class="badge bg-danger" href="#" data-bs-toggle="modal" data-bs-target="#exampleModalDelete{{$atividade->id}}" data-bs-toggle="tooltip" data-placement="bottom" title="Excluir Atividade"><i class="material-icons md-48">delete</i></a> <br/> <hr/>
                             <!-- Modal Deletar -->
                             <div class="modal fade" id="exampleModalDelete{{$atividade->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog">

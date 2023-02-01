@@ -94,13 +94,20 @@
                                 Turma: {{$atividade->turma->serie}}º ANO {{$atividade->turma->turma}} <br/> <hr/>
                                 Descrição: {{$atividade->descricao}} <br/> <hr/>
                                 Data: {{date("d/m/Y", strtotime($atividade->data))}} <br/> <hr/>
+                                <ol class="list-group list-group-numbered">
+                                @foreach ($atividade->anexos as $anexo)
+                                <li class="list-group-item d-flex justify-content-between align-items-start">
+                                    <div class="ms-2 me-auto">
+                                      <div class="fw-bold">{{$anexo->descricao}}</div>
+                                    </div>
+                                    <a type="button" class="badge bg-success rounded-pill" href="/outro/atividadeDiaria/download/{{$anexo->id}}"><i class="material-icons md-48">cloud_download</i></a>
+                                </li>
+                                @endforeach
+                                </ol>
+                                <hr/>
                                 Criado por: {{$atividade->usuario}}<br/>
-                                Data da Criação: {{date("d/m/Y H:i", strtotime($atividade->created_at))}}<br/>
-                                Última Alteração: {{date("d/m/Y H:i", strtotime($atividade->updated_at))}}
+                                Data da Criação: {{date("d/m/Y H:i", strtotime($atividade->created_at))}}
                             </p>
-                        </div>
-                        <div class="modal-footer">
-                            <a type="button" class="badge bg-success" href="/outro/atividadeDiaria/download/{{$atividade->id}}"><i class="material-icons md-48">cloud_download</i></a> <br/> <hr/>
                         </div>
                         </div>
                     </div>

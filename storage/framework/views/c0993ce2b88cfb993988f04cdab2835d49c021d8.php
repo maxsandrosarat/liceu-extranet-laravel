@@ -32,7 +32,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                    <form method="POST" action="/admin/atividadeDiaria" enctype="multipart/form-data">
+                    <form id="nova-atividade" method="POST" action="/admin/atividadeDiaria" enctype="multipart/form-data">
                         <?php echo csrf_field(); ?>
                         <div class="col-auto form-floating">
                             <select class="form-select" id="prof" name="prof" required>
@@ -70,12 +70,17 @@
                             <label for="descricao">Descrição</label>
                         </div>
                         <div class="col-auto form-floating">
-                        <input class="form-control" type="file" id="arquivo" name="arquivo" accept=".doc,.docx,.pdf" required>
+                            <ul id="arquivos" class="list-group">
+                                <li class="list-group-item"><input class="form-control" type="file" id="arquivo0" name="arquivo0" required></li>
+                            </ul>
+                            <input type="hidden" id="qtdArq" name="qtdArq" value="0">
+                            <div class="modal-footer">
+                                <a href="#" onclick="addArquivo();" class="badge bg-info" data-toggle="tooltip" data-placement="bottom" title="Adicionar Mais Arquivos"><i class="material-icons white md-24">add</i></a>
+                            </div>
                         </div>
-                        <b style="font-size: 80%;">Aceito apenas extensões do Word e PDF (".doc", ".docx" e ".pdf")</b>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-sm btn-primary">Enviar</button>
+                        <a onclick="enviar();" class="btn btn-sm btn-primary">Enviar</a>
                     </div>
                 </form>
                 </div>
@@ -97,7 +102,7 @@
                     <form class="row gy-2 gx-3 align-items-center" method="GET" action="/admin/atividadeDiaria/filtro">
                         <?php echo csrf_field(); ?>
                         <div class="col-auto form-floating">
-                            <select class="form-select" id="prof" name="prof">
+                            <select class="form-select" name="prof">
                                 <option value="">Selecione</option>
                                 <?php $__currentLoopData = $profs; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $prof): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <option value="<?php echo e($prof->id); ?>"><?php echo e($prof->name); ?></option>
@@ -106,7 +111,7 @@
                             <label for="prof">Professor(a)</label>
                         </div>
                         <div class="col-auto form-floating">
-                            <select class="form-select" id="disciplina" name="disciplina">
+                            <select class="form-select" name="disciplina">
                                 <option value="">Selecione</option>
                                 <?php $__currentLoopData = $discs; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $disciplina): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <option value="<?php echo e($disciplina->id); ?>"><?php echo e($disciplina->nome); ?><?php if($disciplina->ensino=='fund'): ?> (Fundamental) <?php else: ?> <?php if($disciplina->ensino=='medio'): ?> (Médio) <?php endif; ?> <?php endif; ?></option>
@@ -115,7 +120,7 @@
                             <label for="disciplina">Disciplina</label>
                         </div>
                         <div class="col-auto form-floating">
-                            <select class="form-select" id="turma" name="turma">
+                            <select class="form-select" name="turma">
                                 <option value="">Selecione</option>
                                 <?php $__currentLoopData = $turmas; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $turma): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <option value="<?php echo e($turma->id); ?>"><?php echo e($turma->serie); ?>º ANO <?php echo e($turma->turma); ?> (<?php if($turma->turno=='M'): ?> Matutino <?php else: ?> <?php if($turma->turno=='V'): ?> Vespertino <?php else: ?> Noturno <?php endif; ?> <?php endif; ?>)</option>
@@ -124,7 +129,7 @@
                             <label for="turma">Turma</label>
                         </div>
                         <div class="col-auto form-floating">
-                            <input class="form-control" type="date" name="data" id="data">
+                            <input class="form-control" type="date" name="data">
                             <label for="data">Data</label>
                         </div>
                         <div class="col-auto form-floating">
@@ -158,83 +163,28 @@
                         </div>
                         <div class="modal-body">
                             <p class="font-weight-bolder">
-                                Professor(a): <?php echo e($atividade->prof->name); ?> <br/> <hr/>
                                 Disciplina: <?php echo e($atividade->disciplina->nome); ?> <br/> <hr/>
                                 Turma: <?php echo e($atividade->turma->serie); ?>º ANO <?php echo e($atividade->turma->turma); ?> <br/> <hr/>
                                 Descrição: <?php echo e($atividade->descricao); ?> <br/> <hr/>
                                 Data: <?php echo e(date("d/m/Y", strtotime($atividade->data))); ?> <br/> <hr/>
+                                <ol class="list-group list-group-numbered">
+                                <?php $__currentLoopData = $atividade->anexos; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $anexo): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <li class="list-group-item d-flex justify-content-between align-items-start">
+                                    <div class="ms-2 me-auto">
+                                      <div class="fw-bold"><?php echo e($anexo->descricao); ?></div>
+                                    </div>
+                                    <a type="button" class="badge bg-success rounded-pill" href="/admin/atividadeDiaria/download/<?php echo e($anexo->id); ?>"><i class="material-icons md-48">cloud_download</i></a>
+                                </li>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                </ol>
+                                <hr/>
                                 Criado por: <?php echo e($atividade->usuario); ?><br/>
-                                Data da Criação: <?php echo e(date("d/m/Y H:i", strtotime($atividade->created_at))); ?><br/>
-                                Última Alteração: <?php echo e(date("d/m/Y H:i", strtotime($atividade->updated_at))); ?>
+                                Data da Criação: <?php echo e(date("d/m/Y H:i", strtotime($atividade->created_at))); ?>
 
                             </p>
                         </div>
                         <div class="modal-footer">
-                            <a type="button" class="badge bg-success" href="/admin/atividadeDiaria/download/<?php echo e($atividade->id); ?>"><i class="material-icons md-48">cloud_download</i></a> <button type="button" class="badge bg-warning" data-bs-toggle="modal" data-bs-target="#modalEditar<?php echo e($atividade->id); ?>"><i class="material-icons md-48">edit</i></button> <a type="button" class="badge bg-danger" href="#" data-bs-toggle="modal" data-bs-target="#exampleModalDelete<?php echo e($atividade->id); ?>" data-bs-toggle="tooltip" data-placement="bottom" title="Excluir Atividade"><i class="material-icons md-48">delete</i></a> <br/> <hr/>
-                            <!-- Modal Editar -->
-                            <div class="modal fade" id="modalEditar<?php echo e($atividade->id); ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Editar Atividade: <?php echo e($atividade->descricao); ?> - <?php echo e($atividade->turma->serie); ?>º ANO <?php echo e($atividade->turma->turma); ?></h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form method="POST" action="/admin/atividadeDiaria/editar/<?php echo e($atividade->id); ?>" enctype="multipart/form-data">
-                                        <?php echo csrf_field(); ?>
-                                        <div class="col-auto form-floating">
-                                            <select id="disciplina" class="form-control" name="prof" required>
-                                                <option value="<?php echo e($atividade->prof->id); ?>"><?php echo e($atividade->prof->name); ?></option>
-                                                <?php $__currentLoopData = $profs; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $prof): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                <?php if($prof->id!=$atividade->prof->id): ?>
-                                                <option value="<?php echo e($prof->id); ?>"><?php echo e($prof->name); ?></option>
-                                                <?php endif; ?>
-                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                            </select>
-                                            <label for="prof">Professor</label>
-                                        </div>
-                                        <div class="col-auto form-floating">
-                                            <select id="disciplina" class="form-control" name="disciplina" required>
-                                                <option value="<?php echo e($atividade->disciplina->id); ?>"><?php echo e($atividade->disciplina->nome); ?> (<?php if($atividade->disciplina->ensino=='fund'): ?> Fundamental <?php else: ?> Médio <?php endif; ?>)</option>
-                                                <?php $__currentLoopData = $discs; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $disc): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                <?php if($disc->id!=$atividade->disciplina->id): ?>
-                                                <option value="<?php echo e($disc->id); ?>"><?php echo e($disc->nome); ?> (<?php if($disc->ensino=='fund'): ?> Fundamental <?php else: ?> Médio <?php endif; ?>)</option>
-                                                <?php endif; ?>
-                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                            </select>
-                                            <label for="disciplina">Disciplina</label>
-                                        </div>
-                                        <div class="col-auto form-floating">
-                                            <select id="disciplina" class="form-control" name="turma" required>
-                                                <option value="<?php echo e($atividade->turma->id); ?>"><?php echo e($atividade->turma->serie); ?>º ANO <?php echo e($atividade->turma->turma); ?></option>
-                                                <?php $__currentLoopData = $turmas; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $turma): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                <?php if($turma->id!=$atividade->turma->id): ?>
-                                                <option value="<?php echo e($turma->id); ?>"><?php echo e($turma->serie); ?>º ANO <?php echo e($turma->turma); ?></option>
-                                                <?php endif; ?>
-                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                            </select>
-                                            <label for="turma">Turma</label>
-                                        </div>
-                                        <div class="col-auto form-floating">
-                                            <input class="form-control" type="date" name="data" id="data" value="<?php echo e(date("Y-m-d", strtotime($atividade->data))); ?>" required>
-                                            <label for="data">Data</label>
-                                        </div>
-                                        <div class="col-auto form-floating">
-                                            <input type="text" class="form-control" name="descricao" id="descricao" value="<?php echo e($atividade->descricao); ?>" required>
-                                            <label for="descricao">Descrição</label>
-                                        </div>
-                                        <div class="col-auto form-floating">
-                                            <input class="form-control" type="file" id="arquivo" name="arquivo" accept=".doc,.docx,.pdf">
-                                        </div>
-                                        <b style="font-size: 80%;">Aceito apenas extensões do Word e PDF (".doc", ".docx" e ".pdf")</b>
-                                    </div>
-                                    <div class="modal-footer">
-                                    <button type="submit" class="btn btn-sm btn-primary">Enviar</button>
-                                    </div>
-                                </form>
-                                </div>
-                                </div>
-                            </div>
+                            <a type="button" class="badge bg-danger" href="#" data-bs-toggle="modal" data-bs-target="#exampleModalDelete<?php echo e($atividade->id); ?>" data-bs-toggle="tooltip" data-placement="bottom" title="Excluir Atividade"><i class="material-icons md-48">delete</i></a> <br/> <hr/>
                             <!-- Modal Deletar -->
                             <div class="modal fade" id="exampleModalDelete<?php echo e($atividade->id); ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
