@@ -1,5 +1,3 @@
-
-
 <?php $__env->startSection('body'); ?>
     <div class="card border">
         <div class="card-body">
@@ -14,14 +12,14 @@
             <table class="table table-striped table-ordered table-hover">
                 <thead class="table-dark">
                     <tr>
-                        <th style="text-align: center;">Turmas</th>
+                        <th style="text-align: center;">Turma(s)</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php $__currentLoopData = $turmaDiscs; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $turmaDisc): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <tr>
                             <td>
-                                <a href="/prof/ocorrencias/<?php echo e($disciplina->id); ?>/<?php echo e($turmaDisc->turma->id); ?>" class="btn btn-primary btn-lg btn-block"><?php echo e($turmaDisc->turma->serie); ?>º ANO <?php echo e($turmaDisc->turma->turma); ?> (<?php if($turmaDisc->turma->turno=='M'): ?> Matutino <?php else: ?> <?php if($turmaDisc->turma->turno=='V'): ?> Vespertino <?php else: ?> Noturno <?php endif; ?> <?php endif; ?>)</a>
+                                <a href="/prof/ocorrencias/<?php echo e($disciplina->id); ?>/<?php echo e($turmaDisc->turma->id); ?>" class="btn btn-primary btn-lg btn-block"><?php echo e($turmaDisc->turma->serie); ?>º<?php echo e($turmaDisc->turma->turma); ?><?php echo e($turmaDisc->turma->turno); ?></a>
                             </td>
                         </tr>
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>

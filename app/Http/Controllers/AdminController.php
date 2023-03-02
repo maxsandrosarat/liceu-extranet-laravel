@@ -40,6 +40,7 @@ use App\Models\Simulado;
 use App\Models\TurmaDisciplina;
 use App\Exports\AlunoExport;
 use App\Exports\AlunoExportView;
+use App\Models\AlunoTurma;
 use App\Models\AnexoAtividadeComplementar;
 use App\Models\AnexoAtividadeDiaria;
 use App\Models\AtividadeDiaria;
@@ -503,12 +504,20 @@ class AdminController extends Controller
         $aluno->name = $request->input('name');
         $aluno->email = $request->input('email');
         $aluno->password = Hash::make($request->input('password'));
-        $aluno->turma_id = $request->input('turma');
         if($request->file('foto')!=""){
         $path = $request->file('foto')->store('fotos_perfil','public');
         $aluno->foto = $path;
         }
         $aluno->save();
+        $turmas = $request->input('turmas');
+        if(isset($turmas)){
+            foreach ($turmas as $turmaId) {
+                $alunoTurma = new AlunoTurma();
+                $alunoTurma->aluno_id = $aluno->id;
+                $alunoTurma->turma_id = $turmaId;
+                $alunoTurma->save();
+            }
+        }
         return back()->with('success', 'Aluno(a) Cadastrado(a) com Sucesso!')->with('type', 'success');
     }
 
@@ -533,19 +542,22 @@ class AdminController extends Controller
         $nome = $request->input('nome');
         $turma = $request->input('turma');
         $ativo = $request->input('ativo');
-        if(isset($nome)){
-            if(isset($turma)){
-                $alunos = Aluno::where('ativo',"$ativo")->where('name','like',"%$nome%")->where('turma_id',"$turma")->orderBy('name')->paginate(50);
-            } else {
-                $alunos = Aluno::where('ativo',"$ativo")->where('name','like',"%$nome%")->orderBy('name')->paginate(50);
+        $query = Aluno::query();
+        if(isset($turma)) {
+            $alunos = AlunoTurma::where('turma_id',$turma)->get();
+            $alunoIds = array();
+            foreach($alunos as $aluno){
+                $alunoIds[] = $aluno->aluno_id;
             }
-        } else {
-            if(isset($turma)){
-                $alunos = Aluno::where('ativo',"$ativo")->where('turma_id',"$turma")->orderBy('name')->paginate(50);
-            } else {
-                $alunos = Aluno::where('ativo',"$ativo")->orderBy('name')->paginate(50);
-            }
+            $query->whereIn('id', $alunoIds);
         }
+        if(isset($nome)){
+            $query->where('name','like',"%$nome%");
+        }
+        if(isset($ativo)) {
+            $query->where('ativo', $ativo);
+        }
+        $alunos = $query->orderBy('name')->paginate(50);
         $turmas = Turma::all();
         $view = "filtro";
         return view('admin.alunos', compact('view','turmas','alunos'));
@@ -560,13 +572,22 @@ class AdminController extends Controller
             if($request->input('password')!=""){
             $aluno->password = Hash::make($request->input('password'));
             }
-            $aluno->turma_id = $request->input('turma');
             if($request->file('foto')!=""){
                 Storage::disk('public')->delete($aluno->foto);
                 $path = $request->file('foto')->store('fotos_perfil','public');
                 $aluno->foto = $path;
             }
             $aluno->save();
+            AlunoTurma::where('aluno_id',$aluno->id)->delete();
+            $turmas = $request->input('turmas');
+            if(isset($turmas)){
+                foreach ($turmas as $turmaId) {
+                    $alunoTurma = new AlunoTurma();
+                    $alunoTurma->aluno_id = $aluno->id;
+                    $alunoTurma->turma_id = $turmaId;
+                    $alunoTurma->save();
+                }
+            }
         }
         return back()->with('success', 'Aluno(a) Alterado(a) com Sucesso!')->with('type', 'success');
     }
@@ -1793,7 +1814,7 @@ class AdminController extends Controller
         $validador = Diario::where('turma_id',"$turmaId")->where('dia', "$dia")->count();
         if($validador>0){
             $diarios = Diario::where('turma_id',"$turmaId")->where('dia', "$dia")->orderBy('tempo')->get();
-            $ocorrencias = Ocorrencia::where('data',"$dia")->get();
+            $ocorrencias = Ocorrencia::where('turma_id',"$turmaId")->where('data',"$dia")->get();
             return view('admin.diario_admin', compact('dia','turma','diarios','ocorrencias'));
         } else {
             return back()->with('mensagem', 'Sem lançamentos até o momento!')->with('type', 'warning');

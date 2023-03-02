@@ -17,16 +17,11 @@
                     <br/>
                     <h5 class="card-title">Diário</h5>
                     <?php if(session('mensagem')): ?>
-                    <div class="container">
-                        <div class="row justify-content-center">
-                            <div class="col-md-8">
-                                <div class="alert alert-success" role="alert">
-                                    <button type="button" class="close" data-dismiss="alert">x</button>
-                                    <p><?php echo e(session('mensagem')); ?></p>
-                                </div>
-                            </div>
+                        <div class="alert <?php if(session('type')=="success"): ?> alert-success <?php else: ?> <?php if(session('type')=="warning"): ?> alert-warning <?php else: ?> <?php if(session('type')=="danger"): ?> alert-danger <?php else: ?> alert-info <?php endif; ?> <?php endif; ?> <?php endif; ?> alert-dismissible fade show" role="alert">
+                            <?php echo e(session('mensagem')); ?>
+
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
-                    </div>
                     <?php endif; ?>
                     <form class="row g-3" method="GET" action="/admin/diario/consulta">
                         <?php echo csrf_field(); ?>
@@ -34,7 +29,7 @@
                             <select class="form-select" id="turma" name="turma" required>
                                 <option value="">Selecione</option>
                                 <?php $__currentLoopData = $turmas; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $turma): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                <option value="<?php echo e($turma->id); ?>"><?php echo e($turma->serie); ?>º ANO <?php echo e($turma->turma); ?> (<?php if($turma->turno=='M'): ?> Matutino <?php else: ?> <?php if($turma->turno=='V'): ?> Vespertino <?php else: ?> Noturno <?php endif; ?> <?php endif; ?>)</option>
+                                <option value="<?php echo e($turma->id); ?>"><?php echo e($turma->serie); ?>º<?php echo e($turma->turma); ?><?php echo e($turma->turno); ?></option>
                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </select>
                             <label for="turma">Turma</label>

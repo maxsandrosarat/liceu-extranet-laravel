@@ -55,7 +55,7 @@
                         <td>
                             <ul>
                             <?php $__currentLoopData = $plan->series; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $serie): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                <li><?php echo e($serie->serie); ?>º ANO</li>
+                                <li><?php echo e($serie->serie); ?>º</li>
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </ul>
                         </td>

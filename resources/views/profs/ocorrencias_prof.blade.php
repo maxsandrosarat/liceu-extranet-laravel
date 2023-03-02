@@ -5,7 +5,7 @@
         <div class="card-body">
             <a href="/prof/ocorrencias/{{$disciplina->id}}" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="Voltar"><i class="material-icons white">reply</i></a>
             <br/><br/>
-            <h5 class="card-title">Painel de Ocorrências - Discplina: {{$disciplina->nome}} - Turma: {{$turma->serie}}º ANO {{$turma->turma}}</h5>
+            <h5 class="card-title">Painel de Ocorrências - Discplina: {{$disciplina->nome}} - Turma: {{$turma->serie}}º{{$turma->turma}}{{$turma->turno}}</h5>
             @if(session('mensagem'))
                 <div class="alert @if(session('type')=="success") alert-success @else @if(session('type')=="warning") alert-warning @else @if(session('type')=="danger") alert-danger @else alert-info @endif @endif @endif alert-dismissible fade show" role="alert">
                     {{session('mensagem')}}

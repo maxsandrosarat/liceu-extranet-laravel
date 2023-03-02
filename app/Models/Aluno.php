@@ -25,11 +25,11 @@ class Aluno extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function turma(){
-        return $this->belongsTo('App\Models\Turma');
-    }
-
     function atividade(){
         return $this->belongsToMany("App\Models\Atividade", "atividade_retornos");
+    }
+
+    function turmas(){
+        return $this->belongsToMany("App\Models\Turma", "aluno_turmas")->orderBy('serie');
     }
 }

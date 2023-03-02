@@ -17,16 +17,10 @@
                     <br/>
                     <h5 class="card-title">Diário</h5>
                     @if(session('mensagem'))
-                    <div class="container">
-                        <div class="row justify-content-center">
-                            <div class="col-md-8">
-                                <div class="alert alert-success" role="alert">
-                                    <button type="button" class="close" data-dismiss="alert">x</button>
-                                    <p>{{session('mensagem')}}</p>
-                                </div>
-                            </div>
+                        <div class="alert @if(session('type')=="success") alert-success @else @if(session('type')=="warning") alert-warning @else @if(session('type')=="danger") alert-danger @else alert-info @endif @endif @endif alert-dismissible fade show" role="alert">
+                            {{session('mensagem')}}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
-                    </div>
                     @endif
                     <form class="row g-3" method="GET" action="/admin/diario/consulta">
                         @csrf
@@ -34,7 +28,7 @@
                             <select class="form-select" id="turma" name="turma" required>
                                 <option value="">Selecione</option>
                                 @foreach ($turmas as $turma)
-                                <option value="{{$turma->id}}">{{$turma->serie}}º ANO {{$turma->turma}} (@if($turma->turno=='M') Matutino @else @if($turma->turno=='V') Vespertino @else Noturno @endif @endif)</option>
+                                <option value="{{$turma->id}}">{{$turma->serie}}º{{$turma->turma}}{{$turma->turno}}</option>
                                 @endforeach
                             </select>
                             <label for="turma">Turma</label>

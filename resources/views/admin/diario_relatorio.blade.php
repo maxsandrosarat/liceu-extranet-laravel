@@ -39,7 +39,7 @@
                             <select class="form-select mr-sm-2" id="turma" name="turma" required>
                                 <option value="">Selecione</option>
                                     @foreach ($turmas as $turma)
-                                    <option @if($turma->ativo==false) style="color: red;" @endif value="{{$turma->id}}">{{$turma->serie}}º ANO {{$turma->turma}} (@if($turma->turno=='M') Matutino @else @if($turma->turno=='V') Vespertino @else Noturno @endif @endif)</option>
+                                    <option @if($turma->ativo==false) style="color: red;" @endif value="{{$turma->id}}">{{$turma->serie}}º{{$turma->turma}}{{$turma->turno}}</option>
                                     @endforeach
                             </select>
                             <label for="turma">Turma</label>

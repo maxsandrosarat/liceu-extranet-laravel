@@ -10,7 +10,7 @@
                 $diasemana = array('Domingo', 'Segunda-Feira', 'Terça-Feira', 'Quarta-Feira', 'Quinta-Feira', 'Sexta-Feira', 'Sábado');
                 $diasemana_numero = date('w', strtotime($dia)); 
                 ?>
-                Dia: <?php echo e(date("d/m/Y", strtotime($dia))); ?> (<?php echo e($diasemana[$diasemana_numero]); ?>) - <?php echo e($turma->serie); ?>º ANO <?php echo e($turma->turma); ?>
+                Dia: <?php echo e(date("d/m/Y", strtotime($dia))); ?> (<?php echo e($diasemana[$diasemana_numero]); ?>) - <?php echo e($turma->serie); ?>º<?php echo e($turma->turma); ?><?php echo e($turma->turno); ?>
 
             </h3>
             <?php if(session('mensagem')): ?>
@@ -148,12 +148,12 @@
                                             <div class="modal-dialog" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title" id="exampleModalLabel">Diário: <?php echo e($turma->serie); ?>º ANO <?php echo e($turma->turma); ?> - <?php echo e(date("d/m/Y", strtotime($dia))); ?></h5>
+                                                        <h5 class="modal-title" id="exampleModalLabel">Diário: <?php echo e($turma->serie); ?>º<?php echo e($turma->turma); ?><?php echo e($turma->turno); ?> - <?php echo e(date("d/m/Y", strtotime($dia))); ?></h5>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body">
                                                         <p id="texto">
-                                                        Conteúdo Ministrado em Aula - <?php echo e($turma->serie); ?>º ANO <?php echo e($turma->turma); ?> - <?php echo e(date("d/m/Y", strtotime($dia))); ?><br/><br/>
+                                                        Conteúdo Ministrado em Aula - <?php echo e($turma->serie); ?>º<?php echo e($turma->turma); ?><?php echo e($turma->turno); ?> - <?php echo e(date("d/m/Y", strtotime($dia))); ?><br/><br/>
                                                         <?php $__currentLoopData = $diarios; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $diario): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                         Disciplina: <?php echo e($diario->disciplina->nome); ?><br/>
                                                         Conteúdo: <?php echo e($diario->tema); ?><br/>
@@ -190,7 +190,6 @@
                             </thead>
                             <tbody>
                                 <?php $__currentLoopData = $ocorrencias; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $ocorrencia): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                <?php if($ocorrencia->aluno->turma_id==$turma->id): ?>
                                 <tr>
                                     <td><?php echo e($ocorrencia->tipo_ocorrencia->codigo); ?> - <?php echo e($ocorrencia->tipo_ocorrencia->descricao); ?></td>
                                     <td><?php echo e($ocorrencia->aluno->name); ?></td>
@@ -282,7 +281,6 @@
                                         <?php endif; ?>
                                     </td>
                                 </tr>
-                                <?php endif; ?>
                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </tbody>
                         </table>

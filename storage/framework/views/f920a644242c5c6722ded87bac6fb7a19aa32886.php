@@ -24,12 +24,12 @@
                                 }
                             }
                         ?>
-                        <th colspan="<?php echo e($qtdTurmas); ?>"><?php echo e($fundSerie->serie); ?>º ANO</th>
+                        <th colspan="<?php echo e($qtdTurmas); ?>"><?php echo e($fundSerie->serie); ?>º</th>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </tr>
                     <tr>
                         <?php $__currentLoopData = $fundTurmas; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $fundTurma): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                        <th><?php echo e($fundTurma->serie); ?>º <?php echo e($fundTurma->turma); ?></th>
+                        <th><?php echo e($fundTurma->serie); ?>º<?php echo e($fundTurma->turma); ?><?php echo e($fundTurma->turno); ?></th>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </tr>
                 </thead>
@@ -73,7 +73,7 @@
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title" id="exampleModalLabel">Excluir Questões do(a) <?php echo e($prova->descricao); ?> - <?php echo e($contFund->disciplina->nome); ?> - <?php echo e($contFund->turma->serie); ?>º ANO <?php echo e($contFund->turma->turma); ?></h5>
+                                                        <h5 class="modal-title" id="exampleModalLabel">Excluir Questões do(a) <?php echo e($prova->descricao); ?> - <?php echo e($contFund->disciplina->nome); ?> - <?php echo e($contFund->turma->serie); ?>º<?php echo e($contFund->turma->turma); ?><?php echo e($contFund->turma->turno); ?></h5>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body">
@@ -82,7 +82,7 @@
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                                        <a href="/admin/planejamentos/apagar/<?php echo e($contFund->id); ?>" class="btn btn-sm btn-danger" data-toggle="tooltip" data-placement="right" title="Inativar">Excluir</a>
+                                                        <a href="/admin/planejamentos/apagarAnexo/<?php echo e($contFund->id); ?>" class="btn btn-sm btn-danger" data-toggle="tooltip" data-placement="right" title="Inativar">Excluir</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -94,7 +94,7 @@
                                                 <div class="modal-dialog" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalLabel">Anexar Questões do(a) Prova <?php echo e($prova->descricao); ?> - <?php echo e($contFund->disciplina->nome); ?> - <?php echo e($contFund->turma->serie); ?>º ANO <?php echo e($contFund->turma->turma); ?></h5>
+                                                    <h5 class="modal-title" id="exampleModalLabel">Anexar Questões do(a) Prova <?php echo e($prova->descricao); ?> - <?php echo e($contFund->disciplina->nome); ?> - <?php echo e($contFund->turma->serie); ?>º<?php echo e($contFund->turma->turma); ?><?php echo e($contFund->turma->turno); ?></h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body">
@@ -118,7 +118,7 @@
                                                     <div class="modal-dialog" role="document">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
-                                                                <h5 class="modal-title" id="exampleModalLabel">Conferir Questões do <?php echo e($prova->descricao); ?> - <?php echo e($contFund->disciplina->nome); ?> - <?php echo e($contFund->turma->serie); ?>º ANO <?php echo e($contFund->turma->turma); ?></h5>
+                                                                <h5 class="modal-title" id="exampleModalLabel">Conferir Questões do <?php echo e($prova->descricao); ?> - <?php echo e($contFund->disciplina->nome); ?> - <?php echo e($contFund->turma->serie); ?>º<?php echo e($contFund->turma->turma); ?><?php echo e($contFund->turma->turno); ?></h5>
                                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                             </div>
                                                             <div class="modal-body">
@@ -166,12 +166,12 @@
                                 }
                             }
                         ?>
-                        <th colspan="<?php echo e($qtdTurmas); ?>"><?php echo e($medioSerie->serie); ?>º ANO</th>
+                        <th colspan="<?php echo e($qtdTurmas); ?>"><?php echo e($medioSerie->serie); ?>º</th>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </tr>
                     <tr>
                         <?php $__currentLoopData = $medioTurmas; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $medioTurma): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                        <th><?php echo e($medioTurma->serie); ?>º <?php echo e($medioTurma->turma); ?></th>
+                        <th><?php echo e($medioTurma->serie); ?>º<?php echo e($medioTurma->turma); ?><?php echo e($medioTurma->turno); ?></th>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </tr>
                 </thead>
@@ -215,13 +215,13 @@
                                             <div class="modal-dialog" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title" id="exampleModalLabel">Excluir Questões do <?php echo e($prova->descricao); ?> - <?php echo e($contMedio->disciplina->nome); ?> - <?php echo e($contMedio->turma->serie); ?>º ANO <?php echo e($contMedio->turma->turma); ?></h5>
+                                                        <h5 class="modal-title" id="exampleModalLabel">Excluir Questões do <?php echo e($prova->descricao); ?> - <?php echo e($contMedio->disciplina->nome); ?> - <?php echo e($contMedio->turma->serie); ?>º<?php echo e($contMedio->turma->turma); ?><?php echo e($contMedio->turma->turno); ?></h5>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body">
                                                         <h5>Tem certeza que deseja excluir esse arquivo?</h5>
                                                         <p>Não será possivel reverter esta ação.</p>
-                                                        <a href="/admin/planejamentos/apagar/<?php echo e($contMedio->id); ?>" class="btn btn-sm btn-danger" data-toggle="tooltip" data-placement="right" title="Inativar">Excluir</a>
+                                                        <a href="/admin/planejamentos/apagarAnexo/<?php echo e($contMedio->id); ?>" class="btn btn-sm btn-danger" data-toggle="tooltip" data-placement="right" title="Inativar">Excluir</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -233,7 +233,7 @@
                                             <div class="modal-dialog" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabel">Anexar Questões do <?php echo e($prova->descricao); ?> - <?php echo e($contMedio->disciplina->nome); ?> - <?php echo e($contMedio->turma->serie); ?>º ANO <?php echo e($contMedio->turma->turma); ?></h5>
+                                                <h5 class="modal-title" id="exampleModalLabel">Anexar Questões do <?php echo e($prova->descricao); ?> - <?php echo e($contMedio->disciplina->nome); ?> - <?php echo e($contMedio->turma->serie); ?>º<?php echo e($contMedio->turma->turma); ?><?php echo e($contMedio->turma->turno); ?></h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
@@ -257,7 +257,7 @@
                                                 <div class="modal-dialog" role="document">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <h5 class="modal-title" id="exampleModalLabel">Conferir Questões do <?php echo e($prova->descricao); ?> - <?php echo e($contMedio->disciplina->nome); ?> - <?php echo e($contMedio->turma->serie); ?>º ANO <?php echo e($contMedio->turma->turma); ?></h5>
+                                                            <h5 class="modal-title" id="exampleModalLabel">Conferir Questões do <?php echo e($prova->descricao); ?> - <?php echo e($contMedio->disciplina->nome); ?> - <?php echo e($contMedio->turma->serie); ?>º<?php echo e($contMedio->turma->turma); ?><?php echo e($contMedio->turma->turno); ?></h5>
                                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                         </div>
                                                         <div class="modal-body">

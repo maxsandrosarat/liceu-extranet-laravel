@@ -24,12 +24,12 @@
                                 }
                             }
                         ?>
-                        <th colspan="<?php echo e($qtdTurmas); ?>"><?php echo e($fundSerie->serie); ?>º ANO</th>
+                        <th colspan="<?php echo e($qtdTurmas); ?>"><?php echo e($fundSerie->serie); ?>º</th>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </tr>
                     <tr>
                         <?php $__currentLoopData = $fundTurmas; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $fundTurma): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                        <th><?php echo e($fundTurma->serie); ?>º <?php echo e($fundTurma->turma); ?></th>
+                        <th><?php echo e($fundTurma->serie); ?>º<?php echo e($fundTurma->turma); ?><?php echo e($fundTurma->turno); ?></th>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </tr>
                 </thead>
@@ -56,7 +56,7 @@
                                         <?php if($fundPertence===0): ?> <td style="color:blue; text-align: center; font-weight:bold;">Não se <br/>Aplica</td>
                                         <?php else: ?>
                                         <?php if($contFund->arquivo==''): ?>
-                                        <td style="color:red; text-align: center;"> Pendente <br/> <button type="button" class="badge bg-warning" data-bs-toggle="modal" data-bs-target="#exampleModalAnexar<?php echo e($contFund->id); ?>"><i class="material-icons md-18">cloud_upload</i></button> 
+                                        <td style="color:red; text-align: center;"> Pendente <br/>
                                     <?php else: ?>
                                         <?php if($contFund->comentario!=""): ?>
                                         <td style="text-align: center;"><a href="#" data-bs-toggle="modal" data-bs-target="#exampleModalConf<?php echo e($contFund->id); ?>"><i class="material-icons md-48 yellow" data-toggle="tooltip" data-placement="left" title="Problemas Encontrados">report_problem</i></a><br/>
@@ -75,7 +75,7 @@
                                                     <div class="modal-dialog" role="document">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
-                                                                <h5 class="modal-title" id="exampleModalLabel">Conferir Planejamento do <?php echo e($prova->descricao); ?> - <?php echo e($contFund->disciplina->nome); ?> - <?php echo e($contFund->turma->serie); ?>º ANO <?php echo e($contFund->turma->turma); ?></h5>
+                                                                <h5 class="modal-title" id="exampleModalLabel">Conferir Planejamento do <?php echo e($prova->descricao); ?> - <?php echo e($contFund->disciplina->nome); ?> - <?php echo e($contFund->turma->serie); ?>º<?php echo e($contFund->turma->turma); ?><?php echo e($contFund->turma->turno); ?></h5>
                                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                             </div>
                                                             <div class="modal-body">
@@ -123,12 +123,12 @@
                                 }
                             }
                         ?>
-                        <th colspan="<?php echo e($qtdTurmas); ?>"><?php echo e($medioSerie->serie); ?>º ANO</th>
+                        <th colspan="<?php echo e($qtdTurmas); ?>"><?php echo e($medioSerie->serie); ?>º</th>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </tr>
                     <tr>
                         <?php $__currentLoopData = $medioTurmas; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $medioTurma): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                        <th><?php echo e($medioTurma->serie); ?>º <?php echo e($medioTurma->turma); ?></th>
+                        <th><?php echo e($medioTurma->serie); ?>º<?php echo e($medioTurma->turma); ?><?php echo e($medioTurma->turno); ?></th>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </tr>
                 </thead>
@@ -155,7 +155,7 @@
                                     <?php if($medioPertence===0): ?> <td style="color:blue; text-align: center; font-weight:bold;">Não se <br/>Aplica</td> 
                                     <?php else: ?>
                                     <?php if($contMedio->arquivo==''): ?>
-                                    <td style="color:red; text-align: center;"> Pendente <br/> <button type="button" class="badge bg-warning" data-bs-toggle="modal" data-bs-target="#exampleModalAnexar<?php echo e($contMedio->id); ?>"><i class="material-icons md-18">cloud_upload</i></button> 
+                                    <td style="color:red; text-align: center;"> Pendente <br/>
                                 <?php else: ?>
                                         <?php if($contMedio->comentario!=""): ?>
                                         <td style="text-align: center;"><a href="#" data-bs-toggle="modal" data-bs-target="#exampleModalConf<?php echo e($contMedio->id); ?>"><i class="material-icons md-48 yellow" data-toggle="tooltip" data-placement="left" title="Problemas Encontrados">report_problem</i></a><br/>
@@ -174,7 +174,7 @@
                                                 <div class="modal-dialog" role="document">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <h5 class="modal-title" id="exampleModalLabel">Conferir Planejamento do <?php echo e($prova->descricao); ?> - <?php echo e($contMedio->disciplina->nome); ?> - <?php echo e($contMedio->turma->serie); ?>º ANO <?php echo e($contMedio->turma->turma); ?></h5>
+                                                            <h5 class="modal-title" id="exampleModalLabel">Conferir Planejamento do <?php echo e($prova->descricao); ?> - <?php echo e($contMedio->disciplina->nome); ?> - <?php echo e($contMedio->turma->serie); ?>º<?php echo e($contMedio->turma->turma); ?><?php echo e($contMedio->turma->turno); ?></h5>
                                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                         </div>
                                                         <div class="modal-body">

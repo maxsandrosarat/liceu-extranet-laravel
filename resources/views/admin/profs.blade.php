@@ -117,7 +117,7 @@
                                                                             @endforeach
                                                                         @endforeach
                                                                         >
-                                                                        <label class="form-check-label" for="turma{{$turma->id}}">{{$turma->serie}}º ANO {{$turma->turma}} (@if($turma->turno=='M') Matutino @else @if($turma->turno=='V') Vespertino @else Noturno @endif @endif)</label>
+                                                                        <label class="form-check-label" for="turma{{$turma->id}}">{{$turma->serie}}º{{$turma->turma}}{{$turma->turno}}</label>
                                                                     </div>
                                                                 </li>
                                                             @endforeach

@@ -1,4 +1,4 @@
-@extends('layouts.app', ["current"=>"diario"])
+@extends('layouts.app', ["current"=>"pedagogico"])
 
 @section('body')
 <div class="card border">
@@ -10,7 +10,7 @@
             $diasemana = array('Domingo', 'Segunda-Feira', 'Terça-Feira', 'Quarta-Feira', 'Quinta-Feira', 'Sexta-Feira', 'Sábado');
             $diasemana_numero = date('w', strtotime($dia)); 
             @endphp
-            Dia: {{date("d/m/Y", strtotime($dia))}} ({{$diasemana[$diasemana_numero]}}) - {{$turma->serie}}º ANO {{$turma->turma}}
+            Dia: {{date("d/m/Y", strtotime($dia))}} ({{$diasemana[$diasemana_numero]}}) - {{$turma->serie}}º{{$turma->turma}}{{$turma->turno}}
         </h3>
         @if(session('mensagem'))
             <div class="alert @if(session('type')=="success") alert-success @else @if(session('type')=="warning") alert-warning @else @if(session('type')=="danger") alert-danger @else alert-info @endif @endif @endif alert-dismissible fade show" role="alert">
@@ -124,12 +124,12 @@
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalLabel">Diário: {{$turma->serie}}º ANO {{$turma->turma}} - {{date("d/m/Y", strtotime($dia))}}</h5>
+                                                    <h5 class="modal-title" id="exampleModalLabel">Diário: {{$turma->serie}}º{{$turma->turma}}{{$turma->turno}} - {{date("d/m/Y", strtotime($dia))}}</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
                                                     <p id="texto">
-                                                    Conteúdo Ministrado em Aula - {{$turma->serie}}º ANO {{$turma->turma}} - {{date("d/m/Y", strtotime($dia))}}<br/><br/>
+                                                    Conteúdo Ministrado em Aula - {{$turma->serie}}º{{$turma->turma}}{{$turma->turno}} - {{date("d/m/Y", strtotime($dia))}}<br/><br/>
                                                     @foreach ($diarios as $diario)
                                                     Disciplina: {{$diario->disciplina->nome}}<br/>
                                                     Conteúdo: {{$diario->tema}}<br/>
@@ -166,7 +166,6 @@
                         </thead>
                         <tbody>
                             @foreach ($ocorrencias as $ocorrencia)
-                            @if($ocorrencia->aluno->turma_id==$turma->id)
                             <tr>
                                 <td>{{$ocorrencia->tipo_ocorrencia->codigo}} - {{$ocorrencia->tipo_ocorrencia->descricao}}</td>
                                 <td>{{$ocorrencia->aluno->name}}</td>
@@ -228,14 +227,11 @@
                                     @endif
                                 </td>
                             </tr>
-                            @endif
                             @endforeach
                         </tbody>
                     </table>
                     </div>
                     @endif
-
-
     </div>
 </div>
 @endsection

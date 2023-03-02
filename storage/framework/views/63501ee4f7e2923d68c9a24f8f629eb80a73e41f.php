@@ -68,15 +68,15 @@
                         <td>
                             <ul>
                             <?php $__currentLoopData = $prova->series; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $serie): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                <li><?php echo e($serie->turma->serie); ?>º ANO <?php echo e($serie->turma->turma); ?></li>
+                                <li><?php echo e($serie->turma->serie); ?>º<?php echo e($serie->turma->turma); ?><?php echo e($serie->turma->turno); ?></li>
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </ul>
                         </td>
                         <td>
-                            <a href="/prof/conteudosProvas/painel/<?php echo e($prova->id); ?>" class="badge bg-primary" data-toggle="tooltip" data-placement="right" title="Painel"><i class="material-icons md-18">attach_file</i></a>
+                            <a href="/prof/conteudosProvas/painel/<?php echo e($prova->id); ?>" class="badge bg-primary" data-toggle="tooltip" data-placement="right" title="Painel de Conteúdos"><i class="material-icons md-18">attach_file</i></a>
                         </td>
                         <td> 
-                            <a href="/prof/provas/painel/<?php echo e($prova->id); ?>" class="badge bg-primary" data-toggle="tooltip" data-placement="right" title="Painel"><i class="material-icons md-18">attach_file</i></a>
+                            <a href="/prof/provas/painel/<?php echo e($prova->id); ?>" class="badge bg-primary" data-toggle="tooltip" data-placement="right" title="Painel de Questões"><i class="material-icons md-18">attach_file</i></a>
                         </td>
                     </tr>
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>

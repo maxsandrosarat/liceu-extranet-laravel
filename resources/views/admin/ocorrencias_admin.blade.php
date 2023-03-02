@@ -47,7 +47,7 @@
                             <select class="form-select" id="aluno" name="aluno" style="width:170px;">
                                 <option value="">Selecione o aluno</option>
                                 @foreach ($alunos as $aluno)
-                                <option value="{{$aluno->id}}">{{$aluno->name}} - {{$aluno->turma->serie}}º ANO {{$aluno->turma->turma}}</option>
+                                <option value="{{$aluno->id}}">{{$aluno->name}}</option>
                                 @endforeach
                             </select>
                             <label for="aluno">Aluno</label>
@@ -74,7 +74,7 @@
                     <tr>
                         <th>Tipo</th>
                         <th>Aluno</th>
-                        <th>Turna</th>
+                        <th>Turma</th>
                         <th>Disciplina</th>
                         <th>Data</th>
                         <th>Observação</th>
@@ -88,7 +88,7 @@
                     <tr>
                         <td data-toggle="tooltip" data-placement="bottom" title="{{$ocorrencia->tipo_ocorrencia->descricao}}">{{$ocorrencia->tipo_ocorrencia->codigo}}</td>
                         <td data-toggle="tooltip" data-placement="bottom" title="Código: {{$ocorrencia->id}}">{{$ocorrencia->aluno->name}}</td>
-                        <td>{{$ocorrencia->aluno->turma->serie}}º ANO {{$ocorrencia->aluno->turma->turma}}</td>
+                        <td>{{$ocorrencia->turma->serie}}º{{$ocorrencia->turma->turma}}{{$ocorrencia->turma->turno}}</td>
                         <td>{{$ocorrencia->disciplina->nome}}</td>
                         <td>{{date("d/m/Y", strtotime($ocorrencia->data))}}</td>
                         <td>

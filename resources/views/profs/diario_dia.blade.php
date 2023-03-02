@@ -21,7 +21,7 @@
                         </div>
                     </div>
                     <br/>
-                    <h5 class="card-title">Diário - {{$disc->nome}} - {{$turma->serie}}º ANO {{$turma->turma}}</h5>
+                    <h5 class="card-title">Diário - {{$disc->nome}} - {{$turma->serie}}º{{$turma->turma}}{{$turma->turno}}</h5>
                     <form method="GET" action="/prof/diario">
                         @csrf
                         <input type="hidden" name="disciplina" value="{{$disc->id}}">

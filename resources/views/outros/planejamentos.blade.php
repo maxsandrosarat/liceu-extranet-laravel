@@ -24,12 +24,12 @@
                                 }
                             }
                         @endphp
-                        <th colspan="{{$qtdTurmas}}">{{$fundSerie->serie}}º ANO</th>
+                        <th colspan="{{$qtdTurmas}}">{{$fundSerie->serie}}º</th>
                         @endforeach
                     </tr>
                     <tr>
                         @foreach($fundTurmas as $fundTurma)
-                        <th>{{$fundTurma->serie}}º {{$fundTurma->turma}}</th>
+                        <th>{{$fundTurma->serie}}º{{$fundTurma->turma}}{{$fundTurma->turno}}</th>
                         @endforeach
                     </tr>
                 </thead>
@@ -55,7 +55,7 @@
                                         @if($fundPertence===0) <td style="color:blue; text-align: center; font-weight:bold;">Não se <br/>Aplica</td>
                                         @else
                                         @if($contFund->arquivo=='')
-                                        <td style="color:red; text-align: center;"> Pendente <br/> <button type="button" class="badge bg-warning" data-bs-toggle="modal" data-bs-target="#exampleModalAnexar{{$contFund->id}}"><i class="material-icons md-18">cloud_upload</i></button> 
+                                        <td style="color:red; text-align: center;"> Pendente <br/>
                                     @else
                                         @if($contFund->comentario!="")
                                         <td style="text-align: center;"><a href="#" data-bs-toggle="modal" data-bs-target="#exampleModalConf{{$contFund->id}}"><i class="material-icons md-48 yellow" data-toggle="tooltip" data-placement="left" title="Problemas Encontrados">report_problem</i></a><br/>
@@ -74,7 +74,7 @@
                                                     <div class="modal-dialog" role="document">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
-                                                                <h5 class="modal-title" id="exampleModalLabel">Conferir Planejamento do {{$prova->descricao}} - {{$contFund->disciplina->nome}} - {{$contFund->turma->serie}}º ANO {{$contFund->turma->turma}}</h5>
+                                                                <h5 class="modal-title" id="exampleModalLabel">Conferir Planejamento do {{$prova->descricao}} - {{$contFund->disciplina->nome}} - {{$contFund->turma->serie}}º{{$contFund->turma->turma}}{{$contFund->turma->turno}}</h5>
                                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                             </div>
                                                             <div class="modal-body">
@@ -122,12 +122,12 @@
                                 }
                             }
                         @endphp
-                        <th colspan="{{$qtdTurmas}}">{{$medioSerie->serie}}º ANO</th>
+                        <th colspan="{{$qtdTurmas}}">{{$medioSerie->serie}}º</th>
                         @endforeach
                     </tr>
                     <tr>
                         @foreach($medioTurmas as $medioTurma)
-                        <th>{{$medioTurma->serie}}º {{$medioTurma->turma}}</th>
+                        <th>{{$medioTurma->serie}}º{{$medioTurma->turma}}{{$medioTurma->turno}}</th>
                         @endforeach
                     </tr>
                 </thead>
@@ -153,7 +153,7 @@
                                     @if($medioPertence===0) <td style="color:blue; text-align: center; font-weight:bold;">Não se <br/>Aplica</td> 
                                     @else
                                     @if($contMedio->arquivo=='')
-                                    <td style="color:red; text-align: center;"> Pendente <br/> <button type="button" class="badge bg-warning" data-bs-toggle="modal" data-bs-target="#exampleModalAnexar{{$contMedio->id}}"><i class="material-icons md-18">cloud_upload</i></button> 
+                                    <td style="color:red; text-align: center;"> Pendente <br/>
                                 @else
                                         @if($contMedio->comentario!="")
                                         <td style="text-align: center;"><a href="#" data-bs-toggle="modal" data-bs-target="#exampleModalConf{{$contMedio->id}}"><i class="material-icons md-48 yellow" data-toggle="tooltip" data-placement="left" title="Problemas Encontrados">report_problem</i></a><br/>
@@ -172,7 +172,7 @@
                                                 <div class="modal-dialog" role="document">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <h5 class="modal-title" id="exampleModalLabel">Conferir Planejamento do {{$prova->descricao}} - {{$contMedio->disciplina->nome}} - {{$contMedio->turma->serie}}º ANO {{$contMedio->turma->turma}}</h5>
+                                                            <h5 class="modal-title" id="exampleModalLabel">Conferir Planejamento do {{$prova->descricao}} - {{$contMedio->disciplina->nome}} - {{$contMedio->turma->serie}}º{{$contMedio->turma->turma}}{{$contMedio->turma->turno}}</h5>
                                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                         </div>
                                                         <div class="modal-body">

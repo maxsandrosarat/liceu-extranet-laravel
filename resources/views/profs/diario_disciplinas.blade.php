@@ -20,7 +20,7 @@
             <table class="table table-striped table-ordered table-hover">
                 <thead class="table-dark">
                     <tr>
-                        <th style="text-align: center;">Disciplinas</th>
+                        <th style="text-align: center;">Disciplina(s)</th>
                     </tr>
                 </thead>
                 <tbody>

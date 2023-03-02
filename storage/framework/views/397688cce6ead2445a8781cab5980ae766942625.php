@@ -21,7 +21,7 @@
             <table class="table table-striped table-ordered table-hover">
                 <thead class="table-dark">
                     <tr>
-                        <th style="text-align: center;">Disciplinas</th>
+                        <th style="text-align: center;">Turma(s)</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -29,7 +29,7 @@
                         <?php if($turmaDisc->turma->ativo==true): ?>
                         <tr>
                             <td>
-                                <a href="/prof/diario/<?php echo e($discId); ?>/<?php echo e($turmaDisc->turma->id); ?>" class="btn btn-primary btn-lg btn-block"><?php echo e($turmaDisc->turma->serie); ?>º ANO <?php echo e($turmaDisc->turma->turma); ?> (<?php if($turmaDisc->turma->turno=='M'): ?> Matutino <?php else: ?> <?php if($turmaDisc->turma->turno=='V'): ?> Vespertino <?php else: ?> Noturno <?php endif; ?> <?php endif; ?>)</a>
+                                <a href="/prof/diario/<?php echo e($discId); ?>/<?php echo e($turmaDisc->turma->id); ?>" class="btn btn-primary btn-lg btn-block"><?php echo e($turmaDisc->turma->serie); ?>º<?php echo e($turmaDisc->turma->turma); ?><?php echo e($turmaDisc->turma->turno); ?></a>
                             </td>
                         </tr>
                         <?php endif; ?>

@@ -17,7 +17,7 @@
                 <div class="row justify-content-center">
                     <div class="col-md-8">
                         <h5>Disciplina: {{$diario->disciplina->nome}}</h5>
-                        <h5>Turma: {{$diario->turma->serie}}º ANO {{$diario->turma->turma}}</h5>
+                        <h5>Turma: {{$diario->turma->serie}}º{{$diario->turma->turma}}{{$diario->turma->turno}}</h5>
                         @php
                         $diasemana = array('Domingo', 'Segunda-Feira', 'Terça-Feira', 'Quarta-Feira', 'Quinta-Feira', 'Sexta-Feira', 'Sábado');
                         $diasemana_numero = date('w', strtotime($diario->dia)); 
@@ -317,7 +317,7 @@
                                                                 @if($aluno->foto!="") <img src="/storage/{{$aluno->foto}}" alt="foto_aluno" style="width: 100%"> @else <i class="material-icons md-60">no_photography</i> @endif
                                                                 <hr/>
                                                                 <h6 class="font-italic">
-                                                                {{$aluno->name}} - {{$aluno->turma->serie}}º ANO {{$aluno->turma->turma}} (@if($aluno->turma->turno=='M') Matutino @else @if($aluno->turma->turno=='V') Vespertino @else Noturno @endif @endif)
+                                                                    {{$aluno->name}}
                                                                 </h6>
                                                                 <hr/>
                                                             </div>
@@ -340,6 +340,7 @@
                                         <label for="tipo">Tipo de Ocorrência</label>
                                     </div>
                                     <br/><br/>
+                                    <input type="hidden" name="turma" value="{{$turma->id}}">
                                     <input type="hidden" name="disciplina" value="{{$disciplina->id}}">
                                     <input type="hidden" name="data" value="{{$dia}}" required>
                                     <label for="observacao">Observação</label>
@@ -370,7 +371,6 @@
                             </thead>
                             <tbody>
                                 @foreach ($ocorrencias as $ocorrencia)
-                                @if($ocorrencia->aluno->turma_id==$turma->id)
                                 <tr>
                                     <td>{{$ocorrencia->tipo_ocorrencia->codigo}} - {{$ocorrencia->tipo_ocorrencia->descricao}}</td>
                                     <td>{{$ocorrencia->aluno->name}}</td>
@@ -478,7 +478,6 @@
                                         @endif
                                     </td>
                                 </tr>
-                                @endif
                                 @endforeach
                             </tbody>
                         </table>

@@ -89,7 +89,7 @@
                         <th scope="col">Foto</th>
                         <th scope="col">Nome</th>
                         <th scope="col">Login</th>
-                        <th scope="col">Turma</th>
+                        <th scope="col">Turma(s)</th>
                         <th scope="col">Ativo</th>
                         <th scope="col">Ações</th>
                     </tr>
@@ -110,7 +110,10 @@
                                 @if($aluno->foto!="") <img src="/storage/{{$aluno->foto}}" alt="foto_produto" style="width: 100%"> @else <i class="material-icons md-60">no_photography</i> @endif
                                 <hr/>
                                 <h6 class="font-italic">
-                                {{$aluno->name}} - {{$aluno->turma->serie}}º ANO {{$aluno->turma->turma}} (@if($aluno->turma->turno=='M') Matutino @else @if($aluno->turma->turno=='V') Vespertino @else Noturno @endif @endif)
+                                    {{$aluno->name}}
+                                    @foreach($aluno->turmas as $turma)
+                                     - {{$turma->serie}}º{{$turma->turma}}{{$turma->turno}}
+                                    @endforeach
                                 </h6>
                                 <hr/>
                             </div>
@@ -119,7 +122,11 @@
                         </div>
                         <td>{{$aluno->name}}</td>
                         <td>{{$aluno->email}}</td>
-                        <td @if($aluno->turma->ativo==false) style="color: red;" @endif >{{$aluno->turma->serie}}º ANO {{$aluno->turma->turma}} (@if($aluno->turma->turno=='M') Matutino @else @if($aluno->turma->turno=='V') Vespertino @else Noturno @endif @endif)</td>
+                        <td>
+                            @foreach ($aluno->turmas as $turma)
+                            <b @if($turma->ativo==false) style="color: red;" @endif>- {{$turma->serie}}º{{$turma->turma}}{{$turma->turno}} </b>
+                            @endforeach
+                        </td>
                         <td>
                             @if($aluno->ativo==1)
                                 <b><i class="material-icons green">check_circle</i></b>
@@ -160,17 +167,15 @@
                                                     <input id="password-confirm" type="password" class="form-control" name="password_confirmation" autocomplete="new-password">
                                                     <label for="password-confirm">Confirmação Senha</label>
                                                 </div>
-                                                <div class="col-12 form-floating">
-                                                    <select class="form-select" id="turma" name="turma" required>
-                                                        <option value="{{$aluno->turma->id}}">{{$aluno->turma->serie}}º ANO {{$aluno->turma->turma}} (@if($aluno->turma->turno=='M') Matutino @else @if($aluno->turma->turno=='V') Vespertino @else Noturno @endif @endif)</option>
-                                                            @foreach ($turmas as $turma)
-                                                                @if($aluno->turma->id==$turma->id || $turma->ativo==false)
-                                                                @else
-                                                                <option value="{{$turma->id}}">{{$turma->serie}}º ANO {{$turma->turma}} (@if($turma->turno=='M') Matutino @else @if($turma->turno=='V') Vespertino @else Noturno @endif @endif)</option>
-                                                                @endif
-                                                            @endforeach
-                                                    </select>
-                                                    <label for="turma">Turma</label>
+                                                <hr/>
+                                                <label for="turmas">Turma(s)</label>
+                                                <div class="checkbox-group required" style="text-align: left;">
+                                                    @foreach ($turmas as $turma)
+                                                    <div class="form-check">
+                                                        <input type="checkbox" class="form-check-input check" id="turma{{$turma->id}}" name="turmas[]" value="{{$turma->id}}" @foreach($aluno->turmas as $alunoTurma) @if($alunoTurma->id==$turma->id) checked @endif  @endforeach>
+                                                        <label class="form-check-label" for="turma{{$turma->id}}">{{$turma->serie}}º{{$turma->turma}}{{$turma->turno}}@if($turma->ensino=="fund") (Fundamental) @else @if($turma->ensino=="medio") (Médio) @endif @endif</label>
+                                                    </div>
+                                                    @endforeach
                                                 </div>
                                                 <br/>
                                                 <div class="col-12 input-group mb-3">
@@ -219,6 +224,7 @@
                         <li><h5>Baixe o modelo de importação.</h5></li>
                         <a type="button" class="btn btn-info" href="/admin/templates/download/aluno">Baixar modelo</a>
                         <li><h5>Nenhum campo pode ficar sem preencher.</h5></li>
+                        <li><h5>Só é possivel adicionar uma turma de início, após inserido pode-se editar e incluir mais turmas.</h5></li>
                         <li><h5>No campo login não esqueça de adicionar @liceu (senão usuário não conseguirá fazer login)</h5></li>
                         <li><h5>Após envio do Arquivo aguarde tempo de processamento!</h5></li>
                     </ul>
@@ -283,17 +289,15 @@
                                 </span>
                             @enderror
                         </div>
-                        <div class="col-12 form-floating">
-                            <select class="form-select" id="turma" name="turma" required>
-                                <option value="">Selecione</option>
-                                    @foreach ($turmas as $turma)
-                                        @if($turma->ativo==false)
-                                        @else
-                                        <option value="{{$turma->id}}">{{$turma->serie}}º ANO {{$turma->turma}} (@if($turma->turno=='M') Matutino @else @if($turma->turno=='V') Vespertino @else Noturno @endif @endif)</option>
-                                        @endif
-                                    @endforeach
-                            </select>
-                            <label for="turma">Turma</label>
+                        <hr/>
+                        <label for="turmas">Turma(s)</label>
+                        <div class="checkbox-group required">
+                            @foreach ($turmas as $turma)
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input check" id="turma{{$turma->id}}" name="turmas[]" value="{{$turma->id}}">
+                                <label class="form-check-label" for="turma{{$turma->id}}">{{$turma->serie}}º{{$turma->turma}}{{$turma->turno}}@if($turma->ensino=="fund") (Fundamental) @else @if($turma->ensino=="medio") (Médio) @endif @endif</label>
+                            </div>
+                            @endforeach
                         </div>
                         <br/>
                         <div class="col-12 input-group mb-3">

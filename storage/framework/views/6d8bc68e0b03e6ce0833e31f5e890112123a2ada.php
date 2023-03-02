@@ -1,11 +1,9 @@
-
-
 <?php $__env->startSection('body'); ?>
     <div class="card border">
         <div class="card-body">
             <a href="/prof/ocorrencias/<?php echo e($disciplina->id); ?>" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="Voltar"><i class="material-icons white">reply</i></a>
             <br/><br/>
-            <h5 class="card-title">Painel de Ocorrências - Discplina: <?php echo e($disciplina->nome); ?> - Turma: <?php echo e($turma->serie); ?>º ANO <?php echo e($turma->turma); ?></h5>
+            <h5 class="card-title">Painel de Ocorrências - Discplina: <?php echo e($disciplina->nome); ?> - Turma: <?php echo e($turma->serie); ?>º<?php echo e($turma->turma); ?><?php echo e($turma->turno); ?></h5>
             <?php if(session('mensagem')): ?>
                 <div class="alert <?php if(session('type')=="success"): ?> alert-success <?php else: ?> <?php if(session('type')=="warning"): ?> alert-warning <?php else: ?> <?php if(session('type')=="danger"): ?> alert-danger <?php else: ?> alert-info <?php endif; ?> <?php endif; ?> <?php endif; ?> alert-dismissible fade show" role="alert">
                     <?php echo e(session('mensagem')); ?>
@@ -145,6 +143,31 @@
                                 </div>
                                 </div>
                             </div>
+
+                            <button type="button" class="badge bg-danger" data-bs-toggle="modal" data-bs-target="#exampleModalDelete<?php echo e($ocorrencia->id); ?>" data-toggle="tooltip" data-placement="left" title="Excluir"><i class="material-icons md-18">delete</i></button></td>
+                                        <!-- Modal -->
+                                        <div class="modal fade bd-example-modal-lg" id="exampleModalDelete<?php echo e($ocorrencia->id); ?>" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">Excluir Ocorrência Nº <?php echo e($ocorrencia->id); ?></h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <h6><b>Aluno: <?php echo e($ocorrencia->aluno->name); ?></b></h6>
+                                                        <h6><b>Tipo de Ocorrência: <?php echo e($ocorrencia->tipo_ocorrencia->codigo); ?> - <?php echo e($ocorrencia->tipo_ocorrencia->descricao); ?></b></h6>
+                                                        <h6><b>Disciplina: <?php echo e($ocorrencia->disciplina->nome); ?></b></h6>
+                                                        <h5>Tem certeza que deseja excluir essa ocorrência?</h5>
+                                                        <p>Não será possivel reverter esta ação.</p>
+                                                        <form action="/prof/ocorrencias/apagar/<?php echo e($ocorrencia->id); ?>" method="POST">
+                                                            <?php echo csrf_field(); ?>
+                                                            <input type="hidden" name="ocorrencia" value="<?php echo e($ocorrencia->id); ?>" required>
+                                                            <button type="submit" class="btn btn-sm btn-danger">Excluir</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                             <?php endif; ?>
                             <?php endif; ?>
                         </td>

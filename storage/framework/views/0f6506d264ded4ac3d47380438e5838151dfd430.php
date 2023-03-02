@@ -1,5 +1,3 @@
-
-
 <?php $__env->startSection('body'); ?>
     <div class="card border">
         <div class="card-body">
@@ -48,7 +46,7 @@
                             <select class="form-select" id="aluno" name="aluno" style="width:170px;">
                                 <option value="">Selecione o aluno</option>
                                 <?php $__currentLoopData = $alunos; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $aluno): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                <option value="<?php echo e($aluno->id); ?>"><?php echo e($aluno->name); ?> - <?php echo e($aluno->turma->serie); ?>º ANO <?php echo e($aluno->turma->turma); ?></option>
+                                <option value="<?php echo e($aluno->id); ?>"><?php echo e($aluno->name); ?></option>
                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </select>
                             <label for="aluno">Aluno</label>
@@ -75,7 +73,7 @@
                     <tr>
                         <th>Tipo</th>
                         <th>Aluno</th>
-                        <th>Turna</th>
+                        <th>Turma</th>
                         <th>Disciplina</th>
                         <th>Data</th>
                         <th>Observação</th>
@@ -89,7 +87,7 @@
                     <tr>
                         <td data-toggle="tooltip" data-placement="bottom" title="<?php echo e($ocorrencia->tipo_ocorrencia->descricao); ?>"><?php echo e($ocorrencia->tipo_ocorrencia->codigo); ?></td>
                         <td data-toggle="tooltip" data-placement="bottom" title="Código: <?php echo e($ocorrencia->id); ?>"><?php echo e($ocorrencia->aluno->name); ?></td>
-                        <td><?php echo e($ocorrencia->aluno->turma->serie); ?>º ANO <?php echo e($ocorrencia->aluno->turma->turma); ?></td>
+                        <td><?php echo e($ocorrencia->turma->serie); ?>º<?php echo e($ocorrencia->turma->turma); ?><?php echo e($ocorrencia->turma->turno); ?></td>
                         <td><?php echo e($ocorrencia->disciplina->nome); ?></td>
                         <td><?php echo e(date("d/m/Y", strtotime($ocorrencia->data))); ?></td>
                         <td>

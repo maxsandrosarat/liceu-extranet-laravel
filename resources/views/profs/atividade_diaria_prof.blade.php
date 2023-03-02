@@ -30,7 +30,7 @@
                             <select class="form-select" id="turma" name="turma" required>
                                 <option value="">Selecione</option>
                                 @foreach ($turmas as $turma)
-                                <option value="{{$turma->turma->id}}">{{$turma->turma->serie}}º ANO {{$turma->turma->turma}} (@if($turma->turma->turno=='M') Matutino @else @if($turma->turma->turno=='V') Vespertino @else Noturno @endif @endif)</option>
+                                <option value="{{$turma->turma->id}}">{{$turma->turma->serie}}º{{$turma->turma->turma}}{{$turma->turma->turno}}</option>
                                 @endforeach
                             </select>
                             <label for="turma">Turma</label>
@@ -79,7 +79,7 @@
                             <select class="form-select" name="turma">
                                 <option value="">Selecione</option>
                                 @foreach ($turmas as $turma)
-                                <option value="{{$turma->turma->id}}">{{$turma->turma->serie}}º ANO {{$turma->turma->turma}} (@if($turma->turma->turno=='M') Matutino @else @if($turma->turno=='V') Vespertino @else Noturno @endif @endif)</option>
+                                <option value="{{$turma->turma->id}}">{{$turma->turma->serie}}º{{$turma->turma->turma}}{{$turma->turma->turno}}</option>
                                 @endforeach
                             </select>
                             <label for="turma">Turma</label>
@@ -106,7 +106,7 @@
                     $dataAtual = date("Y-m-d");
                 @endphp
                     <a class="fill-div" data-bs-toggle="modal" data-bs-target="#exampleModal{{$atividade->id}}"><div id="my-div" class="bd-callout @if($atividade->impresso==1) bd-callout-success @else @if($atividade->data==$dataAtual && $atividade->impresso==0) bd-callout-warning @else @if($atividade->data>$dataAtual && $atividade->impresso==0) bd-callout-info @else @if($atividade->data<$dataAtual && $atividade->impresso==0) bd-callout-danger @endif @endif @endif @endif">
-                        <h4>{{$atividade->disciplina->nome}} - {{$atividade->turma->serie}}º ANO {{$atividade->turma->turma}} - {{$atividade->descricao}}</h4>
+                        <h4>{{$atividade->disciplina->nome}} - {{$atividade->turma->serie}}º{{$atividade->turma->turma}}{{$atividade->turma->turno}} - {{$atividade->descricao}}</h4>
                         <p>Data: {{date("d/m/Y", strtotime($atividade->data))}}</p>
                     </div></a>
                     <!-- Modal -->
@@ -120,7 +120,7 @@
                         <div class="modal-body">
                             <p class="font-weight-bolder">
                                 Disciplina: {{$atividade->disciplina->nome}} <br/> <hr/>
-                                Turma: {{$atividade->turma->serie}}º ANO {{$atividade->turma->turma}} <br/> <hr/>
+                                Turma: {{$atividade->turma->serie}}º{{$atividade->turma->turma}}{{$atividade->turma->turno}} <br/> <hr/>
                                 Descrição: {{$atividade->descricao}} <br/> <hr/>
                                 Data: {{date("d/m/Y", strtotime($atividade->data))}} <br/> <hr/>
                                 <ol class="list-group list-group-numbered">

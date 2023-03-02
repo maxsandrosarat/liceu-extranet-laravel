@@ -3,6 +3,7 @@
 namespace App\Imports;
 
 use App\Models\Aluno;
+use App\Models\AlunoTurma;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Illuminate\Support\Facades\DB;
@@ -21,17 +22,18 @@ class AlunoImport implements ToCollection
                     $aluno->name = $row[0];
                     $aluno->email = $row[1];
                     $aluno->password = Hash::make($row[2]);
+                    $aluno->save();
                     $serie = $row[3];
                     $turma = $row[4];
                     $turno = $row[5];
                     $ensino = $row[6];
-                    $turmas = DB::table('turmas')->select(DB::raw("id"))->where('serie',"$serie")->where('turma',"$turma")->where('turno',"$turno")->where('ensino',"$ensino")->get();
-                    foreach($turmas as $turma){
-                        $turmaId = $turma->id;
+                    $turma = DB::table('turmas')->select(DB::raw("id"))->where('serie',"$serie")->where('turma',"$turma")->where('turno',"$turno")->where('ensino',"$ensino")->first();
+                    if(isset($turma)){
+                        $alunoTurma = new AlunoTurma();
+                        $alunoTurma->aluno_id = $aluno->id;
+                        $alunoTurma->turma_id = $turma->id;
+                        $alunoTurma->save();
                     }
-                    $turma_id = $turmaId;
-                    $aluno->turma_id = $turma_id;
-                    $aluno->save();
                 }
             }
         }

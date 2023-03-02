@@ -22,7 +22,7 @@
                         </div>
                     </div>
                     <br/>
-                    <h5 class="card-title">Diário - <?php echo e($disc->nome); ?> - <?php echo e($turma->serie); ?>º ANO <?php echo e($turma->turma); ?></h5>
+                    <h5 class="card-title">Diário - <?php echo e($disc->nome); ?> - <?php echo e($turma->serie); ?>º<?php echo e($turma->turma); ?><?php echo e($turma->turno); ?></h5>
                     <form method="GET" action="/prof/diario">
                         <?php echo csrf_field(); ?>
                         <input type="hidden" name="disciplina" value="<?php echo e($disc->id); ?>">

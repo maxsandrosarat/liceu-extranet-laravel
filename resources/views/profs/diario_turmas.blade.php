@@ -20,7 +20,7 @@
             <table class="table table-striped table-ordered table-hover">
                 <thead class="table-dark">
                     <tr>
-                        <th style="text-align: center;">Disciplinas</th>
+                        <th style="text-align: center;">Turma(s)</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -28,7 +28,7 @@
                         @if($turmaDisc->turma->ativo==true)
                         <tr>
                             <td>
-                                <a href="/prof/diario/{{$discId}}/{{$turmaDisc->turma->id}}" class="btn btn-primary btn-lg btn-block">{{$turmaDisc->turma->serie}}º ANO {{$turmaDisc->turma->turma}} (@if($turmaDisc->turma->turno=='M') Matutino @else @if($turmaDisc->turma->turno=='V') Vespertino @else Noturno @endif @endif)</a>
+                                <a href="/prof/diario/{{$discId}}/{{$turmaDisc->turma->id}}" class="btn btn-primary btn-lg btn-block">{{$turmaDisc->turma->serie}}º{{$turmaDisc->turma->turma}}{{$turmaDisc->turma->turno}}</a>
                             </td>
                         </tr>
                         @endif

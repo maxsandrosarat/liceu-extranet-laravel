@@ -71,7 +71,7 @@
                         <td>
                             <ul>
                             @foreach ($prova->series as $serie)
-                                <li>{{$serie->turma->serie}}º ANO {{$serie->turma->turma}}</li>
+                                <li>{{$serie->turma->serie}}º{{$serie->turma->turma}}{{$serie->turma->turno}}</li>
                             @endforeach
                             </ul>
                         </td>
@@ -178,7 +178,7 @@
                 @foreach ($turmas as $turma)
                 <div class="form-check">
                     <input type="checkbox" class="form-check-input check" id="turma{{$turma->id}}" name="turmas[]" value="{{$turma->id}}">
-                    <label class="form-check-label" for="turma{{$turma->id}}">{{$turma->serie}}º ANO {{$turma->turma}} @if($turma->ensino=="fund") (Fundamental) @else @if($turma->ensino=="medio") (Médio) @endif @endif</label>
+                    <label class="form-check-label" for="turma{{$turma->id}}">{{$turma->serie}}º{{$turma->turma}}{{$turma->turno}} @if($turma->ensino=="fund") (Fundamental) @else @if($turma->ensino=="medio") (Médio) @endif @endif</label>
                 </div>
                 @endforeach
                 </div>

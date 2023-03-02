@@ -42,6 +42,7 @@ return array(
     'App\\Imports\\OutroImport' => $baseDir . '/app/Imports/OutroImport.php',
     'App\\Models\\Admin' => $baseDir . '/app/Models/Admin.php',
     'App\\Models\\Aluno' => $baseDir . '/app/Models/Aluno.php',
+    'App\\Models\\AlunoTurma' => $baseDir . '/app/Models/AlunoTurma.php',
     'App\\Models\\AnexoAtividadeComplementar' => $baseDir . '/app/Models/AnexoAtividadeComplementar.php',
     'App\\Models\\AnexoAtividadeDiaria' => $baseDir . '/app/Models/AnexoAtividadeDiaria.php',
     'App\\Models\\AnexoPlanejamento' => $baseDir . '/app/Models/AnexoPlanejamento.php',

@@ -18,7 +18,7 @@
                 <div class="row justify-content-center">
                     <div class="col-md-8">
                         <h5>Disciplina: <?php echo e($diario->disciplina->nome); ?></h5>
-                        <h5>Turma: <?php echo e($diario->turma->serie); ?>º ANO <?php echo e($diario->turma->turma); ?></h5>
+                        <h5>Turma: <?php echo e($diario->turma->serie); ?>º<?php echo e($diario->turma->turma); ?><?php echo e($diario->turma->turno); ?></h5>
                         <?php
                         $diasemana = array('Domingo', 'Segunda-Feira', 'Terça-Feira', 'Quarta-Feira', 'Quinta-Feira', 'Sexta-Feira', 'Sábado');
                         $diasemana_numero = date('w', strtotime($diario->dia)); 
@@ -318,7 +318,8 @@
                                                                 <?php if($aluno->foto!=""): ?> <img src="/storage/<?php echo e($aluno->foto); ?>" alt="foto_aluno" style="width: 100%"> <?php else: ?> <i class="material-icons md-60">no_photography</i> <?php endif; ?>
                                                                 <hr/>
                                                                 <h6 class="font-italic">
-                                                                <?php echo e($aluno->name); ?> - <?php echo e($aluno->turma->serie); ?>º ANO <?php echo e($aluno->turma->turma); ?> (<?php if($aluno->turma->turno=='M'): ?> Matutino <?php else: ?> <?php if($aluno->turma->turno=='V'): ?> Vespertino <?php else: ?> Noturno <?php endif; ?> <?php endif; ?>)
+                                                                    <?php echo e($aluno->name); ?>
+
                                                                 </h6>
                                                                 <hr/>
                                                             </div>
@@ -341,6 +342,7 @@
                                         <label for="tipo">Tipo de Ocorrência</label>
                                     </div>
                                     <br/><br/>
+                                    <input type="hidden" name="turma" value="<?php echo e($turma->id); ?>">
                                     <input type="hidden" name="disciplina" value="<?php echo e($disciplina->id); ?>">
                                     <input type="hidden" name="data" value="<?php echo e($dia); ?>" required>
                                     <label for="observacao">Observação</label>
@@ -371,7 +373,6 @@
                             </thead>
                             <tbody>
                                 <?php $__currentLoopData = $ocorrencias; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $ocorrencia): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                <?php if($ocorrencia->aluno->turma_id==$turma->id): ?>
                                 <tr>
                                     <td><?php echo e($ocorrencia->tipo_ocorrencia->codigo); ?> - <?php echo e($ocorrencia->tipo_ocorrencia->descricao); ?></td>
                                     <td><?php echo e($ocorrencia->aluno->name); ?></td>
@@ -479,7 +480,6 @@
                                         <?php endif; ?>
                                     </td>
                                 </tr>
-                                <?php endif; ?>
                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </tbody>
                         </table>

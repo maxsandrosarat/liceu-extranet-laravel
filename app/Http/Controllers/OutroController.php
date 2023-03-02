@@ -348,7 +348,7 @@ class OutroController extends Controller
         $dia = $request->input('data');
         $turma = Turma::find($turmaId);
         $diarios = Diario::where('turma_id',"$turmaId")->where('dia', "$dia")->orderBy('tempo')->get();
-        $ocorrencias = Ocorrencia::where('data',"$dia")->get();
+        $ocorrencias = Ocorrencia::where('turma_id',"$turmaId")->where('data',"$dia")->get();
         return view('outros.diario_outro', compact('dia','turma','diarios','ocorrencias'));
     }
 

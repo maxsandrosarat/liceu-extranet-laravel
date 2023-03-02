@@ -67,7 +67,7 @@
                         <td>
                             <ul>
                             @foreach ($prova->series as $serie)
-                                <li>{{$serie->turma->serie}}º ANO {{$serie->turma->turma}}</li>
+                                <li>{{$serie->turma->serie}}º{{$serie->turma->turma}}{{$serie->turma->turno}}</li>
                             @endforeach
                             </ul>
                         </td>

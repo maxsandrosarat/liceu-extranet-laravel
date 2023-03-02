@@ -118,7 +118,7 @@
                                                                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                                         >
-                                                                        <label class="form-check-label" for="turma<?php echo e($turma->id); ?>"><?php echo e($turma->serie); ?>º ANO <?php echo e($turma->turma); ?> (<?php if($turma->turno=='M'): ?> Matutino <?php else: ?> <?php if($turma->turno=='V'): ?> Vespertino <?php else: ?> Noturno <?php endif; ?> <?php endif; ?>)</label>
+                                                                        <label class="form-check-label" for="turma<?php echo e($turma->id); ?>"><?php echo e($turma->serie); ?>º<?php echo e($turma->turma); ?><?php echo e($turma->turno); ?></label>
                                                                     </div>
                                                                 </li>
                                                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>

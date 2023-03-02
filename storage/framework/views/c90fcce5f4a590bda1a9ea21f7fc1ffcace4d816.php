@@ -72,15 +72,15 @@
                         <td>
                             <ul>
                             <?php $__currentLoopData = $prova->series; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $serie): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                <li><?php echo e($serie->turma->serie); ?>º ANO <?php echo e($serie->turma->turma); ?></li>
+                                <li><?php echo e($serie->turma->serie); ?>º<?php echo e($serie->turma->turma); ?><?php echo e($serie->turma->turno); ?></li>
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </ul>
                         </td>
                         <td>
-                            <a href="/admin/conteudosProvas/painel/<?php echo e($prova->id); ?>" class="badge bg-primary" data-toggle="tooltip" data-placement="right" title="Painel"><i class="material-icons md-18">attach_file</i></a>
+                            <a href="/admin/conteudosProvas/painel/<?php echo e($prova->id); ?>" class="badge bg-primary" data-toggle="tooltip" data-placement="right" title="Painel de Conteúdos"><i class="material-icons md-18">attach_file</i></a>
                         </td>
                         <td> 
-                            <a href="/admin/provas/painel/<?php echo e($prova->id); ?>" class="badge bg-primary" data-toggle="tooltip" data-placement="right" title="Painel"><i class="material-icons md-18">attach_file</i></a>
+                            <a href="/admin/provas/painel/<?php echo e($prova->id); ?>" class="badge bg-primary" data-toggle="tooltip" data-placement="right" title="Painel de Questões"><i class="material-icons md-18">attach_file</i></a>
                         </td>
                         <td> 
                             <button type="button" class="badge bg-warning" data-bs-toggle="modal" data-bs-target="#exampleModalEdit<?php echo e($prova->id); ?>" data-toggle="tooltip" data-placement="left" title="Editar"><i class="material-icons md-18">edit</i></button>
@@ -179,7 +179,7 @@
                 <?php $__currentLoopData = $turmas; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $turma): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                 <div class="form-check">
                     <input type="checkbox" class="form-check-input check" id="turma<?php echo e($turma->id); ?>" name="turmas[]" value="<?php echo e($turma->id); ?>">
-                    <label class="form-check-label" for="turma<?php echo e($turma->id); ?>"><?php echo e($turma->serie); ?>º ANO <?php echo e($turma->turma); ?> <?php if($turma->ensino=="fund"): ?> (Fundamental) <?php else: ?> <?php if($turma->ensino=="medio"): ?> (Médio) <?php endif; ?> <?php endif; ?></label>
+                    <label class="form-check-label" for="turma<?php echo e($turma->id); ?>"><?php echo e($turma->serie); ?>º<?php echo e($turma->turma); ?><?php echo e($turma->turno); ?> <?php if($turma->ensino=="fund"): ?> (Fundamental) <?php else: ?> <?php if($turma->ensino=="medio"): ?> (Médio) <?php endif; ?> <?php endif; ?></label>
                 </div>
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </div>

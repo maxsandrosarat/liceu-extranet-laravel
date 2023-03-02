@@ -10,17 +10,25 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             <?php endif; ?>
-            <form action="/admin/planejamentos" method="GET">
-                <?php echo csrf_field(); ?>
-                <label for="ano">Selecione o ano:
-                <select class="form-select" id="ano" name="ano">
-                    <option value="">Selecione</option>
-                    <?php $__currentLoopData = $anos; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $an): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                    <option value="<?php echo e($an->ano); ?>"><?php echo e($an->ano); ?></option>
-                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                  </select></label>
-                <input type="submit" class="btn btn-primary" value="Selecionar">
-            </form>
+            <div class="row">
+                <div class="col">
+                    <form action="/admin/planejamentos" method="GET">
+                        <?php echo csrf_field(); ?>
+                        <label for="ano">Selecione o ano:
+                        <select class="form-select" id="ano" name="ano">
+                            <option value="">Selecione</option>
+                            <?php $__currentLoopData = $anos; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $an): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <option value="<?php echo e($an->ano); ?>"><?php echo e($an->ano); ?></option>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                          </select></label>
+                        <input type="submit" class="btn btn-primary" value="Selecionar">
+                    </form>
+                </div>
+                <div class="col" style="text-align: right;">
+                    <h5>Baixe o modelo da Máscara</h5>
+                    <a type="button" class="btn btn-info" href="/admin/templates/download/mascara-planejamento">Baixar Máscara</a>
+                </div>
+            </div>
             <?php if(count($planejamentos)==0): ?>
                 <div class="alert alert-danger" role="alert">
                     Sem planejamentos cadastrados para o ano <?php echo e($ano); ?>! Tente consultar outros anos!
@@ -47,13 +55,13 @@
                         <td>
                             <ul>
                             <?php $__currentLoopData = $plan->series; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $serie): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                <li><?php echo e($serie->serie); ?>º ANO</li>
+                                <li><?php echo e($serie->serie); ?>º</li>
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </ul>
                         </td>
                         <td>
                             <a href="/admin/planejamentos/painel/<?php echo e($plan->id); ?>" class="badge bg-primary" data-toggle="tooltip" data-placement="right" title="Painel"><i class="material-icons md-48">attach_file</i></a>
-                            <button type="button" class="badge bg-danger" data-toggle="modal" data-target="#exampleModalDelete<?php echo e($plan->id); ?>"><i class="material-icons md-48">delete</i></button></td>
+                            <button type="button" class="badge bg-danger" data-bs-toggle="modal" data-bs-target="#exampleModalDelete<?php echo e($plan->id); ?>"><i class="material-icons md-48">delete</i></button></td>
                             <!-- Modal -->
                             <div class="modal fade bd-example-modal-lg" id="exampleModalDelete<?php echo e($plan->id); ?>" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">

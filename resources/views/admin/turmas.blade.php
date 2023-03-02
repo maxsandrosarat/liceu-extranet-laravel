@@ -36,7 +36,7 @@
                     @foreach ($turmas as $turma)
                     <tr>
                         <td>{{$turma->id}}</td>
-                        <td>{{$turma->serie}}º ANO</td>
+                        <td>{{$turma->serie}}º</td>
                         <td>{{$turma->turma}}</td>
                         <td>@if($turma->turno=='M') Matutino @else @if($turma->turno=='V') Vespertino @else Noturno @endif @endif</td>
                         <td>@if($turma->ensino=='fund') Fundamental @else Médio @endif</td>
@@ -55,7 +55,7 @@
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabel">{{$turma->serie}}º ANO {{$turma->turma}} (@if($turma->turno=='M') Matutino @else @if($turma->turno=='V') Vespertino @else Noturno @endif @endif)</h5>
+                                                <h5 class="modal-title" id="exampleModalLabel">{{$turma->serie}}º{{$turma->turma}} (@if($turma->turno=='M') Matutino @else @if($turma->turno=='V') Vespertino @else Noturno @endif @endif)</h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">

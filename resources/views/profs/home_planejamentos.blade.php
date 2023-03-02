@@ -56,7 +56,7 @@
                         <td>
                             <ul>
                             @foreach ($plan->series as $serie)
-                                <li>{{$serie->serie}}º ANO</li>
+                                <li>{{$serie->serie}}º</li>
                             @endforeach
                             </ul>
                         </td>

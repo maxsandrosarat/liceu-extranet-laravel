@@ -4,10 +4,7 @@
             <th>Código</th>
             <th>Nome</th>
             <th>Login</th>
-            <th>Série</th>
-            <th>Turma</th>
-            <th>Turno</th>
-            <th>Ensino</th>
+            <th>Turma(s)</th>
             <th>Ativo</th>
             <th>Criação</th>
             <th>Última Atualização</th>
@@ -19,10 +16,11 @@
             <td>{{$aluno->id}}</td>
             <td>{{$aluno->name}}</td>
             <td>{{$aluno->email}}</td>
-            <td>{{$aluno->turma->serie}}</td>
-            <td>{{$aluno->turma->turma}}</td>
-            <td>{{$aluno->turma->turno}}</td>
-            <td>{{$aluno->turma->ensino}}</td>
+            <td>
+                @foreach ($aluno->turmas as $turma)
+                <b @if($turma->ativo==false) style="color: red;" @endif>- {{$turma->serie}}º{{$turma->turma}}{{$turma->turno}} </b>
+                @endforeach
+            </td>
             <td>@if($aluno->ativo==1)Sim @else Não @endif</td>
             <td>{{$aluno->created_at->format('d/m/Y H:i') }}</td>
             <td>{{$aluno->updated_at->format('d/m/Y H:i') }}</td>

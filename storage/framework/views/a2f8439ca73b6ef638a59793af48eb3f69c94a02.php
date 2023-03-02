@@ -31,7 +31,7 @@
                             <select class="form-select" id="turma" name="turma" required>
                                 <option value="">Selecione</option>
                                 <?php $__currentLoopData = $turmas; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $turma): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                <option value="<?php echo e($turma->turma->id); ?>"><?php echo e($turma->turma->serie); ?>º ANO <?php echo e($turma->turma->turma); ?> (<?php if($turma->turma->turno=='M'): ?> Matutino <?php else: ?> <?php if($turma->turma->turno=='V'): ?> Vespertino <?php else: ?> Noturno <?php endif; ?> <?php endif; ?>)</option>
+                                <option value="<?php echo e($turma->turma->id); ?>"><?php echo e($turma->turma->serie); ?>º<?php echo e($turma->turma->turma); ?><?php echo e($turma->turma->turno); ?></option>
                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </select>
                             <label for="turma">Turma</label>
@@ -80,7 +80,7 @@
                             <select class="form-select" name="turma">
                                 <option value="">Selecione</option>
                                 <?php $__currentLoopData = $turmas; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $turma): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                <option value="<?php echo e($turma->turma->id); ?>"><?php echo e($turma->turma->serie); ?>º ANO <?php echo e($turma->turma->turma); ?> (<?php if($turma->turma->turno=='M'): ?> Matutino <?php else: ?> <?php if($turma->turno=='V'): ?> Vespertino <?php else: ?> Noturno <?php endif; ?> <?php endif; ?>)</option>
+                                <option value="<?php echo e($turma->turma->id); ?>"><?php echo e($turma->turma->serie); ?>º<?php echo e($turma->turma->turma); ?><?php echo e($turma->turma->turno); ?></option>
                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </select>
                             <label for="turma">Turma</label>
@@ -107,7 +107,7 @@
                     $dataAtual = date("Y-m-d");
                 ?>
                     <a class="fill-div" data-bs-toggle="modal" data-bs-target="#exampleModal<?php echo e($atividade->id); ?>"><div id="my-div" class="bd-callout <?php if($atividade->impresso==1): ?> bd-callout-success <?php else: ?> <?php if($atividade->data==$dataAtual && $atividade->impresso==0): ?> bd-callout-warning <?php else: ?> <?php if($atividade->data>$dataAtual && $atividade->impresso==0): ?> bd-callout-info <?php else: ?> <?php if($atividade->data<$dataAtual && $atividade->impresso==0): ?> bd-callout-danger <?php endif; ?> <?php endif; ?> <?php endif; ?> <?php endif; ?>">
-                        <h4><?php echo e($atividade->disciplina->nome); ?> - <?php echo e($atividade->turma->serie); ?>º ANO <?php echo e($atividade->turma->turma); ?> - <?php echo e($atividade->descricao); ?></h4>
+                        <h4><?php echo e($atividade->disciplina->nome); ?> - <?php echo e($atividade->turma->serie); ?>º<?php echo e($atividade->turma->turma); ?><?php echo e($atividade->turma->turno); ?> - <?php echo e($atividade->descricao); ?></h4>
                         <p>Data: <?php echo e(date("d/m/Y", strtotime($atividade->data))); ?></p>
                     </div></a>
                     <!-- Modal -->
@@ -121,7 +121,7 @@
                         <div class="modal-body">
                             <p class="font-weight-bolder">
                                 Disciplina: <?php echo e($atividade->disciplina->nome); ?> <br/> <hr/>
-                                Turma: <?php echo e($atividade->turma->serie); ?>º ANO <?php echo e($atividade->turma->turma); ?> <br/> <hr/>
+                                Turma: <?php echo e($atividade->turma->serie); ?>º<?php echo e($atividade->turma->turma); ?><?php echo e($atividade->turma->turno); ?> <br/> <hr/>
                                 Descrição: <?php echo e($atividade->descricao); ?> <br/> <hr/>
                                 Data: <?php echo e(date("d/m/Y", strtotime($atividade->data))); ?> <br/> <hr/>
                                 <ol class="list-group list-group-numbered">

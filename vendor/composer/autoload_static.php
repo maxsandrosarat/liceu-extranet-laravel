@@ -628,6 +628,7 @@ class ComposerStaticInitede8c241006ddfaad8df88af1831c0aa
         'App\\Imports\\OutroImport' => __DIR__ . '/../..' . '/app/Imports/OutroImport.php',
         'App\\Models\\Admin' => __DIR__ . '/../..' . '/app/Models/Admin.php',
         'App\\Models\\Aluno' => __DIR__ . '/../..' . '/app/Models/Aluno.php',
+        'App\\Models\\AlunoTurma' => __DIR__ . '/../..' . '/app/Models/AlunoTurma.php',
         'App\\Models\\AnexoAtividadeComplementar' => __DIR__ . '/../..' . '/app/Models/AnexoAtividadeComplementar.php',
         'App\\Models\\AnexoAtividadeDiaria' => __DIR__ . '/../..' . '/app/Models/AnexoAtividadeDiaria.php',
         'App\\Models\\AnexoPlanejamento' => __DIR__ . '/../..' . '/app/Models/AnexoPlanejamento.php',

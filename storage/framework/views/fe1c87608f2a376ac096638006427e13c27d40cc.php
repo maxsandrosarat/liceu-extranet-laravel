@@ -24,12 +24,12 @@
                                 }
                             }
                         ?>
-                        <th colspan="<?php echo e($qtdTurmas); ?>"><?php echo e($fundSerie->serie); ?>º ANO</th>
+                        <th colspan="<?php echo e($qtdTurmas); ?>"><?php echo e($fundSerie->serie); ?>º</th>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </tr>
                     <tr>
                         <?php $__currentLoopData = $fundTurmas; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $fundTurma): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                        <th><?php echo e($fundTurma->serie); ?>º <?php echo e($fundTurma->turma); ?></th>
+                        <th><?php echo e($fundTurma->serie); ?>º<?php echo e($fundTurma->turma); ?><?php echo e($fundTurma->turno); ?></th>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </tr>
                 </thead>
@@ -66,7 +66,7 @@
                                                         <div class="modal-dialog modal-xl" role="document">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
-                                                            <h5 class="modal-title" id="exampleModalLabel">Conteúdo do(a) Prova <?php echo e($prova->descricao); ?> - <?php echo e($contFund->disciplina->nome); ?> - <?php echo e($contFund->turma->serie); ?>º ANO <?php echo e($contFund->turma->turma); ?></h5>
+                                                            <h5 class="modal-title" id="exampleModalLabel">Conteúdo do(a) Prova <?php echo e($prova->descricao); ?> - <?php echo e($contFund->disciplina->nome); ?> - <?php echo e($contFund->turma->serie); ?>º<?php echo e($contFund->turma->turma); ?><?php echo e($contFund->turma->turno); ?></h5>
                                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                             </div>
                                                             <div class="modal-body">
@@ -74,6 +74,10 @@
                                                                 <div class="col-12 form-floating">
                                                                     <textarea class="form-control" name="descricao" id="descricao" rows="10" cols="40" placeholder="Escreva aqui ou copei e cole do arquivo, a descrição completa dos conteúdos que serão cobrados."><?php if($contFund->descricao!=''): ?><?php echo e($contFund->descricao); ?><?php endif; ?></textarea>
                                                                     <label for="descricao">Descrição</label>
+                                                                </div>
+                                                                <div class="col-3 form-floating">
+                                                                    <input class="form-control" type="date" id="dataAplicacao" name="dataAplicacao" <?php if($contFund->data_aplicacao==null): ?> placeholder="Data Aplicação" <?php else: ?> value="<?php echo e(date("Y-m-d", strtotime($contFund->data_aplicacao))); ?>" <?php endif; ?> disabled>
+                                                                    <label for="dataAplicacao">Data Aplicação</label>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -91,7 +95,7 @@
                         <td>
                             <!-- Button trigger modal -->
                             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalPdf<?php echo e($fundTurma->id); ?>">
-                                <?php echo e($fundTurma->serie); ?>º <?php echo e($fundTurma->turma); ?>
+                                <?php echo e($fundTurma->serie); ?>º<?php echo e($fundTurma->turma); ?><?php echo e($fundTurma->turno); ?>
 
                             </button>
 
@@ -100,7 +104,7 @@
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Gerar Arquivo (PDF) - <?php echo e($fundTurma->serie); ?>º <?php echo e($fundTurma->turma); ?></h5>
+                                    <h5 class="modal-title" id="exampleModalLabel">Gerar Arquivo (PDF) - <?php echo e($fundTurma->serie); ?>º<?php echo e($fundTurma->turma); ?><?php echo e($fundTurma->turno); ?></h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
@@ -152,12 +156,12 @@
                                 }
                             }
                         ?>
-                        <th colspan="<?php echo e($qtdTurmas); ?>"><?php echo e($medioSerie->serie); ?>º ANO</th>
+                        <th colspan="<?php echo e($qtdTurmas); ?>"><?php echo e($medioSerie->serie); ?>º</th>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </tr>
                     <tr>
                         <?php $__currentLoopData = $medioTurmas; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $medioTurma): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                        <th><?php echo e($medioTurma->serie); ?>º <?php echo e($medioTurma->turma); ?></th>
+                        <th><?php echo e($medioTurma->serie); ?>º<?php echo e($medioTurma->turma); ?><?php echo e($medioTurma->turno); ?></th>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </tr>
                 </thead>
@@ -194,7 +198,7 @@
                                                 <div class="modal-dialog modal-xl" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalLabel">Conteúdo do(a) <?php echo e($prova->descricao); ?> - <?php echo e($contMedio->disciplina->nome); ?> - <?php echo e($contMedio->turma->serie); ?>º ANO <?php echo e($contMedio->turma->turma); ?></h5>
+                                                    <h5 class="modal-title" id="exampleModalLabel">Conteúdo do(a) <?php echo e($prova->descricao); ?> - <?php echo e($contMedio->disciplina->nome); ?> - <?php echo e($contMedio->turma->serie); ?>º<?php echo e($contMedio->turma->turma); ?><?php echo e($contMedio->turma->turno); ?></h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body">
@@ -202,6 +206,10 @@
                                                         <div class="col-12 form-floating">
                                                             <textarea class="form-control" name="descricao" id="descricao" rows="10" cols="40" placeholder="Escreva aqui ou copei e cole do arquivo, a descrição completa dos conteúdos que serão cobrados."><?php if($contMedio->descricao!=''): ?><?php echo e($contMedio->descricao); ?><?php endif; ?></textarea>
                                                             <label for="descricao">Descrição</label>
+                                                        </div>
+                                                        <div class="col-3 form-floating">
+                                                            <input class="form-control" type="date" id="dataAplicacao" <?php if($contMedio->data_aplicacao==null): ?> placeholder="Data Aplicação" <?php else: ?> value="<?php echo e(date("Y-m-d", strtotime($contMedio->data_aplicacao))); ?>" <?php endif; ?> disabled>
+                                                            <label for="dataAplicacao">Data Aplicação</label>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -218,7 +226,7 @@
                         <td>
                             <!-- Button trigger modal -->
                             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalPdf<?php echo e($medioTurma->id); ?>">
-                                <?php echo e($medioTurma->serie); ?>º <?php echo e($medioTurma->turma); ?>
+                                <?php echo e($medioTurma->serie); ?>º<?php echo e($medioTurma->turma); ?><?php echo e($medioTurma->turno); ?>
 
                             </button>
 
@@ -227,7 +235,7 @@
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Gerar Arquivo (PDF) - <?php echo e($medioTurma->serie); ?>º <?php echo e($medioTurma->turma); ?></h5>
+                                    <h5 class="modal-title" id="exampleModalLabel">Gerar Arquivo (PDF) - <?php echo e($medioTurma->serie); ?>º<?php echo e($medioTurma->turma); ?><?php echo e($medioTurma->turno); ?></h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
@@ -265,4 +273,4 @@
 </div>
 <?php $__env->stopSection(); ?>
 
-<?php echo $__env->make('layouts.app', ["current"=>"provas"], \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\laragon\www\liceu-extranet-laravel\resources\views/outros/conteudos_provas.blade.php ENDPATH**/ ?>
+<?php echo $__env->make('layouts.app', ["current"=>"pedagogico"], \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\laragon\www\liceu-extranet-laravel\resources\views/outros/conteudos_provas.blade.php ENDPATH**/ ?>

@@ -68,15 +68,15 @@
                     <td>
                         <ul>
                         <?php $__currentLoopData = $prova->series; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $serie): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                            <li><?php echo e($serie->turma->serie); ?>º ANO <?php echo e($serie->turma->turma); ?></li>
+                            <li><?php echo e($serie->turma->serie); ?>º<?php echo e($serie->turma->turma); ?><?php echo e($serie->turma->turno); ?></li>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </ul>
                     </td>
                     <td>
-                        <a href="/outro/conteudosProvas/painel/<?php echo e($prova->id); ?>" class="badge bg-primary" data-toggle="tooltip" data-placement="right" title="Painel"><i class="material-icons md-18">attach_file</i></a>
+                        <a href="/outro/conteudosProvas/painel/<?php echo e($prova->id); ?>" class="badge bg-primary" data-toggle="tooltip" data-placement="right" title="Painel de Conteúdos"><i class="material-icons md-18">attach_file</i></a>
                     </td>
                     <td> 
-                        <a href="/outro/provas/painel/<?php echo e($prova->id); ?>" class="badge bg-primary" data-toggle="tooltip" data-placement="right" title="Painel"><i class="material-icons md-18">attach_file</i></a>
+                        <a href="/outro/provas/painel/<?php echo e($prova->id); ?>" class="badge bg-primary" data-toggle="tooltip" data-placement="right" title="Painel de Questões"><i class="material-icons md-18">attach_file</i></a>
                     </td>
                 </tr>
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
@@ -87,4 +87,4 @@
     </div>
 </div>
 <?php $__env->stopSection(); ?>
-<?php echo $__env->make('layouts.app', ["current"=>"provas"], \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\laragon\www\liceu-extranet-laravel\resources\views/outros/home_provas.blade.php ENDPATH**/ ?>
+<?php echo $__env->make('layouts.app', ["current"=>"pedagogico"], \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\laragon\www\liceu-extranet-laravel\resources\views/outros/home_provas.blade.php ENDPATH**/ ?>

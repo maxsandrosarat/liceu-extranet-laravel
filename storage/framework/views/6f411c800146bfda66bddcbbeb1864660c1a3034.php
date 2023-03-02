@@ -90,7 +90,7 @@
                         <th scope="col">Foto</th>
                         <th scope="col">Nome</th>
                         <th scope="col">Login</th>
-                        <th scope="col">Turma</th>
+                        <th scope="col">Turma(s)</th>
                         <th scope="col">Ativo</th>
                         <th scope="col">Ações</th>
                     </tr>
@@ -111,7 +111,12 @@
                                 <?php if($aluno->foto!=""): ?> <img src="/storage/<?php echo e($aluno->foto); ?>" alt="foto_produto" style="width: 100%"> <?php else: ?> <i class="material-icons md-60">no_photography</i> <?php endif; ?>
                                 <hr/>
                                 <h6 class="font-italic">
-                                <?php echo e($aluno->name); ?> - <?php echo e($aluno->turma->serie); ?>º ANO <?php echo e($aluno->turma->turma); ?> (<?php if($aluno->turma->turno=='M'): ?> Matutino <?php else: ?> <?php if($aluno->turma->turno=='V'): ?> Vespertino <?php else: ?> Noturno <?php endif; ?> <?php endif; ?>)
+                                    <?php echo e($aluno->name); ?>
+
+                                    <?php $__currentLoopData = $aluno->turmas; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $turma): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                     - <?php echo e($turma->serie); ?>º<?php echo e($turma->turma); ?><?php echo e($turma->turno); ?>
+
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </h6>
                                 <hr/>
                             </div>
@@ -120,7 +125,11 @@
                         </div>
                         <td><?php echo e($aluno->name); ?></td>
                         <td><?php echo e($aluno->email); ?></td>
-                        <td <?php if($aluno->turma->ativo==false): ?> style="color: red;" <?php endif; ?> ><?php echo e($aluno->turma->serie); ?>º ANO <?php echo e($aluno->turma->turma); ?> (<?php if($aluno->turma->turno=='M'): ?> Matutino <?php else: ?> <?php if($aluno->turma->turno=='V'): ?> Vespertino <?php else: ?> Noturno <?php endif; ?> <?php endif; ?>)</td>
+                        <td>
+                            <?php $__currentLoopData = $aluno->turmas; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $turma): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <b <?php if($turma->ativo==false): ?> style="color: red;" <?php endif; ?>>- <?php echo e($turma->serie); ?>º<?php echo e($turma->turma); ?><?php echo e($turma->turno); ?> </b>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        </td>
                         <td>
                             <?php if($aluno->ativo==1): ?>
                                 <b><i class="material-icons green">check_circle</i></b>
@@ -161,17 +170,15 @@
                                                     <input id="password-confirm" type="password" class="form-control" name="password_confirmation" autocomplete="new-password">
                                                     <label for="password-confirm">Confirmação Senha</label>
                                                 </div>
-                                                <div class="col-12 form-floating">
-                                                    <select class="form-select" id="turma" name="turma" required>
-                                                        <option value="<?php echo e($aluno->turma->id); ?>"><?php echo e($aluno->turma->serie); ?>º ANO <?php echo e($aluno->turma->turma); ?> (<?php if($aluno->turma->turno=='M'): ?> Matutino <?php else: ?> <?php if($aluno->turma->turno=='V'): ?> Vespertino <?php else: ?> Noturno <?php endif; ?> <?php endif; ?>)</option>
-                                                            <?php $__currentLoopData = $turmas; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $turma): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                                <?php if($aluno->turma->id==$turma->id || $turma->ativo==false): ?>
-                                                                <?php else: ?>
-                                                                <option value="<?php echo e($turma->id); ?>"><?php echo e($turma->serie); ?>º ANO <?php echo e($turma->turma); ?> (<?php if($turma->turno=='M'): ?> Matutino <?php else: ?> <?php if($turma->turno=='V'): ?> Vespertino <?php else: ?> Noturno <?php endif; ?> <?php endif; ?>)</option>
-                                                                <?php endif; ?>
-                                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                                    </select>
-                                                    <label for="turma">Turma</label>
+                                                <hr/>
+                                                <label for="turmas">Turma(s)</label>
+                                                <div class="checkbox-group required" style="text-align: left;">
+                                                    <?php $__currentLoopData = $turmas; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $turma): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                    <div class="form-check">
+                                                        <input type="checkbox" class="form-check-input check" id="turma<?php echo e($turma->id); ?>" name="turmas[]" value="<?php echo e($turma->id); ?>" <?php $__currentLoopData = $aluno->turmas; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $alunoTurma): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?> <?php if($alunoTurma->id==$turma->id): ?> checked <?php endif; ?>  <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>>
+                                                        <label class="form-check-label" for="turma<?php echo e($turma->id); ?>"><?php echo e($turma->serie); ?>º<?php echo e($turma->turma); ?><?php echo e($turma->turno); ?><?php if($turma->ensino=="fund"): ?> (Fundamental) <?php else: ?> <?php if($turma->ensino=="medio"): ?> (Médio) <?php endif; ?> <?php endif; ?></label>
+                                                    </div>
+                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                 </div>
                                                 <br/>
                                                 <div class="col-12 input-group mb-3">
@@ -221,6 +228,7 @@
                         <li><h5>Baixe o modelo de importação.</h5></li>
                         <a type="button" class="btn btn-info" href="/admin/templates/download/aluno">Baixar modelo</a>
                         <li><h5>Nenhum campo pode ficar sem preencher.</h5></li>
+                        <li><h5>Só é possivel adicionar uma turma de início, após inserido pode-se editar e incluir mais turmas.</h5></li>
                         <li><h5>No campo login não esqueça de adicionar @liceu (senão usuário não conseguirá fazer login)</h5></li>
                         <li><h5>Após envio do Arquivo aguarde tempo de processamento!</h5></li>
                     </ul>
@@ -327,17 +335,15 @@ if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>
                         </div>
-                        <div class="col-12 form-floating">
-                            <select class="form-select" id="turma" name="turma" required>
-                                <option value="">Selecione</option>
-                                    <?php $__currentLoopData = $turmas; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $turma): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                        <?php if($turma->ativo==false): ?>
-                                        <?php else: ?>
-                                        <option value="<?php echo e($turma->id); ?>"><?php echo e($turma->serie); ?>º ANO <?php echo e($turma->turma); ?> (<?php if($turma->turno=='M'): ?> Matutino <?php else: ?> <?php if($turma->turno=='V'): ?> Vespertino <?php else: ?> Noturno <?php endif; ?> <?php endif; ?>)</option>
-                                        <?php endif; ?>
-                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                            </select>
-                            <label for="turma">Turma</label>
+                        <hr/>
+                        <label for="turmas">Turma(s)</label>
+                        <div class="checkbox-group required">
+                            <?php $__currentLoopData = $turmas; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $turma): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input check" id="turma<?php echo e($turma->id); ?>" name="turmas[]" value="<?php echo e($turma->id); ?>">
+                                <label class="form-check-label" for="turma<?php echo e($turma->id); ?>"><?php echo e($turma->serie); ?>º<?php echo e($turma->turma); ?><?php echo e($turma->turno); ?><?php if($turma->ensino=="fund"): ?> (Fundamental) <?php else: ?> <?php if($turma->ensino=="medio"): ?> (Médio) <?php endif; ?> <?php endif; ?></label>
+                            </div>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </div>
                         <br/>
                         <div class="col-12 input-group mb-3">

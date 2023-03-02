@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Aluno;
+use App\Models\AlunoTurma;
 use App\Models\AnexoAtividadeComplementar;
 use App\Models\AnexoAtividadeDiaria;
 use App\Models\AnexoPlanejamento;
@@ -676,7 +677,12 @@ class ProfController extends Controller
         $turmaDiscs = TurmaDisciplina::where('disciplina_id',"$discId")->get();
         $disc = Disciplina::find($discId);
         $turma = Turma::find($turmaId);
-        $alunos = Aluno::where('ativo',true)->where('turma_id',"$turmaId")->get();
+        $aIds = array();
+        $alunoTurmas = AlunoTurma::where('turma_id',$turmaId)->get();
+        foreach($alunoTurmas as $alunoTurma){
+            $aIds[] = $alunoTurma->aluno_id;
+        }
+        $alunos = Aluno::whereIn('id', $aIds)->where('ativo',true)->get();
         if(count($alunos)==0){
             return back()->with('mensagem', 'A turma selecionada não possui alunos cadastrados!');
         }
@@ -690,7 +696,12 @@ class ProfController extends Controller
         $dia = $request->input('data');
         $disciplina = Disciplina::find($discId);
         $turma = Turma::find($turmaId);
-        $alunos = Aluno::where('ativo',true)->where('turma_id',"$turmaId")->orderBy('name')->get();
+        $aIds = array();
+        $alunoTurmas = AlunoTurma::where('turma_id',$turmaId)->get();
+        foreach($alunoTurmas as $alunoTurma){
+            $aIds[] = $alunoTurma->aluno_id;
+        }
+        $alunos = Aluno::whereIn('id', $aIds)->where('ativo',true)->orderBy('name')->get();
         if(count($alunos)==0){
             return back()->with('mensagem', 'A turma selecionada não possui alunos cadastrados!');
         }
@@ -713,11 +724,7 @@ class ProfController extends Controller
         }
         $diarios = Diario::where('dia', "$dia")->where('prof_id',"$profId")->where('disciplina_id',"$discId")->where('turma_id',"$turmaId")->get();
         $tipos = TipoOcorrencia::where('ativo',true)->orderBy('codigo')->get();
-        $alunoIds = array();
-        foreach($alunos as $aluno){
-            $alunosIds[] = $aluno->id;
-        }
-        $ocorrencias = Ocorrencia::whereIn('aluno_id', $alunosIds)->where('prof_id',"$profId")->where('disciplina_id',"$discId")->where('data',"$dia")->get();
+        $ocorrencias = Ocorrencia::whereIn('aluno_id', $aIds)->where('turma_id',$turmaId)->where('prof_id',"$profId")->where('disciplina_id',"$discId")->where('data',"$dia")->get();
         return view('profs.diario_prof', compact('dia','alunos','tipos','disciplina','turma','diarios','ocorrencias'));
     }
 
@@ -790,11 +797,16 @@ class ProfController extends Controller
         $disciplina = Disciplina::find($disc);
         $turma = Turma::find($tm);
         $profId = Auth::user()->id;
-        $alunos = Aluno::where('ativo',true)->where('turma_id',"$tm")->get();
+        $aIds = array();
+        $alunoTurmas = AlunoTurma::where('turma_id',$tm)->get();
+        foreach($alunoTurmas as $alunoTurma){
+            $aIds[] = $alunoTurma->aluno_id;
+        }
+        $alunos = Aluno::whereIn('id', $aIds)->where('ativo',true)->get();
         $tipos = TipoOcorrencia::where('ativo',true)->orderBy('codigo')->get();
         $ocorrencias = Ocorrencia::where('prof_id',"$profId")->where('turma_id',"$tm")->where('disciplina_id',"$disc")->orderBy('data','desc')->paginate(10);
         $view = "inicial";
-        return view('profs.ocorrencias_prof', compact('view','alunos','tipos','turma','disciplina','ocorrencias','turma'));
+        return view('profs.ocorrencias_prof', compact('view','alunos','tipos','turma','disciplina','ocorrencias'));
     }
 
     public function novasOcorrencias(Request $request){
@@ -802,6 +814,7 @@ class ProfController extends Controller
         $alunos = $request->input('alunos');
         $tipo = $request->input('tipo');
         $disciplina = $request->input('disciplina');
+        $turma = $request->input('turma');
         $data = $request->input('data');
         if($request->input('observacao')==""){
             $observacao = "";
@@ -814,7 +827,7 @@ class ProfController extends Controller
             foreach($alunos as $aluno) {
                 $ocorrencia = new Ocorrencia();
                 $ocorrencia->aluno_id = $aluno;
-                $ocorrencia->turma_id = Aluno::find($aluno)->turma_id;
+                $ocorrencia->turma_id = $turma;
                 $ocorrencia->tipo_ocorrencia_id = $tipo;
                 $ocorrencia->prof_id = $profId;
                 $ocorrencia->disciplina_id = $disciplina;
@@ -896,7 +909,12 @@ class ProfController extends Controller
         }
         $disciplina = Disciplina::find($disc);
         $turma = Turma::find($tm);
-        $alunos = Aluno::where('ativo',true)->where('turma_id',"$tm")->get();
+        $aIds = array();
+        $alunoTurmas = AlunoTurma::where('turma_id',$tm)->get();
+        foreach($alunoTurmas as $alunoTurma){
+            $aIds[] = $alunoTurma->aluno_id;
+        }
+        $alunos = Aluno::whereIn('id', $aIds)->where('ativo',true)->get();
         $tipos = TipoOcorrencia::where('ativo',true)->get();
         $view = "filtro";
         return view('profs.ocorrencias_prof', compact('view','alunos','tipos','disciplina','ocorrencias','turma'));

@@ -1,4 +1,4 @@
-@extends('layouts.app', ["current"=>"provas"])
+@extends('layouts.app', ["current"=>"pedagogico"])
 
 @section('body')
 <div class="card border">
@@ -24,12 +24,12 @@
                                 }
                             }
                         @endphp
-                        <th colspan="{{$qtdTurmas}}">{{$fundSerie->serie}}º ANO</th>
+                        <th colspan="{{$qtdTurmas}}">{{$fundSerie->serie}}º</th>
                         @endforeach
                     </tr>
                     <tr>
                         @foreach($fundTurmas as $fundTurma)
-                        <th>{{$fundTurma->serie}}º {{$fundTurma->turma}}</th>
+                        <th>{{$fundTurma->serie}}º{{$fundTurma->turma}}{{$fundTurma->turno}}</th>
                         @endforeach
                     </tr>
                 </thead>
@@ -65,7 +65,7 @@
                                                         <div class="modal-dialog modal-xl" role="document">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
-                                                            <h5 class="modal-title" id="exampleModalLabel">Conteúdo do(a) Prova {{$prova->descricao}} - {{$contFund->disciplina->nome}} - {{$contFund->turma->serie}}º ANO {{$contFund->turma->turma}}</h5>
+                                                            <h5 class="modal-title" id="exampleModalLabel">Conteúdo do(a) Prova {{$prova->descricao}} - {{$contFund->disciplina->nome}} - {{$contFund->turma->serie}}º{{$contFund->turma->turma}}{{$contFund->turma->turno}}</h5>
                                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                             </div>
                                                             <div class="modal-body">
@@ -94,7 +94,7 @@
                         <td>
                             <!-- Button trigger modal -->
                             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalPdf{{$fundTurma->id}}">
-                                {{$fundTurma->serie}}º {{$fundTurma->turma}}
+                                {{$fundTurma->serie}}º{{$fundTurma->turma}}{{$fundTurma->turno}}
                             </button>
 
                             <!-- Modal -->
@@ -102,7 +102,7 @@
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Gerar Arquivo (PDF) - {{$fundTurma->serie}}º {{$fundTurma->turma}}</h5>
+                                    <h5 class="modal-title" id="exampleModalLabel">Gerar Arquivo (PDF) - {{$fundTurma->serie}}º{{$fundTurma->turma}}{{$fundTurma->turno}}</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
@@ -153,12 +153,12 @@
                                 }
                             }
                         @endphp
-                        <th colspan="{{$qtdTurmas}}">{{$medioSerie->serie}}º ANO</th>
+                        <th colspan="{{$qtdTurmas}}">{{$medioSerie->serie}}º</th>
                         @endforeach
                     </tr>
                     <tr>
                         @foreach($medioTurmas as $medioTurma)
-                        <th>{{$medioTurma->serie}}º {{$medioTurma->turma}}</th>
+                        <th>{{$medioTurma->serie}}º{{$medioTurma->turma}}{{$medioTurma->turno}}</th>
                         @endforeach
                     </tr>
                 </thead>
@@ -194,7 +194,7 @@
                                                 <div class="modal-dialog modal-xl" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalLabel">Conteúdo do(a) {{$prova->descricao}} - {{$contMedio->disciplina->nome}} - {{$contMedio->turma->serie}}º ANO {{$contMedio->turma->turma}}</h5>
+                                                    <h5 class="modal-title" id="exampleModalLabel">Conteúdo do(a) {{$prova->descricao}} - {{$contMedio->disciplina->nome}} - {{$contMedio->turma->serie}}º{{$contMedio->turma->turma}}{{$contMedio->turma->turno}}</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body">
@@ -222,7 +222,7 @@
                         <td>
                             <!-- Button trigger modal -->
                             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalPdf{{$medioTurma->id}}">
-                                {{$medioTurma->serie}}º {{$medioTurma->turma}}
+                                {{$medioTurma->serie}}º{{$medioTurma->turma}}{{$medioTurma->turno}}
                             </button>
 
                             <!-- Modal -->
@@ -230,7 +230,7 @@
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Gerar Arquivo (PDF) - {{$medioTurma->serie}}º {{$medioTurma->turma}}</h5>
+                                    <h5 class="modal-title" id="exampleModalLabel">Gerar Arquivo (PDF) - {{$medioTurma->serie}}º{{$medioTurma->turma}}{{$medioTurma->turno}}</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">

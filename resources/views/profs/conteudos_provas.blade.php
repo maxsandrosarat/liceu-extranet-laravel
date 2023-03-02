@@ -24,12 +24,12 @@
                                 }
                             }
                         @endphp
-                        <th colspan="{{$qtdTurmas}}">{{$fundSerie->serie}}º ANO</th>
+                        <th colspan="{{$qtdTurmas}}">{{$fundSerie->serie}}º</th>
                         @endforeach
                     </tr>
                     <tr>
                         @foreach($fundTurmas as $fundTurma)
-                        <th>{{$fundTurma->serie}}º {{$fundTurma->turma}}</th>
+                        <th>{{$fundTurma->serie}}º{{$fundTurma->turma}}{{$fundTurma->turno}}</th>
                         @endforeach
                     </tr>
                 </thead>
@@ -65,7 +65,7 @@
                                                         <div class="modal-dialog modal-xl" role="document">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
-                                                            <h5 class="modal-title" id="exampleModalLabel">Conteúdo do(a) Prova {{$prova->descricao}} - {{$contFund->disciplina->nome}} - {{$contFund->turma->serie}}º ANO {{$contFund->turma->turma}}</h5>
+                                                            <h5 class="modal-title" id="exampleModalLabel">Conteúdo do(a) Prova {{$prova->descricao}} - {{$contFund->disciplina->nome}} - {{$contFund->turma->serie}}º{{$contFund->turma->turma}}{{$contFund->turma->turno}}</h5>
                                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                             </div>
                                                             <div class="modal-body">
@@ -117,12 +117,12 @@
                                 }
                             }
                         @endphp
-                        <th colspan="{{$qtdTurmas}}">{{$medioSerie->serie}}º ANO</th>
+                        <th colspan="{{$qtdTurmas}}">{{$medioSerie->serie}}º</th>
                         @endforeach
                     </tr>
                     <tr>
                         @foreach($medioTurmas as $medioTurma)
-                        <th>{{$medioTurma->serie}}º {{$medioTurma->turma}}</th>
+                        <th>{{$medioTurma->serie}}º{{$medioTurma->turma}}{{$medioTurma->turno}}</th>
                         @endforeach
                     </tr>
                 </thead>
@@ -158,7 +158,7 @@
                                                 <div class="modal-dialog modal-xl" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalLabel">Conteúdo do(a) {{$prova->descricao}} - {{$contMedio->disciplina->nome}} - {{$contMedio->turma->serie}}º ANO {{$contMedio->turma->turma}}</h5>
+                                                    <h5 class="modal-title" id="exampleModalLabel">Conteúdo do(a) {{$prova->descricao}} - {{$contMedio->disciplina->nome}} - {{$contMedio->turma->serie}}º{{$contMedio->turma->turma}}{{$contMedio->turma->turno}}</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body">
