@@ -3,9 +3,15 @@
 @section('body')
 <div class="card border">
     <div class="card-body">
-        <a href="/prof/atividadeDiaria/disciplinas" class="btn btn-success"data-toggle="tooltip" data-placement="bottom" title="Voltar"><i class="material-icons white">reply</i></a>
+        <a href="/prof/atividadeDiaria/disciplinas/{{$tipo}}" class="btn btn-success"data-toggle="tooltip" data-placement="bottom" title="Voltar"><i class="material-icons white">reply</i></a>
         <br/><br/>
+        @if($tipo=='diaria')
         <h5 class="card-title">Painel de Atividades Diárias - Disciplina: {{$disciplina->nome}}</h5>
+        @elseif($tipo=='ionica')
+        <h5 class="card-title">Painel de Atividades da Plataforma Iônica - Disciplina: {{$disciplina->nome}}</h5>
+        @else
+
+        @endif
             @if(session('mensagem'))
                 <div class="alert @if(session('type')=="success") alert-success @else @if(session('type')=="warning") alert-warning @else @if(session('type')=="danger") alert-danger @else alert-info @endif @endif @endif alert-dismissible fade show" role="alert">
                     {{session('mensagem')}}
@@ -26,6 +32,7 @@
                     <form id="nova-atividade" method="POST" action="/prof/atividadeDiaria" enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" name="disciplina" value="{{$disciplina->id}}">
+                        <input type="hidden" name="tipo" value="{{$tipo}}">
                         <div class="col-auto form-floating">
                             <select class="form-select" id="turma" name="turma" required>
                                 <option value="">Selecione</option>
@@ -75,6 +82,7 @@
             <div class="card border">
                 <h5 class="card-title">Filtros:</h5>
                     <form class="row gy-2 gx-3 align-items-center" method="GET" action="/prof/atividadeDiaria/filtro/{{$disciplina->id}}">
+                        <input type="hidden" name="tipo" value="{{$tipo}}">
                         <div class="col-auto form-floating">
                             <select class="form-select" name="turma">
                                 <option value="">Selecione</option>

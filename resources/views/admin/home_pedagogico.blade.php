@@ -17,11 +17,22 @@
         <div class="col-auto">
             <div class="card border-primary text-center centralizado">
                 <div class="card-body">
-                    <h5>Atividades Complementares</h5>{{-- Diárias --}}
+                    <h5>Atividades Complementares</h5>
                     <p class="card-text">
                         Consultar as Atividades
                     </p>
-                    <a href="/admin/atividadeDiaria" class="btn btn-primary">Atividades</a>
+                    <a href="/admin/atividadeDiaria/diaria" class="btn btn-primary">Atividades</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-auto">
+            <div class="card border-primary text-center centralizado">
+                <div class="card-body">
+                    <h5>Atividades Plataforma Iônica</h5>
+                    <p class="card-text">
+                        Consultar as Atividades
+                    </p>
+                    <a href="/admin/atividadeDiaria/ionica" class="btn btn-primary">Atividades</a>
                 </div>
             </div>
         </div>

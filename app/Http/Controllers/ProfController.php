@@ -245,19 +245,19 @@ class ProfController extends Controller
     }
 
     //ATIVIDADES DIARIAS
-    public function disciplinasAtividadesDiarias(){
+    public function disciplinasAtividadesDiarias($tipo){
         $profId = Auth::user()->id;
         $profDiscs = ProfDisciplina::where('prof_id',"$profId")->get();
-        return view('profs.atividade_diaria_disciplinas', compact('profDiscs'));
+        return view('profs.atividade_diaria_disciplinas', compact('profDiscs','tipo'));
     }
 
-    public function painelAtividadesDiarias($discId){
+    public function painelAtividadesDiarias($discId, $tipo){
         $profId = Auth::user()->id;
         $disciplina = Disciplina::find($discId);
         $turmas = TurmaDisciplina::where('disciplina_id',"$discId")->get();
-        $atividades = AtividadeDiaria::where('prof_id',"$profId")->where('disciplina_id',"$discId")->orderBy('id','desc')->paginate(10);
+        $atividades = AtividadeDiaria::where('tipo', $tipo)->where('prof_id',"$profId")->where('disciplina_id',"$discId")->orderBy('id','desc')->paginate(10);
         $view = "inicial";
-        return view('profs.atividade_diaria_prof', compact('view','disciplina','turmas','atividades'));
+        return view('profs.atividade_diaria_prof', compact('view','disciplina','turmas','atividades','tipo'));
     }
 
     public function novaAtividadeDiaria(Request $request)
@@ -282,6 +282,7 @@ class ProfController extends Controller
         $atividade->descricao = $request->descricao;
         $atividade->usuario = Auth::user()->name;
         // $atividade->arquivo = $path;
+        $atividade->tipo = $request->tipo;
         $atividade->save();
         for($i=0; $i<=$request->qtdArq; $i++){
             if($request->file('arquivo'.$i)!=null){
@@ -305,6 +306,7 @@ class ProfController extends Controller
         $descricao = $request->descricao;
         $data = $request->data;
         $query = AtividadeDiaria::query();
+        $query->where('tipo', $request->tipo);
         $query->where('prof_id', $prof);
         $query->where('disciplina_id', $discId);
         if(isset($turma)){

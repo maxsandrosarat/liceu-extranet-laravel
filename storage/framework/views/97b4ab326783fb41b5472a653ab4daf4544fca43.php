@@ -5,7 +5,13 @@
         <div class="card-body">
             <a href="/prof" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="Voltar"><i class="material-icons white">reply</i></a>
             <br/><br/>
+            <?php if($tipo=='diaria'): ?>
             <h5 class="card-title">Atividades Diárias</h5>
+            <?php elseif($tipo=='ionica'): ?>
+            <h5 class="card-title">Atividades da Plataforma Iônica</h5>
+            <?php else: ?>
+
+            <?php endif; ?>
             <?php if(count($profDiscs)==0): ?>
                 <div class="alert alert-danger" role="alert">
                     Sem disciplinas cadastradas!
@@ -22,7 +28,7 @@
                     <?php $__currentLoopData = $profDiscs; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $disc): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <tr>
                             <td>
-                                <a href="/prof/atividadeDiaria/<?php echo e($disc->disciplina_id); ?>" class="btn btn-primary btn-lg btn-block"><?php echo e($disc->disciplina->nome); ?> (<?php if($disc->disciplina->ensino=='fund'): ?> Fundamental <?php else: ?> Médio <?php endif; ?>)</a>
+                                <a href="/prof/atividadeDiaria/<?php echo e($disc->disciplina_id); ?>/<?php echo e($tipo); ?>" class="btn btn-primary btn-lg btn-block"><?php echo e($disc->disciplina->nome); ?> (<?php if($disc->disciplina->ensino=='fund'): ?> Fundamental <?php else: ?> Médio <?php endif; ?>)</a>
                             </td>
                         </tr>
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>

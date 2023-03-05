@@ -698,13 +698,13 @@ class OutroController extends Controller
     }
 
     //ATIVIDADES DIARIAS
-    public function painelAtividadesDiarias(){
+    public function painelAtividadesDiarias($tipo){
         $profs = Prof::where('ativo',true)->orderBy('name')->get();
         $discs = Disciplina::where('ativo',true)->orderBy('nome')->get();
         $turmas = Turma::where('ativo',true)->get();
-        $atividades = AtividadeDiaria::orderBy('id','desc')->paginate(10);
+        $atividades = AtividadeDiaria::where('tipo', $tipo)->orderBy('id','desc')->paginate(10);
         $view = "inicial";
-        return view('outros.atividade_diaria_outro', compact('view','profs','discs','turmas','atividades'));
+        return view('outros.atividade_diaria_outro', compact('view','profs','discs','turmas','atividades','tipo'));
     }
 
     public function filtroAtividadeDiaria(Request $request)
@@ -715,6 +715,7 @@ class OutroController extends Controller
         $descricao = $request->descricao;
         $data = $request->data;
         $query = AtividadeDiaria::query();
+        $query->where('tipo', $request->tipo);
         if(isset($prof)){
             $query->where('prof_id', $prof);
         }

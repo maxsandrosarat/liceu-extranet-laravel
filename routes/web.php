@@ -138,7 +138,7 @@ Route::group(['prefix' => 'admin'], function() {
     });
 
     Route::group(['prefix' => 'atividadeDiaria'], function() {
-        Route::get('/', 'AdminController@painelAtividadesDiarias');
+        Route::get('/{t}', 'AdminController@painelAtividadesDiarias');
         Route::post('/', 'AdminController@novaAtividadeDiaria');
         Route::get('/filtro', 'AdminController@filtroAtividadeDiaria');
         Route::post('/editar/{id}', 'AdminController@editarAtividadeDiaria');
@@ -300,8 +300,8 @@ Route::group(['prefix' => 'prof'], function() {
     });
 
     Route::group(['prefix' => 'atividadeDiaria'], function() {
-        Route::get('/disciplinas', 'ProfController@disciplinasAtividadesDiarias');
-        Route::get('/{id}', 'ProfController@painelAtividadesDiarias');
+        Route::get('/disciplinas/{t}', 'ProfController@disciplinasAtividadesDiarias');
+        Route::get('/{id}/{t}', 'ProfController@painelAtividadesDiarias');
         Route::post('/', 'ProfController@novaAtividadeDiaria');
         Route::get('/filtro/{id}', 'ProfController@filtroAtividadeDiaria');
         Route::post('/editar/{id}', 'ProfController@editarAtividadeDiaria');
@@ -507,7 +507,7 @@ Route::group(['prefix' => 'outro'], function() {
     });
 
     Route::group(['prefix' => 'atividadeDiaria'], function() {
-        Route::get('/', 'OutroController@painelAtividadesDiarias');
+        Route::get('/{t}', 'OutroController@painelAtividadesDiarias');
         Route::get('/filtro', 'OutroController@filtroAtividadeDiaria');
         Route::get('/download/{id}', 'OutroController@downloadAtividadeDiaria');
         Route::get('/impresso/{id}', 'OutroController@imprimirAtividadeDiaria');

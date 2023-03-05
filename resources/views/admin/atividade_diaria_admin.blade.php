@@ -13,7 +13,13 @@
                 </a>
             </div>
         </div>
+        @if($tipo=='diaria')
         <h5 class="card-title">Painel de Atividades Diárias - {{date("d/m/Y H:i")}}</h5>
+        @elseif($tipo=='ionica')
+        <h5 class="card-title">Painel de Atividades da Plataforma Iônica - {{date("d/m/Y H:i")}}</h5>
+        @else
+
+        @endif
             @if(session('mensagem'))
                 <div class="alert @if(session('type')=="success") alert-success @else @if(session('type')=="warning") alert-warning @else @if(session('type')=="danger") alert-danger @else alert-info @endif @endif @endif alert-dismissible fade show" role="alert">
                     {{session('mensagem')}}
@@ -33,6 +39,7 @@
                     <div class="modal-body">
                     <form id="nova-atividade" method="POST" action="/admin/atividadeDiaria" enctype="multipart/form-data">
                         @csrf
+                        <input type="hidden" name="tipo" value="{{$tipo}}">
                         <div class="col-auto form-floating">
                             <select class="form-select" id="prof" name="prof" required>
                                 <option value="">Selecione</option>
@@ -100,6 +107,7 @@
                 <h5 class="card-title">Filtros:</h5>
                     <form class="row gy-2 gx-3 align-items-center" method="GET" action="/admin/atividadeDiaria/filtro">
                         @csrf
+                        <input type="hidden" name="tipo" value="{{$tipo}}">
                         <div class="col-auto form-floating">
                             <select class="form-select" name="prof">
                                 <option value="">Selecione</option>

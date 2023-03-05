@@ -21,7 +21,18 @@
                     <p class="card-text">
                         Consultar as Atividades
                     </p>
-                    <a href="/outro/atividadeDiaria" class="btn btn-primary">Atividades</a>
+                    <a href="/outro/atividadeDiaria/diaria" class="btn btn-primary">Atividades</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-auto">
+            <div class="card border-primary text-center centralizado">
+                <div class="card-body">
+                    <h5>Atividades Plataforma Iônica</h5>
+                    <p class="card-text">
+                        Consultar as Atividades
+                    </p>
+                    <a href="/outro/atividadeDiaria/ionica" class="btn btn-primary">Atividades</a>
                 </div>
             </div>
         </div>

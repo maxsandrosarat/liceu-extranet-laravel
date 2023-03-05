@@ -3,9 +3,15 @@
 <?php $__env->startSection('body'); ?>
 <div class="card border">
     <div class="card-body">
-        <a href="/prof/atividadeDiaria/disciplinas" class="btn btn-success"data-toggle="tooltip" data-placement="bottom" title="Voltar"><i class="material-icons white">reply</i></a>
+        <a href="/prof/atividadeDiaria/disciplinas/<?php echo e($tipo); ?>" class="btn btn-success"data-toggle="tooltip" data-placement="bottom" title="Voltar"><i class="material-icons white">reply</i></a>
         <br/><br/>
+        <?php if($tipo=='diaria'): ?>
         <h5 class="card-title">Painel de Atividades Diárias - Disciplina: <?php echo e($disciplina->nome); ?></h5>
+        <?php elseif($tipo=='ionica'): ?>
+        <h5 class="card-title">Painel de Atividades da Plataforma Iônica - Disciplina: <?php echo e($disciplina->nome); ?></h5>
+        <?php else: ?>
+
+        <?php endif; ?>
             <?php if(session('mensagem')): ?>
                 <div class="alert <?php if(session('type')=="success"): ?> alert-success <?php else: ?> <?php if(session('type')=="warning"): ?> alert-warning <?php else: ?> <?php if(session('type')=="danger"): ?> alert-danger <?php else: ?> alert-info <?php endif; ?> <?php endif; ?> <?php endif; ?> alert-dismissible fade show" role="alert">
                     <?php echo e(session('mensagem')); ?>
@@ -27,6 +33,7 @@
                     <form id="nova-atividade" method="POST" action="/prof/atividadeDiaria" enctype="multipart/form-data">
                         <?php echo csrf_field(); ?>
                         <input type="hidden" name="disciplina" value="<?php echo e($disciplina->id); ?>">
+                        <input type="hidden" name="tipo" value="<?php echo e($tipo); ?>">
                         <div class="col-auto form-floating">
                             <select class="form-select" id="turma" name="turma" required>
                                 <option value="">Selecione</option>
@@ -76,6 +83,7 @@
             <div class="card border">
                 <h5 class="card-title">Filtros:</h5>
                     <form class="row gy-2 gx-3 align-items-center" method="GET" action="/prof/atividadeDiaria/filtro/<?php echo e($disciplina->id); ?>">
+                        <input type="hidden" name="tipo" value="<?php echo e($tipo); ?>">
                         <div class="col-auto form-floating">
                             <select class="form-select" name="turma">
                                 <option value="">Selecione</option>

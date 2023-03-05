@@ -13,7 +13,13 @@
                 </a>
             </div>
         </div>
+        <?php if($tipo=='diaria'): ?>
         <h5 class="card-title">Painel de Atividades Diárias - <?php echo e(date("d/m/Y H:i")); ?></h5>
+        <?php elseif($tipo=='ionica'): ?>
+        <h5 class="card-title">Painel de Atividades da Plataforma Iônica - <?php echo e(date("d/m/Y H:i")); ?></h5>
+        <?php else: ?>
+
+        <?php endif; ?>
             <?php if(session('mensagem')): ?>
                 <div class="alert <?php if(session('type')=="success"): ?> alert-success <?php else: ?> <?php if(session('type')=="warning"): ?> alert-warning <?php else: ?> <?php if(session('type')=="danger"): ?> alert-danger <?php else: ?> alert-info <?php endif; ?> <?php endif; ?> <?php endif; ?> alert-dismissible fade show" role="alert">
                     <?php echo e(session('mensagem')); ?>
@@ -34,6 +40,7 @@
                     <div class="modal-body">
                     <form id="nova-atividade" method="POST" action="/admin/atividadeDiaria" enctype="multipart/form-data">
                         <?php echo csrf_field(); ?>
+                        <input type="hidden" name="tipo" value="<?php echo e($tipo); ?>">
                         <div class="col-auto form-floating">
                             <select class="form-select" id="prof" name="prof" required>
                                 <option value="">Selecione</option>
@@ -101,6 +108,7 @@
                 <h5 class="card-title">Filtros:</h5>
                     <form class="row gy-2 gx-3 align-items-center" method="GET" action="/admin/atividadeDiaria/filtro">
                         <?php echo csrf_field(); ?>
+                        <input type="hidden" name="tipo" value="<?php echo e($tipo); ?>">
                         <div class="col-auto form-floating">
                             <select class="form-select" name="prof">
                                 <option value="">Selecione</option>
